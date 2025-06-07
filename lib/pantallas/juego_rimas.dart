@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'dart:math' show Random;
 import '../widgets/boton_animado.dart';
 import '../widgets/contador_puntos_racha.dart';
@@ -264,7 +264,7 @@ class _JuegoRimasState extends State<JuegoRimas> with SingleTickerProviderStateM
                 left: 24,
                 child: Text(
                   '¿Qué rima con...?',
-                  style: GoogleFonts.fredoka(
+                  style: const TextStyle(
                     fontSize: 48,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -307,7 +307,7 @@ class _JuegoRimasState extends State<JuegoRimas> with SingleTickerProviderStateM
                           const SizedBox(height: 10),
                           Text(
                             _rimaActual['palabra'],
-                            style: GoogleFonts.fredoka(
+                            style: const TextStyle(
                               fontSize: 40,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -350,7 +350,7 @@ class _JuegoRimasState extends State<JuegoRimas> with SingleTickerProviderStateM
                             child: Center(
                               child: Text(
                                 opcion,
-                                style: GoogleFonts.fredoka(
+                                style: const TextStyle(
                                   fontSize: 32,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,

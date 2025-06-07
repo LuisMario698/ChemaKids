@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class DialogoRachaPerdida extends StatefulWidget {
   final int racha;
@@ -61,9 +60,8 @@ class _DialogoRachaPerdidaState extends State<DialogoRachaPerdida> with SingleTi
             mainAxisSize: MainAxisSize.min,
             children: [
               // Emoji triste grande              const Text('😢', style: TextStyle(fontSize: 80)),
-              Text(
-                'Has perdido la racha',
-                style: GoogleFonts.fredoka(
+              Text(                'Has perdido la racha',
+                style: const TextStyle(
                   fontSize: 32,
                   color: Colors.orange,
                   fontWeight: FontWeight.bold,
@@ -104,9 +102,8 @@ class _DialogoRachaPerdidaState extends State<DialogoRachaPerdida> with SingleTi
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    '${widget.racha}',
-                    style: GoogleFonts.fredoka(
+                  Text(                    '${widget.racha}',
+                    style: const TextStyle(
                       fontSize: 72,
                       fontWeight: FontWeight.bold,
                       color: Colors.orange,

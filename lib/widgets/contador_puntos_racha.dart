@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ContadorPuntosRacha extends StatelessWidget {
   final int score;
@@ -72,17 +71,17 @@ class ContadorPuntosRacha extends StatelessWidget {
         children: [
           Column(
             mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
+            children: [              Text(
                 '$score',
-                style: GoogleFonts.fredoka(                fontSize: MediaQuery.of(context).size.width > 600 ? 32 : 24,
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width > 600 ? 32 : 24,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
               Text(
                 'Puntos',
-                style: GoogleFonts.fredoka(
+                style: TextStyle(
                   fontSize: MediaQuery.of(context).size.width > 600 ? 16 : 12,
                   color: Colors.white70,
                 ),
@@ -126,10 +125,10 @@ class ContadorPuntosRacha extends StatelessWidget {
                 tween: Tween(begin: 0.8, end: 1.0),
                 duration: const Duration(milliseconds: 300),
                 builder: (context, scale, child) => Transform.scale(
-                  scale: scale,
-                  child: Text(
+                  scale: scale,                  child: Text(
                     '$streak',
-                    style: GoogleFonts.fredoka(                      fontSize: MediaQuery.of(context).size.width > 600 ? streakSize - 4 : streakSize - 8,
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.width > 600 ? streakSize - 4 : streakSize - 8,
                       fontWeight: FontWeight.bold,
                       color: streakColor,
                       shadows: streak > 0 ? [

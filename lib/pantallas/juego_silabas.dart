@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
 import '../widgets/boton_animado.dart';
 import '../widgets/dialogo_racha_perdida.dart';
@@ -270,10 +269,9 @@ class _JuegoSilabasState extends State<JuegoSilabas>
               // Title
               Positioned(
                 top: 80,
-                left: 24,
-                child: Text(
+                left: 24,                child: Text(
                   'Forma la palabra',
-                  style: GoogleFonts.fredoka(
+                  style: const TextStyle(
                     fontSize: 48,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -331,10 +329,9 @@ class _JuegoSilabasState extends State<JuegoSilabas>
                           ),
                         ],
                       ),
-                      child: Center(
-                        child: Text(
+                      child: Center(                        child: Text(
                           _palabraActual['silaba1'],
-                          style: GoogleFonts.fredoka(
+                          style: const TextStyle(
                             fontSize: 48,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -375,8 +372,7 @@ class _JuegoSilabasState extends State<JuegoSilabas>
                                 ),
                                 child: Center(
                                   child: Text(
-                                    silaba,
-                                    style: GoogleFonts.fredoka(
+                                    silaba,                                    style: const TextStyle(
                                       fontSize: 48,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,

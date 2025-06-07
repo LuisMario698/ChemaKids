@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class DialogoVictoria extends StatelessWidget {
   final int score;
@@ -73,8 +72,7 @@ class DialogoVictoria extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        '$score',
-                        style: GoogleFonts.fredoka(
+                        '$score',                        style: const TextStyle(
                           fontSize: 80,
                           fontWeight: FontWeight.bold,
                           color: Colors.amber,
@@ -182,16 +180,15 @@ class DialogoVictoria extends StatelessWidget {
                                           builder: (context, val, child) => Transform.scale(
                                             scale: val,
                                             child: Text(
-                                              '10',
-                                              style: GoogleFonts.fredoka(
+                                              '10',                                              style: const TextStyle(
                                                 fontSize: 60,
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white,
                                                 shadows: [
                                                   Shadow(
-                                                    color: Colors.orange.withAlpha(150),
+                                                    color: Colors.orange,
                                                     blurRadius: 10,
-                                                    offset: const Offset(0, 2),
+                                                    offset: Offset(0, 2),
                                                   ),
                                                 ],
                                               ),
@@ -225,8 +222,7 @@ class DialogoVictoria extends StatelessWidget {
                                           colors: [Colors.white, Color(0xFFFFD700)],
                                         ).createShader(bounds),
                                         child: Text(
-                                          '¡RACHA PERFECTA!',
-                                          style: GoogleFonts.fredoka(
+                                          '¡RACHA PERFECTA!',                                          style: const TextStyle(
                                             fontSize: 32,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white,
@@ -255,8 +251,7 @@ class DialogoVictoria extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          '$maxStreak',
-                          style: GoogleFonts.fredoka(
+                          '$maxStreak',                          style: const TextStyle(
                             fontSize: 40,
                             fontWeight: FontWeight.bold,
                             color: Colors.orange,

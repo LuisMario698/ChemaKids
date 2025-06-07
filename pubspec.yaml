@@ -34,14 +34,11 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-  
-  # Animaciones
+    # Animaciones
   rive: ^0.12.4
   lottie: ^3.0.0
   
-  # Fuentes
-  google_fonts: ^6.2.1
-    # Gestión de estado
+  # Gestión de estado
   provider: ^6.1.1
   
   # Almacenamiento local

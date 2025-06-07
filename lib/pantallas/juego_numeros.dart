@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'dart:math';
 import '../modelos/numero_letra.dart';
 import '../widgets/contador_puntos_racha.dart';
@@ -85,7 +85,7 @@ class _JuegoNumerosState extends State<JuegoNumeros>
                     ),
                     title: Text(
                       '¡Felicitaciones!',
-                      style: GoogleFonts.fredoka(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 32,
                       ),
@@ -95,7 +95,7 @@ class _JuegoNumerosState extends State<JuegoNumeros>
                       children: [
                         Text(
                           'Has completado el juego\nPuntuación: $_score de ${numerosYLetras.length}',
-                          style: GoogleFonts.fredoka(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 24,
                           ),
@@ -112,7 +112,7 @@ class _JuegoNumerosState extends State<JuegoNumeros>
                               },
                               child: Text(
                                 'Menú',
-                                style: GoogleFonts.fredoka(
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
                                 ),
@@ -135,7 +135,7 @@ class _JuegoNumerosState extends State<JuegoNumeros>
                               ),
                               child: Text(
                                 'Jugar de nuevo',
-                                style: GoogleFonts.fredoka(
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
                                 ),
@@ -220,7 +220,7 @@ class _JuegoNumerosState extends State<JuegoNumeros>
                 left: 24,
                 child: Text(
                   'Números y Letras',
-                  style: GoogleFonts.fredoka(
+                  style: const TextStyle(
                     fontSize: 48,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -284,8 +284,7 @@ class _JuegoNumerosState extends State<JuegoNumeros>
                             ),
                             const SizedBox(height: 20),
                             Text(
-                              numeroActual.numero,
-                              style: GoogleFonts.fredoka(
+                              numeroActual.numero,                              style: TextStyle(
                                 fontSize: isDesktop ? 72 : 60,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
@@ -354,7 +353,7 @@ class _JuegoNumerosState extends State<JuegoNumeros>
                                               child: Center(
                                                 child: Text(
                                                   palabra,
-                                                  style: GoogleFonts.fredoka(
+                                                  style: const TextStyle(
                                                     fontSize: 32,
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.white,

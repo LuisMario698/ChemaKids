@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:chemakids/modelos/question_que_es.dart';
 import '../widgets/boton_animado.dart';
 import '../widgets/dialogo_racha_perdida.dart';
@@ -84,7 +84,7 @@ class _JuegoQueEsState extends State<JuegoQueEs>
                       ),
                       title: Text(
                         '¡Felicitaciones!',
-                        style: GoogleFonts.fredoka(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 32,
                         ),
@@ -94,7 +94,7 @@ class _JuegoQueEsState extends State<JuegoQueEs>
                         children: [
                           Text(
                             'Has completado el juego\nPuntuación: $_score de ${questions.length}',
-                            style: GoogleFonts.fredoka(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 24,
                             ),
@@ -111,7 +111,7 @@ class _JuegoQueEsState extends State<JuegoQueEs>
                                 },
                                 child: Text(
                                   'Menú',
-                                  style: GoogleFonts.fredoka(
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 20,
                                   ),
@@ -133,7 +133,7 @@ class _JuegoQueEsState extends State<JuegoQueEs>
                                 ),
                                 child: Text(
                                   'Jugar de nuevo',
-                                  style: GoogleFonts.fredoka(
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 20,
                                   ),
@@ -179,7 +179,7 @@ class _JuegoQueEsState extends State<JuegoQueEs>
         child: Center(
           child: Text(
             text,
-            style: GoogleFonts.fredoka(
+            style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -239,7 +239,7 @@ class _JuegoQueEsState extends State<JuegoQueEs>
                 left: 24,
                 child: Text(
                   '¿Qué es?',
-                  style: GoogleFonts.fredoka(
+                  style: const TextStyle(
                     fontSize: 48,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,

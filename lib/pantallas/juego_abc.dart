@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'dart:math';
 
 class _Particle {
@@ -315,8 +315,7 @@ class _JuegoABCState extends State<JuegoABC> with SingleTickerProviderStateMixin
                                               children: [
                                                 // Shadow
                                                 Text(
-                                                  _letras[_letraActualIndex],
-                                                  style: GoogleFonts.fredoka(
+                                                  _letras[_letraActualIndex],                                                  style: TextStyle(
                                                     fontSize: isDesktop ? 280 : 200,
                                                     fontWeight: FontWeight.w900,
                                                     color: Colors.black.withOpacity(0.2),
@@ -325,8 +324,7 @@ class _JuegoABCState extends State<JuegoABC> with SingleTickerProviderStateMixin
                                                 ),
                                                 // Main letter
                                                 Text(
-                                                  _letras[_letraActualIndex],
-                                                  style: GoogleFonts.fredoka(
+                                                  _letras[_letraActualIndex],                                                  style: TextStyle(
                                                     fontSize: isDesktop ? 280 : 200,
                                                     fontWeight: FontWeight.w900,
                                                     foreground: Paint()
