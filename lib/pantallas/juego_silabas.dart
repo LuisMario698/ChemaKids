@@ -269,7 +269,8 @@ class _JuegoSilabasState extends State<JuegoSilabas>
               // Title
               Positioned(
                 top: 80,
-                left: 24,                child: Text(
+                left: 24,
+                child: Text(
                   'Forma la palabra',
                   style: const TextStyle(
                     fontSize: 48,
@@ -329,7 +330,8 @@ class _JuegoSilabasState extends State<JuegoSilabas>
                           ),
                         ],
                       ),
-                      child: Center(                        child: Text(
+                      child: Center(
+                        child: Text(
                           _palabraActual['silaba1'],
                           style: const TextStyle(
                             fontSize: 48,
@@ -372,7 +374,8 @@ class _JuegoSilabasState extends State<JuegoSilabas>
                                 ),
                                 child: Center(
                                   child: Text(
-                                    silaba,                                    style: const TextStyle(
+                                    silaba,
+                                    style: const TextStyle(
                                       fontSize: 48,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,

@@ -44,17 +44,18 @@ class DialogoVictoria extends StatelessWidget {
             TweenAnimationBuilder<double>(
               tween: Tween(begin: 0.5, end: 1.0),
               duration: const Duration(milliseconds: 800),
-              builder: (context, value, child) => Transform.scale(
-                scale: value,
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text('🎉', style: TextStyle(fontSize: 60)),
-                    Text('🏆', style: TextStyle(fontSize: 80)),
-                    Text('✨', style: TextStyle(fontSize: 60)),
-                  ],
-                ),
-              ),
+              builder:
+                  (context, value, child) => Transform.scale(
+                    scale: value,
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text('🎉', style: TextStyle(fontSize: 60)),
+                        Text('🏆', style: TextStyle(fontSize: 80)),
+                        Text('✨', style: TextStyle(fontSize: 60)),
+                      ],
+                    ),
+                  ),
             ),
             const SizedBox(height: 20),
             // Puntuación grande
@@ -72,18 +73,15 @@ class DialogoVictoria extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        '$score',                        style: const TextStyle(
+                        '$score',
+                        style: const TextStyle(
                           fontSize: 80,
                           fontWeight: FontWeight.bold,
                           color: Colors.amber,
                         ),
                       ),
                       const SizedBox(width: 8),
-                      const Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                        size: 70,
-                      ),
+                      const Icon(Icons.star, color: Colors.amber, size: 70),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -94,150 +92,198 @@ class DialogoVictoria extends StatelessWidget {
                     TweenAnimationBuilder<double>(
                       tween: Tween<double>(begin: 0.0, end: 1.0),
                       duration: const Duration(milliseconds: 1000),
-                      builder: (context, value, child) => Transform.scale(
-                        scale: value,
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                Color(0xFFFF6B00),
-                                Color(0xFFFF3800),
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0xFFFF6B00).withAlpha(100),
-                                blurRadius: 20,
-                                spreadRadius: 5,
+                      builder:
+                          (context, value, child) => Transform.scale(
+                            scale: value,
+                            child: Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(vertical: 15),
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Color(0xFFFF6B00),
+                                    Color(0xFFFF3800),
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(
+                                      0xFFFF6B00,
+                                    ).withAlpha(100),
+                                    blurRadius: 20,
+                                    spreadRadius: 5,
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          child: Stack(
-                            children: [
-                              // Efectos de fondo mejorados
-                              ...List.generate(8, (index) {
-                                final random = index * 1.2;
-                                return TweenAnimationBuilder<double>(
-                                  tween: Tween<double>(begin: 0.0, end: 1.0),
-                                  duration: Duration(milliseconds: 800 + (index * 100)),
-                                  builder: (context, val, child) => Positioned(
-                                    left: 20.0 + random * 40,
-                                    top: random * 4,
-                                    child: Transform.scale(
-                                      scale: val,
-                                      child: Container(
-                                        width: 25,
-                                        height: 25,
+                              child: Stack(
+                                children: [
+                                  // Efectos de fondo mejorados
+                                  ...List.generate(8, (index) {
+                                    final random = index * 1.2;
+                                    return TweenAnimationBuilder<double>(
+                                      tween: Tween<double>(
+                                        begin: 0.0,
+                                        end: 1.0,
+                                      ),
+                                      duration: Duration(
+                                        milliseconds: 800 + (index * 100),
+                                      ),
+                                      builder:
+                                          (context, val, child) => Positioned(
+                                            left: 20.0 + random * 40,
+                                            top: random * 4,
+                                            child: Transform.scale(
+                                              scale: val,
+                                              child: Container(
+                                                width: 25,
+                                                height: 25,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.yellow
+                                                          .withAlpha(150),
+                                                      blurRadius: 25,
+                                                      spreadRadius: 3,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                    );
+                                  }), // Contenido principal mejorado
+                                  Column(
+                                    children: [
+                                      const SizedBox(height: 10),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 25,
+                                          vertical: 10,
+                                        ),
                                         decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
+                                          color: Colors.white.withAlpha(30),
+                                          borderRadius: BorderRadius.circular(
+                                            15,
+                                          ),
+                                          border: Border.all(
+                                            color: Colors.white.withAlpha(100),
+                                            width: 2,
+                                          ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.yellow.withAlpha(150),
-                                              blurRadius: 25,
-                                              spreadRadius: 3,
+                                              color: Colors.white.withAlpha(30),
+                                              blurRadius: 15,
+                                              spreadRadius: 2,
+                                            ),
+                                          ],
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            TweenAnimationBuilder<double>(
+                                              tween: Tween(
+                                                begin: 0.5,
+                                                end: 1.0,
+                                              ),
+                                              duration: const Duration(
+                                                milliseconds: 500,
+                                              ),
+                                              builder:
+                                                  (
+                                                    context,
+                                                    val,
+                                                    child,
+                                                  ) => Transform.scale(
+                                                    scale: val,
+                                                    child: Text(
+                                                      '10',
+                                                      style: const TextStyle(
+                                                        fontSize: 60,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white,
+                                                        shadows: [
+                                                          Shadow(
+                                                            color:
+                                                                Colors.orange,
+                                                            blurRadius: 10,
+                                                            offset: Offset(
+                                                              0,
+                                                              2,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                            ),
+                                            const SizedBox(width: 10),
+                                            TweenAnimationBuilder<double>(
+                                              tween: Tween(
+                                                begin: 0.0,
+                                                end: 1.0,
+                                              ),
+                                              duration: const Duration(
+                                                milliseconds: 800,
+                                              ),
+                                              builder:
+                                                  (context, val, child) =>
+                                                      Transform.rotate(
+                                                        angle: val * 6.28319,
+                                                        child: const Icon(
+                                                          Icons.star,
+                                                          color: Colors.amber,
+                                                          size: 50,
+                                                        ),
+                                                      ),
                                             ),
                                           ],
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                );
-                              }),                              // Contenido principal mejorado
-                              Column(
-                                children: [
-                                  const SizedBox(height: 10),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 25,
-                                      vertical: 10,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withAlpha(30),
-                                      borderRadius: BorderRadius.circular(15),
-                                      border: Border.all(
-                                        color: Colors.white.withAlpha(100),
-                                        width: 2,
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.white.withAlpha(30),
-                                          blurRadius: 15,
-                                          spreadRadius: 2,
+                                      const SizedBox(height: 15),
+                                      TweenAnimationBuilder<double>(
+                                        tween: Tween(begin: 0.0, end: 1.0),
+                                        duration: const Duration(
+                                          milliseconds: 1000,
                                         ),
-                                      ],
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        TweenAnimationBuilder<double>(
-                                          tween: Tween(begin: 0.5, end: 1.0),
-                                          duration: const Duration(milliseconds: 500),
-                                          builder: (context, val, child) => Transform.scale(
-                                            scale: val,
-                                            child: Text(
-                                              '10',                                              style: const TextStyle(
-                                                fontSize: 60,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                                shadows: [
-                                                  Shadow(
-                                                    color: Colors.orange,
-                                                    blurRadius: 10,
-                                                    offset: Offset(0, 2),
+                                        builder:
+                                            (
+                                              context,
+                                              val,
+                                              child,
+                                            ) => Transform.scale(
+                                              scale: val,
+                                              child: ShaderMask(
+                                                shaderCallback:
+                                                    (bounds) =>
+                                                        const LinearGradient(
+                                                          colors: [
+                                                            Colors.white,
+                                                            Color(0xFFFFD700),
+                                                          ],
+                                                        ).createShader(bounds),
+                                                child: Text(
+                                                  '¡RACHA PERFECTA!',
+                                                  style: const TextStyle(
+                                                    fontSize: 32,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                    letterSpacing: 1.5,
                                                   ),
-                                                ],
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        TweenAnimationBuilder<double>(
-                                          tween: Tween(begin: 0.0, end: 1.0),
-                                          duration: const Duration(milliseconds: 800),
-                                          builder: (context, val, child) => Transform.rotate(
-                                            angle: val * 6.28319,
-                                            child: const Icon(
-                                              Icons.star,
-                                              color: Colors.amber,
-                                              size: 50,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(height: 15),
-                                  TweenAnimationBuilder<double>(
-                                    tween: Tween(begin: 0.0, end: 1.0),
-                                    duration: const Duration(milliseconds: 1000),
-                                    builder: (context, val, child) => Transform.scale(
-                                      scale: val,
-                                      child: ShaderMask(
-                                        shaderCallback: (bounds) => const LinearGradient(
-                                          colors: [Colors.white, Color(0xFFFFD700)],
-                                        ).createShader(bounds),
-                                        child: Text(
-                                          '¡RACHA PERFECTA!',                                          style: const TextStyle(
-                                            fontSize: 32,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                            letterSpacing: 1.5,
-                                          ),
-                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
                                 ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
                     ),
                   ] else ...[
                     // Racha normal
@@ -251,7 +297,8 @@ class DialogoVictoria extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          '$maxStreak',                          style: const TextStyle(
+                          '$maxStreak',
+                          style: const TextStyle(
                             fontSize: 40,
                             fontWeight: FontWeight.bold,
                             color: Colors.orange,
@@ -286,7 +333,8 @@ class DialogoVictoria extends StatelessWidget {
                             offset: const Offset(0, 4),
                           ),
                         ],
-                      ),                      child: const Center(
+                      ),
+                      child: const Center(
                         child: Icon(
                           Icons.home_rounded,
                           color: Colors.white,
@@ -314,7 +362,8 @@ class DialogoVictoria extends StatelessWidget {
                             offset: const Offset(0, 4),
                           ),
                         ],
-                      ),                      child: const Center(
+                      ),
+                      child: const Center(
                         child: Icon(
                           Icons.refresh_rounded,
                           color: Colors.white,

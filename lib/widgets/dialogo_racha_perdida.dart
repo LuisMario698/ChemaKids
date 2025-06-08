@@ -3,16 +3,14 @@ import 'package:flutter/material.dart';
 class DialogoRachaPerdida extends StatefulWidget {
   final int racha;
 
-  const DialogoRachaPerdida({
-    super.key,
-    required this.racha,
-  });
+  const DialogoRachaPerdida({super.key, required this.racha});
 
   @override
   State<DialogoRachaPerdida> createState() => _DialogoRachaPerdidaState();
 }
 
-class _DialogoRachaPerdidaState extends State<DialogoRachaPerdida> with SingleTickerProviderStateMixin {
+class _DialogoRachaPerdidaState extends State<DialogoRachaPerdida>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
@@ -24,9 +22,10 @@ class _DialogoRachaPerdidaState extends State<DialogoRachaPerdida> with SingleTi
       vsync: this,
     );
 
-    _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.elasticOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
 
     _controller.forward();
   }
@@ -38,7 +37,8 @@ class _DialogoRachaPerdidaState extends State<DialogoRachaPerdida> with SingleTi
   }
 
   @override
-  Widget build(BuildContext context) {    return ScaleTransition(
+  Widget build(BuildContext context) {
+    return ScaleTransition(
       scale: _scaleAnimation,
       child: Dialog(
         backgroundColor: Colors.transparent,
@@ -49,7 +49,8 @@ class _DialogoRachaPerdidaState extends State<DialogoRachaPerdida> with SingleTi
             color: Colors.white,
             borderRadius: BorderRadius.circular(25),
             border: Border.all(color: Colors.orange, width: 4),
-            boxShadow: [              BoxShadow(
+            boxShadow: [
+              BoxShadow(
                 color: Colors.black.withAlpha(51), // 0.2 opacity
                 blurRadius: 20,
                 spreadRadius: 5,
@@ -60,7 +61,8 @@ class _DialogoRachaPerdidaState extends State<DialogoRachaPerdida> with SingleTi
             mainAxisSize: MainAxisSize.min,
             children: [
               // Emoji triste grande              const Text('😢', style: TextStyle(fontSize: 80)),
-              Text(                'Has perdido la racha',
+              Text(
+                'Has perdido la racha',
                 style: const TextStyle(
                   fontSize: 32,
                   color: Colors.orange,
@@ -83,7 +85,8 @@ class _DialogoRachaPerdidaState extends State<DialogoRachaPerdida> with SingleTi
                     child: Container(
                       width: 140,
                       height: 8,
-                      decoration: BoxDecoration(                        color: Colors.red.withAlpha(204), // 0.8 opacity
+                      decoration: BoxDecoration(
+                        color: Colors.red.withAlpha(204), // 0.8 opacity
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
@@ -102,65 +105,66 @@ class _DialogoRachaPerdidaState extends State<DialogoRachaPerdida> with SingleTi
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(                    '${widget.racha}',
+                  Text(
+                    '${widget.racha}',
                     style: const TextStyle(
                       fontSize: 72,
                       fontWeight: FontWeight.bold,
                       color: Colors.orange,
                     ),
                   ),
-                  const Icon(
-                    Icons.flash_on,
-                    color: Colors.orange,
-                    size: 72,
-                  ),
+                  const Icon(Icons.flash_on, color: Colors.orange, size: 72),
                 ],
-              ),              const SizedBox(height: 30),
+              ),
+              const SizedBox(height: 30),
               // Botón animado para continuar
               TweenAnimationBuilder<double>(
                 tween: Tween(begin: 0.8, end: 1.0),
                 duration: const Duration(milliseconds: 600),
-                builder: (context, value, child) => Transform.scale(
-                  scale: value,
-                  child: GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFFFFA500), Color(0xFFFF8C00)],
-                        ),
-                        borderRadius: BorderRadius.circular(25),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFFFFA500).withAlpha(102), // 0.4 opacity
-                            blurRadius: 8,
-                            spreadRadius: 2,
-                            offset: const Offset(0, 4),
+                builder:
+                    (context, value, child) => Transform.scale(
+                      scale: value,
+                      child: GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 16,
+                            horizontal: 32,
                           ),
-                        ],
-                      ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '¡Otra vez!',
-                            style: TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFFFFA500), Color(0xFFFF8C00)],
                             ),
+                            borderRadius: BorderRadius.circular(25),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(
+                                  0xFFFFA500,
+                                ).withAlpha(102), // 0.4 opacity
+                                blurRadius: 8,
+                                spreadRadius: 2,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
                           ),
-                          SizedBox(width: 8),
-                          Text(
-                            '💪',
-                            style: TextStyle(fontSize: 28),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                '¡Otra vez!',
+                                style: TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              SizedBox(width: 8),
+                              Text('💪', style: TextStyle(fontSize: 28)),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ),
               ),
             ],
           ),

@@ -85,10 +85,7 @@ class _JuegoNumerosState extends State<JuegoNumeros>
                     ),
                     title: Text(
                       '¡Felicitaciones!',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 32,
-                      ),
+                      style: const TextStyle(color: Colors.white, fontSize: 32),
                     ),
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -284,7 +281,8 @@ class _JuegoNumerosState extends State<JuegoNumeros>
                             ),
                             const SizedBox(height: 20),
                             Text(
-                              numeroActual.numero,                              style: TextStyle(
+                              numeroActual.numero,
+                              style: TextStyle(
                                 fontSize: isDesktop ? 72 : 60,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,

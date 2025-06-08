@@ -25,17 +25,42 @@ class JuegoABC extends StatefulWidget {
   State<JuegoABC> createState() => _JuegoABCState();
 }
 
-class _JuegoABCState extends State<JuegoABC> with SingleTickerProviderStateMixin {
+class _JuegoABCState extends State<JuegoABC>
+    with SingleTickerProviderStateMixin {
   final List<String> _letras = [
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'H',
+    'I',
+    'J',
+    'K',
+    'L',
+    'M',
+    'N',
+    'O',
+    'P',
+    'Q',
+    'R',
+    'S',
+    'T',
+    'U',
+    'V',
+    'W',
+    'X',
+    'Y',
+    'Z',
   ];
 
   int _letraActualIndex = 0;
   late final AnimationController _controller;
   late final Animation<double> _scaleAnimation;
   late final Animation<double> _floatAnimation;
-  
+
   final List<_Particle> _particles = [];
   final Random _random = Random();
 
@@ -46,37 +71,36 @@ class _JuegoABCState extends State<JuegoABC> with SingleTickerProviderStateMixin
       vsync: this,
       duration: const Duration(milliseconds: 2000),
     )..repeat(reverse: true);
-    
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.2,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.0, 0.3, curve: Curves.easeInOut),
-    ));
+
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.0, 0.3, curve: Curves.easeInOut),
+      ),
+    );
 
     _floatAnimation = Tween<double>(
       begin: -10.0,
       end: 10.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   void _createParticles() {
     for (int i = 0; i < 20; i++) {
-      _particles.add(_Particle(
-        x: 0,
-        y: 0,
-        vx: _random.nextDouble() * 10 - 5,
-        vy: _random.nextDouble() * -15,
-        color: Color.lerp(
-          const Color(0xFFFFA5A5),
-          const Color(0xFFFF7676),
-          _random.nextDouble(),
-        )!,
-      ));
+      _particles.add(
+        _Particle(
+          x: 0,
+          y: 0,
+          vx: _random.nextDouble() * 10 - 5,
+          vy: _random.nextDouble() * -15,
+          color:
+              Color.lerp(
+                const Color(0xFFFFA5A5),
+                const Color(0xFFFF7676),
+                _random.nextDouble(),
+              )!,
+        ),
+      );
     }
     setState(() {});
     Future.delayed(const Duration(milliseconds: 500), () {
@@ -101,7 +125,8 @@ class _JuegoABCState extends State<JuegoABC> with SingleTickerProviderStateMixin
 
   void _letraAnterior() {
     setState(() {
-      _letraActualIndex = (_letraActualIndex - 1 + _letras.length) % _letras.length;
+      _letraActualIndex =
+          (_letraActualIndex - 1 + _letras.length) % _letras.length;
     });
   }
 
@@ -132,11 +157,7 @@ class _JuegoABCState extends State<JuegoABC> with SingleTickerProviderStateMixin
             ),
           ],
         ),
-        child: Icon(
-          icon,
-          color: Colors.white,
-          size: 30,
-        ),
+        child: Icon(icon, color: Colors.white, size: 30),
       ),
     );
   }
@@ -154,9 +175,10 @@ class _JuegoABCState extends State<JuegoABC> with SingleTickerProviderStateMixin
             margin: const EdgeInsets.symmetric(horizontal: 4),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: index == _letraActualIndex
-                  ? const Color(0xFFFFA5A5)
-                  : Colors.white.withOpacity(0.3),
+              color:
+                  index == _letraActualIndex
+                      ? const Color(0xFFFFA5A5)
+                      : Colors.white.withOpacity(0.3),
             ),
           );
         },
@@ -235,7 +257,7 @@ class _JuegoABCState extends State<JuegoABC> with SingleTickerProviderStateMixin
                   onPressed: () => Navigator.of(context).pop(),
                 ),
               ),
-              
+
               // Title text
               const Positioned(
                 top: 80,
@@ -269,7 +291,7 @@ class _JuegoABCState extends State<JuegoABC> with SingleTickerProviderStateMixin
                         icon: Icons.arrow_back_ios_rounded,
                         onTap: _letraAnterior,
                       ),
-                      
+
                       Expanded(
                         child: GestureDetector(
                           onTapDown: (_) => _reproducirSonido(),
@@ -292,14 +314,19 @@ class _JuegoABCState extends State<JuegoABC> with SingleTickerProviderStateMixin
                                       // Particles
                                       if (_particles.isNotEmpty)
                                         CustomPaint(
-                                          size: Size(isDesktop ? 280 : 200, isDesktop ? 280 : 200),
+                                          size: Size(
+                                            isDesktop ? 280 : 200,
+                                            isDesktop ? 280 : 200,
+                                          ),
                                           painter: _ParticlePainter(_particles),
                                         ),
-                                      
+
                                       // Letter shadow and main display
                                       Center(
                                         child: Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 20,
+                                          ),
                                           child: ShaderMask(
                                             shaderCallback: (Rect bounds) {
                                               return LinearGradient(
@@ -315,29 +342,52 @@ class _JuegoABCState extends State<JuegoABC> with SingleTickerProviderStateMixin
                                               children: [
                                                 // Shadow
                                                 Text(
-                                                  _letras[_letraActualIndex],                                                  style: TextStyle(
-                                                    fontSize: isDesktop ? 280 : 200,
+                                                  _letras[_letraActualIndex],
+                                                  style: TextStyle(
+                                                    fontSize:
+                                                        isDesktop ? 280 : 200,
                                                     fontWeight: FontWeight.w900,
-                                                    color: Colors.black.withOpacity(0.2),
+                                                    color: Colors.black
+                                                        .withOpacity(0.2),
                                                     height: 1,
                                                   ),
                                                 ),
                                                 // Main letter
                                                 Text(
-                                                  _letras[_letraActualIndex],                                                  style: TextStyle(
-                                                    fontSize: isDesktop ? 280 : 200,
+                                                  _letras[_letraActualIndex],
+                                                  style: TextStyle(
+                                                    fontSize:
+                                                        isDesktop ? 280 : 200,
                                                     fontWeight: FontWeight.w900,
-                                                    foreground: Paint()
-                                                      ..shader = LinearGradient(
-                                                        begin: Alignment.topCenter,
-                                                        end: Alignment.bottomCenter,
-                                                        colors: [
-                                                          const Color(0xFFFFA5A5),
-                                                          const Color(0xFFFF7676),
-                                                        ],
-                                                      ).createShader(
-                                                        Rect.fromLTWH(0, 0, isDesktop ? 280 : 200, isDesktop ? 280 : 200),
-                                                      ),
+                                                    foreground:
+                                                        Paint()
+                                                          ..shader = LinearGradient(
+                                                            begin:
+                                                                Alignment
+                                                                    .topCenter,
+                                                            end:
+                                                                Alignment
+                                                                    .bottomCenter,
+                                                            colors: [
+                                                              const Color(
+                                                                0xFFFFA5A5,
+                                                              ),
+                                                              const Color(
+                                                                0xFFFF7676,
+                                                              ),
+                                                            ],
+                                                          ).createShader(
+                                                            Rect.fromLTWH(
+                                                              0,
+                                                              0,
+                                                              isDesktop
+                                                                  ? 280
+                                                                  : 200,
+                                                              isDesktop
+                                                                  ? 280
+                                                                  : 200,
+                                                            ),
+                                                          ),
                                                     height: 1,
                                                   ),
                                                 ),
@@ -362,7 +412,7 @@ class _JuegoABCState extends State<JuegoABC> with SingleTickerProviderStateMixin
                     ],
                   ),
                 ),
-              ),              // Sound button
+              ), // Sound button
               Positioned(
                 bottom: 40,
                 left: 0,
@@ -393,10 +443,7 @@ class _JuegoABCState extends State<JuegoABC> with SingleTickerProviderStateMixin
                               gradient: const LinearGradient(
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
-                                colors: [
-                                  Color(0xFF2196F3),
-                                  Color(0xFF1976D2),
-                                ],
+                                colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
                               ),
                               boxShadow: [
                                 BoxShadow(
@@ -407,7 +454,8 @@ class _JuegoABCState extends State<JuegoABC> with SingleTickerProviderStateMixin
                               ],
                             ),
                             child: Stack(
-                              alignment: Alignment.center,                              children: [
+                              alignment: Alignment.center,
+                              children: [
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -416,11 +464,12 @@ class _JuegoABCState extends State<JuegoABC> with SingleTickerProviderStateMixin
                                       'https://raw.githubusercontent.com/kubilayckmk/puppilot/main/assets/megaphone.png',
                                       width: isDesktop ? 80 : 70,
                                       height: isDesktop ? 80 : 70,
-                                      errorBuilder: (context, error, stackTrace) => Icon(
-                                        Icons.campaign_rounded,
-                                        color: Colors.white,
-                                        size: isDesktop ? 50 : 40,
-                                      ),
+                                      errorBuilder:
+                                          (context, error, stackTrace) => Icon(
+                                            Icons.campaign_rounded,
+                                            color: Colors.white,
+                                            size: isDesktop ? 50 : 40,
+                                          ),
                                     ),
                                     const SizedBox(width: 16),
                                     // Ondas de sonido animadas
@@ -429,19 +478,32 @@ class _JuegoABCState extends State<JuegoABC> with SingleTickerProviderStateMixin
                                       children: List.generate(3, (index) {
                                         return TweenAnimationBuilder<double>(
                                           tween: Tween(begin: 0.3, end: 1.0),
-                                          duration: Duration(milliseconds: 400 + (index * 200)),
+                                          duration: Duration(
+                                            milliseconds: 400 + (index * 200),
+                                          ),
                                           curve: Curves.easeInOut,
                                           builder: (context, value, child) {
                                             return Container(
                                               width: 6,
-                                              height: (index + 1) * (isDesktop ? 20 : 15),
-                                              margin: const EdgeInsets.symmetric(horizontal: 5),
+                                              height:
+                                                  (index + 1) *
+                                                  (isDesktop ? 20 : 15),
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 5,
+                                                  ),
                                               decoration: BoxDecoration(
-                                                color: Colors.white.withOpacity(value),
-                                                borderRadius: BorderRadius.circular(3),
+                                                color: Colors.white.withOpacity(
+                                                  value,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(3),
                                                 boxShadow: [
                                                   BoxShadow(
-                                                    color: Colors.white.withOpacity(value * 0.3),
+                                                    color: Colors.white
+                                                        .withOpacity(
+                                                          value * 0.3,
+                                                        ),
                                                     blurRadius: 8,
                                                     spreadRadius: 2,
                                                   ),
@@ -483,9 +545,10 @@ class _ParticlePainter extends CustomPainter {
       particle.y += particle.vy;
       particle.vy += 0.5; // Gravity
 
-      final paint = Paint()
-        ..color = particle.color
-        ..style = PaintingStyle.fill;
+      final paint =
+          Paint()
+            ..color = particle.color
+            ..style = PaintingStyle.fill;
 
       canvas.drawCircle(
         Offset(size.width / 2 + particle.x, size.height / 2 + particle.y),
