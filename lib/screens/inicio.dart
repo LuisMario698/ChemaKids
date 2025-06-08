@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import '../widgets/libro_animado.dart';
 import '../services/auth_service.dart';
 import '../services/estado_app.dart';
-import 'nombre_edad.dart';
-import 'registro_invitado.dart';
+import '../pantallas/nombre_edad.dart';
+import '../pantallas/registro_invitado.dart';
 
 class PantallaInicio extends StatefulWidget {
   const PantallaInicio({super.key});
@@ -76,144 +76,88 @@ class _PantallaInicioState extends State<PantallaInicio>
                   child: const LibroAnimado(),
                 ),
                 const SizedBox(height: 40),
-                // Botones de juego
+
+                // Botón de Play animado
                 SlideTransition(
                   position: _slideAnimation,
                   child: FadeTransition(
                     opacity: _fadeAnimation,
-                    child: Column(
-                      children: [                        // Botón de Play principal (solo activo con sesión iniciada)
-                        Consumer<EstadoApp>(
-                          builder: (context, estadoApp, child) {
-                            final tieneUsuario = estadoApp.tieneUsuario;
-                            
-                            return TweenAnimationBuilder<double>(
-                              tween: Tween(begin: 0.8, end: 1.0),
-                              duration: const Duration(seconds: 1),
-                              curve: Curves.elasticOut,
-                              builder: (context, value, child) {
-                                return Transform.scale(
-                                  scale: value,
-                                  child: GestureDetector(
-                                    onTap: tieneUsuario ? () {
-                                      Navigator.pushReplacementNamed(
-                                        context,
-                                        '/menu',
-                                      );
-                                    } : () {
-                                      // Mostrar mensaje si no tiene sesión
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: const Row(
-                                            children: [
-                                              Icon(Icons.warning, color: Colors.white),
-                                              SizedBox(width: 8),
-                                              Text('Debes iniciar sesión o jugar como invitado primero'),
-                                            ],
-                                          ),
-                                          backgroundColor: Colors.orange,
-                                          behavior: SnackBarBehavior.floating,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(10),
-                                          ),
+                    child: TweenAnimationBuilder<double>(
+                      tween: Tween(begin: 0.8, end: 1.0),
+                      duration: const Duration(seconds: 1),
+                      curve: Curves.elasticOut,
+                      builder: (context, value, child) {
+                        return Transform.scale(
+                          scale: value,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pushReplacementNamed(context, '/menu');
+                            },
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                // Efecto de brillo
+                                Container(
+                                  width: 140,
+                                  height: 140,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    gradient: RadialGradient(
+                                      colors: [
+                                        Colors.red.shade400.withValues(
+                                          alpha: 0.2,
                                         ),
-                                      );
-                                    },                                    child: Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        // Efecto de brillo
-                                        Container(
-                                          width: 140,
-                                          height: 140,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            gradient: RadialGradient(
-                                              colors: [
-                                                (tieneUsuario 
-                                                  ? Colors.red.shade400 
-                                                  : Colors.grey.shade600).withValues(
-                                                  alpha: 0.2,
-                                                ),
-                                                Colors.transparent,
-                                              ],
-                                              stops: const [0.5, 1.0],
-                                            ),
-                                          ),
-                                        ),
-                                        // Sombra exterior
-                                        Container(
-                                          width: 120,
-                                          height: 120,
-                                          decoration: BoxDecoration(
-                                            color: tieneUsuario 
-                                                ? Colors.red.shade700 
-                                                : Colors.grey.shade700,
-                                            shape: BoxShape.circle,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: (tieneUsuario 
-                                                    ? Colors.red 
-                                                    : Colors.grey).withValues(
-                                                  alpha: 0.3,
-                                                ),
-                                                blurRadius: 20,
-                                                spreadRadius: 5,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        // Botón principal
-                                        Container(
-                                          width: 110,
-                                          height: 110,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            gradient: LinearGradient(
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                              colors: tieneUsuario ? [
-                                                Colors.red.shade400,
-                                                Colors.red.shade700,
-                                              ] : [
-                                                Colors.grey.shade500,
-                                                Colors.grey.shade700,
-                                              ],
-                                            ),
-                                          ),
-                                          child: Icon(
-                                            tieneUsuario 
-                                                ? Icons.play_circle_rounded 
-                                                : Icons.lock,
-                                            size: 70,
-                                            color: tieneUsuario 
-                                                ? Colors.white 
-                                                : Colors.white.withValues(alpha: 0.7),
-                                            fill: 1,
-                                          ),
-                                        ),                                      ],
+                                        Colors.transparent,
+                                      ],
+                                      stops: const [0.5, 1.0],
                                     ),
                                   ),
-                                );
-                              },
-                            );
-                          },
-                        ),
-
-                        const SizedBox(height: 70),
-                        
-                        // Botón de "Jugar como Invitado"
-                        // TweenAnimationBuilder<double>(
-                        //   tween: Tween(begin: 0.0, end: 1.0),
-                        //   duration: const Duration(milliseconds: 1500),
-                        //   curve: Curves.easeOutBack,
-                        //   builder: (context, value, child) {
-                        //     return Transform.scale(
-                        //       scale: value,
-                        //       child: _buildBotonInvitado(),
-                        //     );
-                        //   },
-                        // ),
-                      ],
+                                ),
+                                // Sombra exterior
+                                Container(
+                                  width: 120,
+                                  height: 120,
+                                  decoration: BoxDecoration(
+                                    color: Colors.red.shade700,
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.red.withValues(
+                                          alpha: 0.3,
+                                        ),
+                                        blurRadius: 20,
+                                        spreadRadius: 5,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // Botón principal
+                                Container(
+                                  width: 110,
+                                  height: 110,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        Colors.red.shade400,
+                                        Colors.red.shade700,
+                                      ],
+                                    ),
+                                  ),
+                                  child: const Icon(
+                                    Icons.play_circle_rounded,
+                                    size: 70,
+                                    color: Colors.white,
+                                    fill: 1,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -244,15 +188,21 @@ class _PantallaInicioState extends State<PantallaInicio>
         ],
       ),
     );
-  }  Widget _buildAuthOptions() {
+  }
+
+  Widget _buildAuthOptions() {
     return StreamBuilder(
       stream: _authService.authStateChanges,
       builder: (context, snapshot) {
-        try {
-          final estadoApp = context.watch<EstadoApp>();
-          
-          // Simplificar la lógica - solo verificar si hay usuario
-          final tieneUsuario = estadoApp.tieneUsuario;
+        final estadoApp = context.watch<EstadoApp>();
+        final tieneUsuario = estadoApp.tieneUsuario;
+        
+        // Debug: imprimir el estado de autenticación
+        print('🔍 Tiene usuario (EstadoApp): $tieneUsuario');
+        print('🔍 Es invitado: ${estadoApp.esInvitado}');
+        if (tieneUsuario) {
+          print('🔍 Nombre usuario: ${estadoApp.nombreUsuario}');
+        }
 
         return Container(
           padding: const EdgeInsets.all(16),
@@ -270,7 +220,8 @@ class _PantallaInicioState extends State<PantallaInicio>
                 offset: const Offset(0, 5),
               ),
             ],
-          ),          child: Column(
+          ),
+          child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               if (tieneUsuario) ...[
@@ -299,10 +250,9 @@ class _PantallaInicioState extends State<PantallaInicio>
                       const SizedBox(width: 8),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [                          Text(
-                            estadoApp.nombreUsuario.isNotEmpty 
-                                ? estadoApp.nombreUsuario 
-                                : 'Usuario',
+                        children: [
+                          Text(
+                            estadoApp.nombreUsuario,
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 14,
@@ -310,8 +260,8 @@ class _PantallaInicioState extends State<PantallaInicio>
                             ),
                           ),                          Text(
                             estadoApp.esInvitado 
-                                ? 'Modo Invitado'
-                                : 'Usuario Registrado',
+                                ? 'Invitado - Nivel ${estadoApp.nivelUsuario}'
+                                : 'Nivel ${estadoApp.nivelUsuario}',
                             style: TextStyle(
                               color: Colors.white.withValues(alpha: 0.8),
                               fontSize: 12,
@@ -320,7 +270,9 @@ class _PantallaInicioState extends State<PantallaInicio>
                         ],
                       ),
                     ],
-                  ),                ),                const SizedBox(height: 8),
+                  ),
+                ),
+                const SizedBox(height: 8),
                 // Siempre mostrar botón de cerrar sesión/salir cuando hay usuario
                 if (estadoApp.esInvitado) ...[
                   // Para invitados: botón para salir del modo invitado
@@ -338,7 +290,8 @@ class _PantallaInicioState extends State<PantallaInicio>
                     label: 'Cerrar Sesión',
                     color: Colors.red,
                   ),
-                ],] else ...[
+                ],
+              ] else ...[
                 // Usuario no autenticado - mostrar opciones de login/registro
                 _buildAnimatedButton(
                   onPressed: () => _mostrarPantallaAuth(),
@@ -381,38 +334,10 @@ class _PantallaInicioState extends State<PantallaInicio>
                   label: 'Jugar como Invitado',
                   color: Colors.orange,
                 ),
-              ],            ],
+              ],
+            ],
           ),
         );
-        } catch (e) {
-          // Si hay algún error al acceder al estado, mostrar solo los botones básicos
-          print('❌ Error al acceder a EstadoApp: $e');
-          return Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildAnimatedButton(
-                  onPressed: () => _mostrarPantallaAuth(),
-                  icon: Icons.person_add,
-                  label: 'Registrarse',
-                  color: Colors.green,
-                ),
-                const SizedBox(height: 8),
-                _buildAnimatedButton(
-                  onPressed: () => _mostrarPantallaAuth(esLogin: true),
-                  icon: Icons.login,
-                  label: 'Iniciar Sesión',
-                  color: Colors.blue,
-                ),
-              ],
-            ),
-          );
-        }
       },
     );
   }
@@ -492,7 +417,8 @@ class _PantallaInicioState extends State<PantallaInicio>
             child: child,
           );
         },
-        transitionDuration: const Duration(milliseconds: 300),      ),
+        transitionDuration: const Duration(milliseconds: 300),
+      ),
     );
   }
 
@@ -529,5 +455,6 @@ class _PantallaInicioState extends State<PantallaInicio>
           ),
         );
       }
-    }  }
+    }
+  }
 }

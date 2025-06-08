@@ -1,4 +1,3 @@
-
 import '../config/supabase_config.dart';
 import 'supabase_service.dart';
 import 'usuario_service.dart';
@@ -10,9 +9,9 @@ import 'progreso_service.dart';
 /// Este archivo proporciona un punto único de acceso a todos los servicios
 class DatabaseManager {
   static DatabaseManager? _instance;
-  
+
   DatabaseManager._();
-  
+
   static DatabaseManager get instance {
     _instance ??= DatabaseManager._();
     return _instance!;
@@ -30,9 +29,13 @@ class DatabaseManager {
       print('🚀 Iniciando DatabaseManager...');
       print('🔧 Configuración:');
       print('   🌐 URL: ${SupabaseConfig.url}');
-      print('   🔑 Entorno: ${SupabaseConfig.isDevelopment ? "Desarrollo" : "Producción"}');
-      print('   📊 Logging: ${SupabaseConfig.enableLogging ? "Habilitado" : "Deshabilitado"}');
-      
+      print(
+        '   🔑 Entorno: ${SupabaseConfig.isDevelopment ? "Desarrollo" : "Producción"}',
+      );
+      print(
+        '   📊 Logging: ${SupabaseConfig.enableLogging ? "Habilitado" : "Deshabilitado"}',
+      );
+
       // Inicializar Supabase
       await SupabaseService.initializeStatic(
         url: SupabaseConfig.url,
@@ -41,7 +44,7 @@ class DatabaseManager {
 
       // Verificar conexión
       final connectionTest = await SupabaseService.instance.testConnection();
-      
+
       if (!connectionTest) {
         print('❌ Fallo en la prueba de conexión');
         return false;
@@ -53,9 +56,8 @@ class DatabaseManager {
       print('   👥 InvitadoService: Listo');
       print('   🎮 JuegoService: Listo');
       print('   📈 ProgresoService: Listo');
-      
+
       return true;
-      
     } catch (e) {
       print('❌ Error al inicializar DatabaseManager: $e');
       return false;
@@ -65,13 +67,13 @@ class DatabaseManager {
   /// Verifica el estado de todos los servicios
   Future<Map<String, bool>> verificarEstadoServicios() async {
     final estados = <String, bool>{};
-    
+
     try {
       print('🔍 Verificando estado de servicios...');
-      
+
       // Verificar conexión base
       estados['conexion'] = SupabaseService.instance.isConnected;
-      
+
       // Verificar cada servicio con una operación simple
       try {
         await usuarios.obtenerTodos();
@@ -110,15 +112,17 @@ class DatabaseManager {
         print('   ❌ ProgresoService: Error');
       }
 
-      final serviciosFuncionando = estados.values.where((estado) => estado).length;
+      final serviciosFuncionando =
+          estados.values.where((estado) => estado).length;
       final totalServicios = estados.length;
-      
-      print('📊 Resumen: $serviciosFuncionando/$totalServicios servicios funcionando');
-      
+
+      print(
+        '📊 Resumen: $serviciosFuncionando/$totalServicios servicios funcionando',
+      );
     } catch (e) {
       print('❌ Error al verificar servicios: $e');
     }
-    
+
     return estados;
   }
 
@@ -126,15 +130,15 @@ class DatabaseManager {
   Future<Map<String, dynamic>> obtenerEstadisticasGenerales() async {
     try {
       print('📊 Obteniendo estadísticas generales...');
-      
+
       final usuariosList = await usuarios.obtenerTodos();
       final invitadosList = await invitados.obtenerTodos();
       final juegosList = await juegos.obtenerJuegos();
-      
+
       final totalUsuarios = usuariosList.length;
       final totalInvitados = invitadosList.length;
       final totalJuegos = juegosList.length;
-      
+
       final estadisticas = {
         'usuarios': totalUsuarios,
         'invitados': totalInvitados,
@@ -146,9 +150,8 @@ class DatabaseManager {
       print('   👤 Usuarios: $totalUsuarios');
       print('   👥 Invitados: $totalInvitados');
       print('   🎮 Juegos: $totalJuegos');
-      
+
       return estadisticas;
-      
     } catch (e) {
       print('❌ Error al obtener estadísticas generales: $e');
       return {
@@ -164,13 +167,12 @@ class DatabaseManager {
   Future<void> reiniciar() async {
     try {
       print('🔄 Reiniciando DatabaseManager...');
-      
+
       // Limpiar instancias de servicios
       _instance = null;
       await SupabaseService.disposeStatic();
-      
+
       print('✅ DatabaseManager reiniciado');
-      
     } catch (e) {
       print('❌ Error al reiniciar DatabaseManager: $e');
     }

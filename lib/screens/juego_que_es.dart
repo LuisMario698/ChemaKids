@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:chemakids/modelos/question_que_es.dart';
+import 'package:chemakids/models/question_que_es.dart';
 import '../widgets/boton_animado.dart';
 import '../widgets/dialogo_racha_perdida.dart';
 import '../widgets/contador_puntos_racha.dart';

@@ -1,5 +1,5 @@
 
-import '../modelos/juego_model.dart';
+import '../models/juego_model.dart';
 import 'supabase_service.dart';
 
 class JuegoService {

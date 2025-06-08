@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../servicios/estado_app.dart';
+import '../services/estado_app.dart';
 import '../widgets/nivel_card.dart';
 import '../widgets/titulo_pagina.dart';
 
 class PantallaMenu extends StatelessWidget {
   const PantallaMenu({super.key});
-
   @override
   Widget build(BuildContext context) {
-    final usuario = context.watch<EstadoApp>().usuario;
+    final estadoApp = context.watch<EstadoApp>();
     final screenWidth = MediaQuery.of(context).size.width;
     final isDesktop = screenWidth > 600;
 
@@ -67,15 +66,65 @@ class PantallaMenu extends StatelessWidget {
             bottom: 10,
             right: 60,
             child: Text('🐸', style: TextStyle(fontSize: 40)),
-          ),
-          // Contenido principal
+          ),          // Contenido principal
           SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TituloPagina(
-                  texto: '¡Hola ${usuario.nombre}!',
-                  fontSize: isDesktop ? 48 : 40,
+                // Header con título y botón de cerrar sesión
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: TituloPagina(
+                          texto: '¡Hola ${estadoApp.nombreUsuario}!',
+                          fontSize: isDesktop ? 48 : 40,
+                        ),
+                      ),                      // Botón de inicio
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () => _regresarInicio(context),
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.blue.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: Colors.blue.withOpacity(0.5),
+                                width: 1,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.home,
+                                  color: Colors.blue[700],
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  'Inicio',
+                                  style: TextStyle(
+                                    color: Colors.blue[700],
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -105,11 +154,11 @@ class PantallaMenu extends StatelessWidget {
                         return Center(
                           child: SizedBox(
                             width: 600,
-                            child: _buildNivelGrid(context, usuario),
+                            child: _buildNivelGrid(context, estadoApp),
                           ),
                         );
                       }
-                      return _buildNivelGrid(context, usuario);
+                      return _buildNivelGrid(context, estadoApp);
                     },
                   ),
                 ),
@@ -122,7 +171,7 @@ class PantallaMenu extends StatelessWidget {
   }
 
   // Cambia la lista a un GridView para hacerlo más interactivo y visual
-  Widget _buildNivelGrid(BuildContext context, dynamic usuario) {
+  Widget _buildNivelGrid(BuildContext context, EstadoApp estadoApp) {
     final niveles = [
       NivelCard(
         nivel: 1,
@@ -246,13 +295,20 @@ class PantallaMenu extends StatelessWidget {
       },
     );
   }
-
   // Widget para burbujas decorativas
   Widget _burbuja(double size, Color color) {
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+    );
+  }  // Método para regresar al inicio
+  void _regresarInicio(BuildContext context) {
+    // Navegar de vuelta a la pantalla de inicio
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      '/',
+      (route) => false,
     );
   }
 }

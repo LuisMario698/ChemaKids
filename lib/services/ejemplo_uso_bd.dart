@@ -1,8 +1,8 @@
 
-import '../modelos/usuario_model.dart';
-import '../modelos/invitado_model.dart';
-import '../modelos/juego_model.dart';
-import '../modelos/progreso_model.dart';
+import '../models/usuario_model.dart';
+import '../models/invitado_model.dart';
+import '../models/juego_model.dart';
+import '../models/progreso_model.dart';
 import 'database_manager.dart';
 
 /// Servicio de ejemplo que muestra cómo usar la base de datos Supabase
@@ -20,7 +20,7 @@ class EjemploUsoBD {
         id: 0, // Se auto-genera en la BD
         nombre: 'María González',
         email: 'maria@ejemplo.com',
-        nivel: 1,
+        idProgreso: 0, // Se asigna automáticamente en el servicio
         edad: 8,
         authUser: null, // Se asignaría después de la autenticación
       );
@@ -33,7 +33,7 @@ class EjemploUsoBD {
         id: 0,
         nombre: 'Pedro (Hermano)',
         edad: 6,
-        nivel: 1,
+        idProgreso: 0, // Se asigna automáticamente en el servicio
       );
 
       final invitadoCreado = await _db.invitados.crear(nuevoInvitado);
@@ -121,8 +121,8 @@ class EjemploUsoBD {
         idInvitado: 0, // Si es 0, indica que no hay invitado
       );
 
-      final progresoCreado = await _db.progreso.crearProgreso(nuevoProgreso);
-      print('📊 Progreso registrado: Nivel ${progresoCreado?.nivel}, Puntaje ${progresoCreado?.puntaje}');
+      final progresoCreado = await _db.progreso.crearProgreso(nuevoProgreso.toJson());
+      print('📊 Progreso registrado: Nivel ${progresoCreado?['nivel']}, Puntaje ${progresoCreado?['puntaje']}');
 
       // Simular progreso en varios niveles
       for (int nivel = 2; nivel <= 5; nivel++) {
@@ -136,7 +136,7 @@ class EjemploUsoBD {
           idInvitado: 0,
         );
 
-        await _db.progreso.crearProgreso(progresoNivel);
+        await _db.progreso.crearProgreso(progresoNivel.toJson());
         print('🎯 Nivel $nivel completado: ${progresoNivel.puntaje} pts');
       }
 
@@ -169,39 +169,22 @@ class EjemploUsoBD {
       print('👤 Consultando progreso de: ${usuario.nombre}');
 
       // Obtener todo el progreso del usuario
-      final progreso = await _db.progreso.obtenerProgresoUsuario(usuario.id);
+      final progreso = await _db.progreso.obtenerProgresoUsuario(usuario.idProgreso);
       
-      if (progreso.isEmpty) {
+      if (progreso == null || progreso.isEmpty) {
         print('📭 No hay progreso registrado para este usuario');
         return;
       }
 
-      // Agrupar por juego
-      final progresosPorJuego = <int, List<ProgresoModel>>{};
-      for (var p in progreso) {
-        progresosPorJuego.putIfAbsent(p.idJuego, () => []).add(p);
-      }
-
-      // Mostrar resumen por juego
-      for (var juegoId in progresosPorJuego.keys) {
-        final juego = await _db.juegos.obtenerJuegoPorId(juegoId);
-        final registros = progresosPorJuego[juegoId]!;
-        
-        final nivelMaximo = registros.map((p) => p.nivel).reduce((a, b) => a > b ? a : b);
-        final mejorPuntaje = registros.map((p) => p.puntaje).reduce((a, b) => a > b ? a : b);
-        final mejorRacha = registros.map((p) => p.rachaMaxima).reduce((a, b) => a > b ? a : b);
-
-        print('🎮 ${juego?.nombre ?? "Juego $juegoId"}:');
-        print('   📈 Nivel máximo: $nivelMaximo');
-        print('   ⭐ Mejor puntaje: $mejorPuntaje');
-        print('   🔥 Mejor racha: $mejorRacha');
-        print('   📊 Total registros: ${registros.length}');
-      }
+      print('📊 Progreso del usuario ${usuario.nombre}:');
+      print('   Nivel actual: ${progreso['nivel']}');
+      print('   Racha 1: ${progreso['racha_1']}');
+      print('   Racha 2: ${progreso['racha_2']}');
 
       print('✅ Consulta de progreso completada\n');
       
     } catch (e) {
-      print('❌ Error en consultar progreso: $e\n');
+      print('❌ Error al consultar progreso: $e\n');
     }
   }
 
@@ -234,11 +217,11 @@ class EjemploUsoBD {
         for (var juego in juegos.take(3)) {
           final mejorProgreso = await _db.progreso.obtenerMejorPuntaje(
             usuarios.first.id, 
-            juego.id
+            juego.nombre
           );
           
           if (mejorProgreso != null) {
-            print('   ${juego.nombre}: ${mejorProgreso.puntaje} pts');
+            print('   ${juego.nombre}: ${mejorProgreso['puntaje']} pts');
           }
         }
       }

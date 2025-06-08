@@ -1,7 +1,6 @@
-
 import 'package:flutter/material.dart';
-import '../servicios/database_manager.dart';
-import '../servicios/ejemplo_uso_bd.dart';
+import '../services/database_manager.dart';
+import '../services/ejemplo_uso_bd.dart';
 
 /// Widget de demostración para probar la funcionalidad de la base de datos
 /// Se puede incluir en cualquier pantalla para hacer pruebas
@@ -28,13 +27,10 @@ class _DemoBaseDatosState extends State<DemoBaseDatos> {
           children: [
             const Text(
               '🔧 Demo Base de Datos Supabase',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
+
             // Botones de prueba
             Wrap(
               spacing: 8,
@@ -62,9 +58,9 @@ class _DemoBaseDatosState extends State<DemoBaseDatos> {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Área de resultados
             Container(
               width: double.infinity,
@@ -75,30 +71,31 @@ class _DemoBaseDatosState extends State<DemoBaseDatos> {
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.grey[300]!),
               ),
-              child: _isLoading
-                  ? const Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(),
-                          SizedBox(height: 8),
-                          Text('Ejecutando operación...'),
-                        ],
-                      ),
-                    )
-                  : SingleChildScrollView(
-                      child: Text(
-                        _resultado,
-                        style: const TextStyle(
-                          fontFamily: 'monospace',
-                          fontSize: 12,
+              child:
+                  _isLoading
+                      ? const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator(),
+                            SizedBox(height: 8),
+                            Text('Ejecutando operación...'),
+                          ],
+                        ),
+                      )
+                      : SingleChildScrollView(
+                        child: Text(
+                          _resultado,
+                          style: const TextStyle(
+                            fontFamily: 'monospace',
+                            fontSize: 12,
+                          ),
                         ),
                       ),
-                    ),
             ),
-            
+
             const SizedBox(height: 8),
-            
+
             // Botón para limpiar resultados
             SizedBox(
               width: double.infinity,
@@ -121,7 +118,7 @@ class _DemoBaseDatosState extends State<DemoBaseDatos> {
 
     try {
       final isConnected = _db.usuarios.toString(); // Simple check
-      
+
       setState(() {
         _resultado = '''
 ✅ CONEXIÓN EXITOSA
@@ -136,7 +133,6 @@ Detalles:
 - ProgresoService: Activo
 ''';
       });
-      
     } catch (e) {
       setState(() {
         _resultado = '''
@@ -163,25 +159,26 @@ Posibles causas:
 
     try {
       final estados = await _db.verificarEstadoServicios();
-      
+
       final buffer = StringBuffer();
       buffer.writeln('📊 ESTADO DE SERVICIOS');
       buffer.writeln('📅 ${DateTime.now()}');
       buffer.writeln('');
-      
+
       estados.forEach((servicio, estado) {
         final emoji = estado ? '✅' : '❌';
         buffer.writeln('$emoji $servicio: ${estado ? "Funcionando" : "Error"}');
       });
-      
+
       final serviciosFuncionando = estados.values.where((e) => e).length;
       final totalServicios = estados.length;
-      
+
       buffer.writeln('');
-      buffer.writeln('📈 Resumen: $serviciosFuncionando/$totalServicios servicios activos');
-      
+      buffer.writeln(
+        '📈 Resumen: $serviciosFuncionando/$totalServicios servicios activos',
+      );
+
       setState(() => _resultado = buffer.toString());
-      
     } catch (e) {
       setState(() {
         _resultado = '''
@@ -203,7 +200,7 @@ Posibles causas:
 
     try {
       final stats = await _db.obtenerEstadisticasGenerales();
-      
+
       setState(() {
         _resultado = '''
 📈 ESTADÍSTICAS GENERALES
@@ -217,7 +214,6 @@ Datos almacenados:
 Estado: Base de datos funcionando correctamente
 ''';
       });
-      
     } catch (e) {
       setState(() {
         _resultado = '''
@@ -241,19 +237,19 @@ Estado: Base de datos funcionando correctamente
       // Ejecutar ejemplos uno por uno para poder mostrar progreso
       setState(() => _resultado = 'Creando perfil de usuario...');
       await EjemploUsoBD.ejemploCrearPerfilUsuario();
-      
+
       setState(() => _resultado = 'Configurando juegos...');
       await EjemploUsoBD.ejemploConfigurarJuegos();
-      
+
       setState(() => _resultado = 'Registrando progreso...');
       await EjemploUsoBD.ejemploRegistrarProgreso();
-      
+
       setState(() => _resultado = 'Consultando datos...');
       await EjemploUsoBD.ejemploConsultarProgreso();
-      
+
       setState(() => _resultado = 'Realizando búsquedas...');
       await EjemploUsoBD.ejemploBusquedasYFiltros();
-      
+
       setState(() {
         _resultado = '''
 🎉 EJEMPLOS COMPLETADOS EXITOSAMENTE
@@ -269,7 +265,6 @@ Se ejecutaron todos los ejemplos:
 Revisa la consola para ver los detalles completos.
 ''';
       });
-      
     } catch (e) {
       setState(() {
         _resultado = '''
