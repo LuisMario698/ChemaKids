@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'servicios/estado_app.dart';
+import 'servicios/database_manager.dart';
 import 'pantallas/inicio.dart';
 import 'pantallas/menu.dart';
 import 'pantallas/juego_abc.dart';
@@ -16,8 +17,33 @@ import 'pantallas/juego_formar_palabras.dart';
 import 'pantallas/juego_memorama.dart';
 import 'pantallas/juego_sumas_y_restas.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // 🚀 Inicializar base de datos Supabase
+  print('🎮 Iniciando ChemaKids...');
+  
+  try {
+    final dbInitialized = await DatabaseManager.instance.inicializar();
+    
+    if (dbInitialized) {
+      print('✅ Base de datos inicializada correctamente');
+      
+      // Verificar estado de servicios
+      await DatabaseManager.instance.verificarEstadoServicios();
+      
+      // Obtener estadísticas generales
+      await DatabaseManager.instance.obtenerEstadisticasGenerales();
+      
+    } else {
+      print('⚠️ Base de datos no pudo inicializarse - funcionando en modo offline');
+    }
+    
+  } catch (e) {
+    print('❌ Error crítico al inicializar base de datos: $e');
+    print('📱 La app continuará en modo offline');
+  }
+  
   runApp(const ChemakidsApp());
 }
 
@@ -43,9 +69,9 @@ class ChemakidsApp extends StatelessWidget {
           '/colores': (context) => const JuegoColores(),
           '/formas': (context) => const JuegoFormas(),
           '/animales': (context) => const JuegoAnimales(),
-          '/numeros': (context) => const JuegoNumeros(),
-          '/formar-palabras': (context) => const JuegoFormarPalabras(),
+          '/numeros': (context) => const JuegoNumeros(),          '/formar-palabras': (context) => const JuegoFormarPalabras(),
           '/memorama': (context) => const JuegoMemorama(),
+          '/sumas-restas': (context) => const JuegoSumasYRestas(),
         },
         theme: ThemeData(
           primarySwatch: Colors.deepPurple,
