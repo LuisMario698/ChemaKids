@@ -13,7 +13,6 @@ class EjemploUsoPlantilla extends StatefulWidget {
 }
 
 class _EjemploUsoPlantillaState extends State<EjemploUsoPlantilla> {
-  
   void _mostrarPista() {
     // Lógica de pista
     ScaffoldMessenger.of(context).showSnackBar(
@@ -33,7 +32,7 @@ class _EjemploUsoPlantillaState extends State<EjemploUsoPlantilla> {
       onAyuda: _mostrarPista,
       contenido: _buildContenidoJuego(),
     );
-    
+
     // OPCIÓN 2: Usar componentes por separado (más control)
     /*
     return FondoAnimadoChemaKids(
@@ -54,7 +53,7 @@ class _EjemploUsoPlantillaState extends State<EjemploUsoPlantilla> {
     );
     */
   }
-  
+
   Widget _buildContenidoJuego() {
     return Center(
       child: Column(
@@ -75,9 +74,9 @@ class _EjemploUsoPlantillaState extends State<EjemploUsoPlantilla> {
               ),
             ),
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           // Ejemplo de botón con estilo estándar
           ElevatedButton(
             onPressed: () {},
@@ -87,10 +86,7 @@ class _EjemploUsoPlantillaState extends State<EjemploUsoPlantilla> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: 12,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
             child: const Text(
               'Botón de Ejemplo',

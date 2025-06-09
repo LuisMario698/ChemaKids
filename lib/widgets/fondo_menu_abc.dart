@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 /// Widget que crea un fondo animado para el menú basado en el diseño del juego ABC
-/// 
+///
 /// Características:
 /// - Gradiente púrpura rotativo como en el juego ABC
-/// - Círculos animados de diferentes tamaños 
+/// - Círculos animados de diferentes tamaños
 /// - Efecto de profundidad y movimiento
 /// - Optimizado para uso como fondo de pantalla
 class FondoMenuABC extends StatefulWidget {
   /// Widget hijo que se renderiza sobre el fondo animado
   final Widget child;
-  
+
   /// Duración de la animación completa (por defecto 8 segundos)
   final Duration duracion;
-  
+
   /// Intensidad de la animación (0.0 a 1.0)
   final double intensidad;
 
@@ -37,18 +37,13 @@ class _FondoMenuABCState extends State<FondoMenuABC>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duracion,
-      vsync: this,
-    )..repeat();
+    _controller = AnimationController(duration: widget.duracion, vsync: this)
+      ..repeat();
 
     _rotationAnimation = Tween<double>(
       begin: 0.0,
       end: 2 * pi,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.linear,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
   }
 
   @override
@@ -85,13 +80,13 @@ class _FondoMenuABCState extends State<FondoMenuABC>
               );
             },
           ),
-          
+
           // Círculos animados de fondo estilo ABC
           ...List.generate(5, (index) {
             final size = (index + 1) * 80.0;
             final speed = (index + 1).toDouble();
             final opacity = (0.4 - (index * 0.05)).clamp(0.0, 1.0);
-            
+
             return Positioned(
               top: -size / 2,
               right: (index % 2 == 0) ? -size / 2 : null,
@@ -119,13 +114,13 @@ class _FondoMenuABCState extends State<FondoMenuABC>
               ),
             );
           }),
-          
+
           // Círculos inferiores para balance visual
           ...List.generate(3, (index) {
             final size = (index + 2) * 60.0;
             final speed = -(index + 1).toDouble() * 0.5; // Rotación inversa
             final opacity = (0.3 - (index * 0.05)).clamp(0.0, 1.0);
-            
+
             return Positioned(
               bottom: -size / 3,
               left: (index % 2 == 0) ? -size / 3 : null,
@@ -153,7 +148,7 @@ class _FondoMenuABCState extends State<FondoMenuABC>
               ),
             );
           }),
-          
+
           // Elementos decorativos flotantes
           ...List.generate(8, (index) {
             final random = Random(index);
@@ -161,7 +156,7 @@ class _FondoMenuABCState extends State<FondoMenuABC>
             final left = random.nextDouble() * 0.8;
             final top = random.nextDouble() * 0.8;
             final delay = random.nextDouble() * 2.0;
-            
+
             return Positioned(
               left: MediaQuery.of(context).size.width * left,
               top: MediaQuery.of(context).size.height * top,
@@ -169,9 +164,13 @@ class _FondoMenuABCState extends State<FondoMenuABC>
                 animation: _controller,
                 builder: (context, child) {
                   final animationValue = (_controller.value + delay) % 1.0;
-                  final offset = sin(animationValue * 2 * pi) * 20 * widget.intensidad;
-                  final opacity = (sin(animationValue * pi) * 0.3 + 0.1).clamp(0.0, 1.0);
-                  
+                  final offset =
+                      sin(animationValue * 2 * pi) * 20 * widget.intensidad;
+                  final opacity = (sin(animationValue * pi) * 0.3 + 0.1).clamp(
+                    0.0,
+                    1.0,
+                  );
+
                   return Transform.translate(
                     offset: Offset(0, offset),
                     child: Container(
@@ -181,8 +180,12 @@ class _FondoMenuABCState extends State<FondoMenuABC>
                         shape: BoxShape.circle,
                         gradient: RadialGradient(
                           colors: [
-                            Color(0xFFFFA5A5).withOpacity(opacity), // Rosa del ABC
-                            Color(0xFFFF7676).withOpacity(opacity * 0.5), // Rosa coral del ABC
+                            Color(
+                              0xFFFFA5A5,
+                            ).withOpacity(opacity), // Rosa del ABC
+                            Color(
+                              0xFFFF7676,
+                            ).withOpacity(opacity * 0.5), // Rosa coral del ABC
                             Colors.transparent,
                           ],
                           stops: const [0.0, 0.7, 1.0],
@@ -194,7 +197,7 @@ class _FondoMenuABCState extends State<FondoMenuABC>
               ),
             );
           }),
-          
+
           // Contenido principal
           widget.child,
         ],
@@ -266,7 +269,7 @@ class _FondoMenuABCMiniState extends State<FondoMenuABCMini>
               );
             },
           ),
-          
+
           // Un círculo animado simple
           Positioned(
             top: -30,
@@ -293,7 +296,7 @@ class _FondoMenuABCMiniState extends State<FondoMenuABCMini>
               },
             ),
           ),
-          
+
           // Contenido
           widget.child,
         ],
@@ -309,13 +312,13 @@ class EfectosABC {
     Color(0xFF2A0944), // Dark Purple
     Color(0xFF3B0B54), // Lighter Purple
   ];
-  
+
   static const List<Color> coloresSecundarios = [
     Color(0xFFFFA5A5), // Rosa
     Color(0xFFFF7676), // Rosa coral
     Color(0xFFE0D3F5), // Lila claro
   ];
-  
+
   /// Crea un gradiente estilo ABC
   static LinearGradient crearGradienteABC({
     double rotacion = 0.0,
@@ -328,7 +331,7 @@ class EfectosABC {
       transform: GradientRotation(rotacion),
     );
   }
-  
+
   /// Crea un círculo decorativo estilo ABC
   static Widget crearCirculoABC({
     required double tamano,

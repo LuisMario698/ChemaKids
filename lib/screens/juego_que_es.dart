@@ -190,6 +190,7 @@ class _JuegoQueEsState extends State<JuegoQueEs>
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;

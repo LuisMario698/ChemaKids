@@ -33,12 +33,13 @@ class _JuegoFormasState extends State<JuegoFormas> {
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     final pregunta = _preguntas[_indice];
     final opciones =
         _preguntas.map((e) => e['forma'] as BoxShape).toList()..shuffle();
-    
+
     return PlantillaJuegoChemaKids(
       titulo: 'Formas',
       icono: Icons.circle_outlined,

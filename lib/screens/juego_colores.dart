@@ -35,12 +35,13 @@ class _JuegoColoresState extends State<JuegoColores> {
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     final pregunta = _preguntas[_indice];
     final opciones =
         _preguntas.map((e) => e['color'] as Color).toList()..shuffle();
-    
+
     return PlantillaJuegoChemaKids(
       titulo: 'Juego de Colores',
       icono: Icons.palette,
@@ -75,39 +76,43 @@ class _JuegoColoresState extends State<JuegoColores> {
               ),
             ),
             const SizedBox(height: 40),
-            
+
             // Opciones de colores
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: opciones.map((color) {
-                return GestureDetector(
-                  onTap: _respondido ? null : () => _verificar(color),
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      color: color,
-                      shape: BoxShape.circle,
-                      border: Border.all(width: 4, color: Colors.white),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
+              children:
+                  opciones.map((color) {
+                    return GestureDetector(
+                      onTap: _respondido ? null : () => _verificar(color),
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: color,
+                          shape: BoxShape.circle,
+                          border: Border.all(width: 4, color: Colors.white),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
+                      ),
+                    );
+                  }).toList(),
             ),
             const SizedBox(height: 30),
-            
+
             // Mensaje de feedback
             if (_respondido)
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   color: _correcto ? Colors.green : Colors.red,
                   borderRadius: BorderRadius.circular(15),

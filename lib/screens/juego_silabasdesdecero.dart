@@ -11,21 +11,32 @@ class JuegoSilabasDesdeCero extends StatefulWidget {
 
 class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
     with SingleTickerProviderStateMixin {
-  // Lista de consonantes por nivel
+  // Lista de consonantes por nivel - COMPLETADA con todas las consonantes
   final List<String> consonantes = [
     'b',
     'c',
     'd',
     'f',
     'g',
+    'h',
+    'j',
+    'k',
     'l',
     'm',
     'n',
+    'ñ',
     'p',
+    'q',
     'r',
     's',
     't',
+    'v',
+    'w',
+    'x',
+    'y',
+    'z',
   ];
+
   final List<String> vocales = ['a', 'e', 'i', 'o', 'u'];
   int nivelActual = 0;
   int indiceVocal = 0;
@@ -34,10 +45,8 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
   late AnimationController _controller;
   late Animation<double> _animScale;
   bool showConfetti = false;
-  final List<bool> _animandoVocal = List<bool>.filled(
-    5,
-    false,
-  ); // Para animar cada vocal
+  final List<bool> _animandoVocal = List<bool>.filled(5, false);
+
   final List<String> _emojiList = [
     '🐶',
     '🐱',
@@ -53,7 +62,16 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
     '🐳',
     '🦄',
     '🦕',
+    '🐰',
+    '🐯',
+    '🐨',
+    '🐺',
+    '🦔',
+    '🦒',
+    '🐘',
+    '🦓',
   ];
+
   final List<Color> _bgColors = [
     Color(0xFFFFF59D),
     Color(0xFFFFB0B0),
@@ -84,7 +102,18 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
   void _formarSilaba(String vocal, int vocalIdx) {
     setState(() {
       seleccionVocal = vocal;
-      silabaFormada = consonantes[nivelActual] + vocal;
+      // Manejar casos especiales para Q
+      if (consonantes[nivelActual] == 'q') {
+        if (vocal == 'e') {
+          silabaFormada = 'que';
+        } else if (vocal == 'i') {
+          silabaFormada = 'qui';
+        } else {
+          silabaFormada = consonantes[nivelActual] + vocal;
+        }
+      } else {
+        silabaFormada = consonantes[nivelActual] + vocal;
+      }
       showConfetti = true;
       _animandoVocal[vocalIdx] = true;
     });
@@ -94,7 +123,8 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
     });
     Future.delayed(const Duration(milliseconds: 350), () {
       if (mounted) setState(() => _animandoVocal[vocalIdx] = false);
-    });  }
+    });
+  }
 
   void _siguienteNivel() {
     setState(() {
@@ -103,13 +133,28 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
       } else {
         nivelActual = 0;
       }
-      seleccionVocal = null;
-      silabaFormada = null;
-      showConfetti = false;
-      for (int i = 0; i < _animandoVocal.length; i++) {
-        _animandoVocal[i] = false;
-      }
+      _resetearSeleccion();
     });
+  }
+
+  void _anteriorNivel() {
+    setState(() {
+      if (nivelActual > 0) {
+        nivelActual--;
+      } else {
+        nivelActual = consonantes.length - 1;
+      }
+      _resetearSeleccion();
+    });
+  }
+
+  void _resetearSeleccion() {
+    seleccionVocal = null;
+    silabaFormada = null;
+    showConfetti = false;
+    for (int i = 0; i < _animandoVocal.length; i++) {
+      _animandoVocal[i] = false;
+    }
   }
 
   Widget _buildBotonLetra({
@@ -164,7 +209,6 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
   }
 
   Widget _buildConfetti() {
-    // Simulación sencilla de confetti con emojis
     return Positioned.fill(
       child: IgnorePointer(
         child: AnimatedOpacity(
@@ -187,6 +231,7 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final String consonanteNivel = consonantes[nivelActual];
@@ -270,7 +315,7 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
                     }),
                   ),
                   const SizedBox(height: 36),
-                  // Mostrar la sílaba formada con animación y sonido visual
+                  // Mostrar la sílaba formada con animación
                   if (silabaFormada != null)
                     ScaleTransition(
                       scale: _animScale,
@@ -310,7 +355,6 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
                                   emoji,
                                   style: const TextStyle(fontSize: 56),
                                 ),
-                                // Se elimina el botón de escuchar
                               ],
                             ),
                           ),
@@ -358,17 +402,87 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
                       }),
                     ),
                   ),
-                  // Flecha para cambiar de consonante (nivel)
+                  // Navegación entre consonantes mejorada
                   Padding(
                     padding: const EdgeInsets.only(top: 24),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.arrow_forward_rounded,
-                        size: 48,
-                        color: Colors.deepPurple,
-                      ),
-                      tooltip: 'Siguiente consonante',
-                      onPressed: _siguienteNivel,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Botón anterior
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(25),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.deepPurple.withOpacity(0.1),
+                                blurRadius: 8,
+                                spreadRadius: 1,
+                              ),
+                            ],
+                          ),
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.arrow_back_rounded,
+                              size: 32,
+                              color: Colors.deepPurple,
+                            ),
+                            tooltip: 'Consonante anterior',
+                            onPressed: _anteriorNivel,
+                          ),
+                        ),
+                        const SizedBox(width: 24),
+                        // Indicador de consonante actual
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 12,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.deepPurple,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.deepPurple.withOpacity(0.3),
+                                blurRadius: 8,
+                                spreadRadius: 1,
+                              ),
+                            ],
+                          ),
+                          child: Text(
+                            '${nivelActual + 1} / ${consonantes.length}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 24),
+                        // Botón siguiente
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(25),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.deepPurple.withOpacity(0.1),
+                                blurRadius: 8,
+                                spreadRadius: 1,
+                              ),
+                            ],
+                          ),
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.arrow_forward_rounded,
+                              size: 32,
+                              color: Colors.deepPurple,
+                            ),
+                            tooltip: 'Siguiente consonante',
+                            onPressed: _siguienteNivel,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],

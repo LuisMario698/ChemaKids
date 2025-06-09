@@ -6,7 +6,8 @@ import '../widgets/titulo_pagina.dart';
 import '../widgets/fondo_menu_abc.dart';
 
 class PantallaMenu extends StatelessWidget {
-  const PantallaMenu({super.key});  @override
+  const PantallaMenu({super.key});
+  @override
   Widget build(BuildContext context) {
     final estadoApp = context.watch<EstadoApp>();
     final screenWidth = MediaQuery.of(context).size.width;
@@ -19,10 +20,7 @@ class PantallaMenu extends StatelessWidget {
           children: [
             // Header con título y botón de cerrar sesión
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: 8,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -53,11 +51,7 @@ class PantallaMenu extends StatelessWidget {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
-                              Icons.home,
-                              color: Colors.white,
-                              size: 20,
-                            ),
+                            Icon(Icons.home, color: Colors.white, size: 20),
                             const SizedBox(width: 6),
                             Text(
                               'Inicio',
@@ -76,10 +70,7 @@ class PantallaMenu extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: 8,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
               child: Text(
                 '¡Elige un juego para aprender y divertirte!',
                 style: TextStyle(
@@ -130,6 +121,15 @@ class PantallaMenu extends StatelessWidget {
             'https://img.freepik.com/premium-vector/alphabet-cute-cartoon-vector-illustration_480744-381.jpg',
       ),
       NivelCard(
+        nivel: 1,
+        titulo: 'ABC Audio',
+        color: const Color(0xFFB39DDB),
+        onTap: () => Navigator.pushNamed(context, '/abc-audio'),
+        bloqueado: false,
+        imagenUrl:
+            'https://img.freepik.com/premium-vector/headphones-music-cute-cartoon-vector-illustration_480744-395.jpg',
+      ),
+      NivelCard(
         nivel: 2,
         titulo: 'Sílabas desde cero',
         color: const Color(0xFFFFE082),
@@ -139,8 +139,17 @@ class PantallaMenu extends StatelessWidget {
             'https://img.freepik.com/premium-vector/abc-blocks-cute-cartoon-vector-illustration_480744-386.jpg',
       ),
       NivelCard(
+        nivel: 2,
+        titulo: 'Sílabas Audio',
+        color: const Color(0xFF9C27B0),
+        onTap: () => Navigator.pushNamed(context, '/silabas-audio'),
+        bloqueado: false,
+        imagenUrl:
+            'https://img.freepik.com/premium-vector/sound-speaker-cute-cartoon-vector-illustration_480744-392.jpg',
+      ),
+      NivelCard(
         nivel: 3,
-        titulo: 'Sílabas Mágicas',
+        titulo: 'Completar Palabras',
         color: const Color(0xFFFFB0B0),
         onTap: () => Navigator.pushNamed(context, '/silabas'),
         bloqueado: false,
@@ -148,43 +157,7 @@ class PantallaMenu extends StatelessWidget {
             'https://img.freepik.com/premium-vector/book-education-cute-cartoon-vector-illustration_480744-382.jpg',
       ),
       NivelCard(
-        nivel: 4,
-        titulo: 'Rima Rima',
-        color: const Color(0xFF90CAF9),
-        onTap: () => Navigator.pushNamed(context, '/rimas'),
-        bloqueado: false,
-        imagenUrl:
-            'https://img.freepik.com/premium-vector/poetry-book-cute-cartoon-vector-illustration_480744-383.jpg',
-      ),
-      NivelCard(
-        nivel: 5,
-        titulo: '¿Qué es?',
-        color: const Color(0xFFFFCC80),
-        onTap: () => Navigator.pushNamed(context, '/que-es'),
-        bloqueado: false,
-        imagenUrl:
-            'https://img.freepik.com/premium-vector/cute-toy-car-cartoon-vector-illustration_480744-357.jpg',
-      ),
-      NivelCard(
-        nivel: 6,
-        titulo: 'Números y Letras',
-        color: const Color(0xFFA5D6A7),
-        onTap: () => Navigator.pushNamed(context, '/numeros'),
-        bloqueado: false,
-        imagenUrl:
-            'https://img.freepik.com/premium-vector/numbers-letters-cute-cartoon-vector-illustration_480744-384.jpg',
-      ),
-      NivelCard(
-        nivel: 7,
-        titulo: 'Sumas y Restas',
-        color: const Color(0xFFFFF59D),
-        onTap: () => Navigator.pushNamed(context, '/sumas-restas'),
-        bloqueado: false,
-        imagenUrl:
-            'https://img.freepik.com/premium-vector/math-addition-subtraction-cute-cartoon-vector-illustration_480744-390.jpg',
-      ),
-      NivelCard(
-        nivel: 8,
+        nivel: 3,
         titulo: 'Formar Palabras',
         color: const Color(0xFFB2EBF2),
         onTap: () => Navigator.pushNamed(context, '/formar-palabras'),
@@ -193,16 +166,7 @@ class PantallaMenu extends StatelessWidget {
             'https://img.freepik.com/premium-vector/word-game-cute-cartoon-vector-illustration_480744-387.jpg',
       ),
       NivelCard(
-        nivel: 9,
-        titulo: 'Sonidos y Palabras',
-        color: const Color(0xFFFFAB91),
-        onTap: () => Navigator.pushNamed(context, '/animales'),
-        bloqueado: false,
-        imagenUrl:
-            'https://img.freepik.com/premium-vector/animals-words-cute-cartoon-vector-illustration_480744-385.jpg',
-      ),
-      NivelCard(
-        nivel: 10,
+        nivel: 3,
         titulo: 'Memorama',
         color: const Color(0xFFD1C4E9),
         onTap: () => Navigator.pushNamed(context, '/memorama'),
@@ -211,7 +175,7 @@ class PantallaMenu extends StatelessWidget {
             'https://img.freepik.com/premium-vector/memory-game-cute-cartoon-vector-illustration_480744-388.jpg',
       ),
       NivelCard(
-        nivel: 11,
+        nivel: 3,
         titulo: 'Colores',
         color: const Color(0xFFFFF176),
         onTap: () => Navigator.pushNamed(context, '/colores'),
@@ -219,6 +183,52 @@ class PantallaMenu extends StatelessWidget {
         imagenUrl:
             'https://img.freepik.com/premium-vector/colors-cute-cartoon-vector-illustration_480744-389.jpg',
       ),
+
+      // NivelCard(
+      //   nivel: 6,
+      //   titulo: 'Rima Rima',
+      //   color: const Color(0xFF90CAF9),
+      //   onTap: () => Navigator.pushNamed(context, '/rimas'),
+      //   bloqueado: false,
+      //   imagenUrl:
+      //       'https://img.freepik.com/premium-vector/poetry-book-cute-cartoon-vector-illustration_480744-383.jpg',
+      // ),
+      // NivelCard(
+      //   nivel: 7,
+      //   titulo: '¿Qué es?',
+      //   color: const Color(0xFFFFCC80),
+      //   onTap: () => Navigator.pushNamed(context, '/que-es'),
+      //   bloqueado: false,
+      //   imagenUrl:
+      //       'https://img.freepik.com/premium-vector/cute-toy-car-cartoon-vector-illustration_480744-357.jpg',
+      // ),
+      //   NivelCard(
+      //   nivel: 8,
+      //   titulo: 'Números y Letras',
+      //   color: const Color(0xFFA5D6A7),
+      //   onTap: () => Navigator.pushNamed(context, '/numeros'),
+      //   bloqueado: false,
+      //   imagenUrl:
+      //       'https://img.freepik.com/premium-vector/numbers-letters-cute-cartoon-vector-illustration_480744-384.jpg',
+      // ),
+      // NivelCard(
+      //   nivel: 9,
+      //   titulo: 'Sumas y Restas',
+      //   color: const Color(0xFFFFF59D),
+      //   onTap: () => Navigator.pushNamed(context, '/sumas-restas'),
+      //   bloqueado: false,
+      //   imagenUrl:
+      //       'https://img.freepik.com/premium-vector/math-addition-subtraction-cute-cartoon-vector-illustration_480744-390.jpg',
+      // ),
+      // NivelCard(
+      //   nivel: 11,
+      //   titulo: 'Sonidos y Palabras',
+      //   color: const Color(0xFFFFAB91),
+      //   onTap: () => Navigator.pushNamed(context, '/animales'),
+      //   bloqueado: false,
+      //   imagenUrl:
+      //       'https://img.freepik.com/premium-vector/animals-words-cute-cartoon-vector-illustration_480744-385.jpg',
+      // ),
     ];
 
     return GridView.builder(
@@ -239,7 +249,8 @@ class PantallaMenu extends StatelessWidget {
             child: niveles[index],
           ),
         );
-      },    );
+      },
+    );
   }
 
   // Método para regresar al inicio

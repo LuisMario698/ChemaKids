@@ -79,6 +79,7 @@ class _JuegoSumasYRestasState extends State<JuegoSumasYRestas> {
     lista.shuffle();
     return lista;
   }
+
   @override
   Widget build(BuildContext context) {
     final opciones = _generarOpciones();

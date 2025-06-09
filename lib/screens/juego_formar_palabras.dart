@@ -222,23 +222,22 @@ class _JuegoFormarPalabrasState extends State<JuegoFormarPalabras>
   @override
   Widget build(BuildContext context) {
     final palabra = _palabras[_indice]['palabra'] as String;
-    final imgUrl = _palabras[_indice]['img'] as String;    return PlantillaJuegoChemaKids(
+    final imgUrl = _palabras[_indice]['img'] as String;
+    return PlantillaJuegoChemaKids(
       titulo: 'Formar Palabras',
       icono: Icons.star_rounded,
       mostrarAyuda: true,
-      onAyuda: _completado
-          ? null
-          : () {
-              setState(() {
-                _mostrarPista = true;
-              });
-              Future.delayed(
-                const Duration(milliseconds: 300),
-                () {
+      onAyuda:
+          _completado
+              ? null
+              : () {
+                setState(() {
+                  _mostrarPista = true;
+                });
+                Future.delayed(const Duration(milliseconds: 300), () {
                   _mostrarLetraPista();
-                },
-              );
-            },
+                });
+              },
       contenido: Column(
         children: [
           const SizedBox(height: 10),
@@ -395,8 +394,7 @@ class _JuegoFormarPalabrasState extends State<JuegoFormarPalabras>
                     context: context,
                     barrierDismissible: false,
                     builder: (context) {
-                      final bool esUltima =
-                          _indice >= _palabras.length - 1;
+                      final bool esUltima = _indice >= _palabras.length - 1;
                       return Dialog(
                         backgroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
@@ -443,25 +441,17 @@ class _JuegoFormarPalabrasState extends State<JuegoFormarPalabras>
                               const SizedBox(height: 24),
                               ElevatedButton.icon(
                                 icon: Icon(
-                                  esUltima
-                                      ? Icons.replay
-                                      : Icons.arrow_forward,
+                                  esUltima ? Icons.replay : Icons.arrow_forward,
                                 ),
                                 label: Text(
-                                  esUltima
-                                      ? 'Jugar de nuevo'
-                                      : 'Siguiente',
+                                  esUltima ? 'Jugar de nuevo' : 'Siguiente',
                                 ),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.deepPurple,
                                   foregroundColor: Colors.white,
-                                  textStyle: const TextStyle(
-                                    fontSize: 20,
-                                  ),
+                                  textStyle: const TextStyle(fontSize: 20),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                      18,
-                                    ),
+                                    borderRadius: BorderRadius.circular(18),
                                   ),
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 32,

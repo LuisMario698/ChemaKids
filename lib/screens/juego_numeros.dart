@@ -155,7 +155,9 @@ class _JuegoNumerosState extends State<JuegoNumeros>
   void dispose() {
     _controller.dispose();
     super.dispose();
-  }  @override
+  }
+
+  @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isDesktop = screenWidth > 600;
@@ -172,21 +174,15 @@ class _JuegoNumerosState extends State<JuegoNumeros>
             top: 16,
             right: 16,
             child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 10,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
                 color: const Color(0xFFFFA500).withOpacity(0.3),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: ContadorPuntosRacha(
-                score: _score,
-                streak: _streak,
-              ),
+              child: ContadorPuntosRacha(score: _score, streak: _streak),
             ),
           ),
-          
+
           // Main content
           Center(
             child: Column(
@@ -232,11 +228,12 @@ class _JuegoNumerosState extends State<JuegoNumeros>
                             child: Image.network(
                               numeroActual.imageUrl,
                               fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) => Icon(
-                                Icons.image,
-                                color: Colors.grey,
-                                size: isDesktop ? 60 : 50,
-                              ),
+                              errorBuilder:
+                                  (context, error, stackTrace) => Icon(
+                                    Icons.image,
+                                    color: Colors.grey,
+                                    size: isDesktop ? 60 : 50,
+                                  ),
                             ),
                           ),
                         ),
@@ -259,67 +256,74 @@ class _JuegoNumerosState extends State<JuegoNumeros>
                   spacing: 20,
                   runSpacing: 20,
                   alignment: WrapAlignment.center,
-                  children: numeroActual.palabrasRelacionadas.map((palabra) {
-                    return TweenAnimationBuilder<double>(
-                      tween: Tween(begin: 0.0, end: 0.0),
-                      duration: const Duration(milliseconds: 200),
-                      builder: (context, value, child) {
-                        return Transform.translate(
-                          offset: Offset(0, value),
-                          child: MouseRegion(
-                            onEnter: (_) =>
-                                (context as Element).markNeedsBuild(),
-                            onExit: (_) =>
-                                (context as Element).markNeedsBuild(),
-                            child: GestureDetector(
-                              onTap: () => _checkRespuesta(palabra),
-                              child: TweenAnimationBuilder<double>(
-                                tween: Tween(begin: 0, end: -4),
-                                duration: const Duration(milliseconds: 200),
-                                builder: (context, value, child) {
-                                  return Transform.translate(
-                                    offset: Offset(0, value),
-                                    child: Container(
-                                      width: isDesktop ? 160 : 140,
-                                      height: isDesktop ? 80 : 70,
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                          colors: [
-                                            const Color(0xFFFFA500),
-                                            const Color(0xFFFF8C00),
-                                          ],
-                                        ),
-                                        borderRadius: BorderRadius.circular(20),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(0.2),
-                                            blurRadius: 10,
-                                            offset: const Offset(0, 4),
+                  children:
+                      numeroActual.palabrasRelacionadas.map((palabra) {
+                        return TweenAnimationBuilder<double>(
+                          tween: Tween(begin: 0.0, end: 0.0),
+                          duration: const Duration(milliseconds: 200),
+                          builder: (context, value, child) {
+                            return Transform.translate(
+                              offset: Offset(0, value),
+                              child: MouseRegion(
+                                onEnter:
+                                    (_) =>
+                                        (context as Element).markNeedsBuild(),
+                                onExit:
+                                    (_) =>
+                                        (context as Element).markNeedsBuild(),
+                                child: GestureDetector(
+                                  onTap: () => _checkRespuesta(palabra),
+                                  child: TweenAnimationBuilder<double>(
+                                    tween: Tween(begin: 0, end: -4),
+                                    duration: const Duration(milliseconds: 200),
+                                    builder: (context, value, child) {
+                                      return Transform.translate(
+                                        offset: Offset(0, value),
+                                        child: Container(
+                                          width: isDesktop ? 160 : 140,
+                                          height: isDesktop ? 80 : 70,
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                              colors: [
+                                                const Color(0xFFFFA500),
+                                                const Color(0xFFFF8C00),
+                                              ],
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black.withOpacity(
+                                                  0.2,
+                                                ),
+                                                blurRadius: 10,
+                                                offset: const Offset(0, 4),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          palabra,
-                                          style: const TextStyle(
-                                            fontSize: 32,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
+                                          child: Center(
+                                            child: Text(
+                                              palabra,
+                                              style: const TextStyle(
+                                                fontSize: 32,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                  );
-                                },
+                                      );
+                                    },
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
+                            );
+                          },
                         );
-                      },
-                    );
-                  }).toList(),
+                      }).toList(),
                 ),
               ],
             ),

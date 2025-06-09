@@ -36,8 +36,18 @@ class _JuegoMemoramaState extends State<JuegoMemorama> {
   void _generarMemorama() {
     // Pares: letras y números, todos tienen su par idéntico
     final List<String> valores = [
-      'A', 'A', 'B', 'B', 'C', 'C',
-      '1', '1', '2', '2', '3', '3',
+      'A',
+      'A',
+      'B',
+      'B',
+      'C',
+      'C',
+      '1',
+      '1',
+      '2',
+      '2',
+      '3',
+      '3',
     ];
     List<MemoramaItem> items =
         valores.map((v) => MemoramaItem(value: v)).toList();
@@ -89,7 +99,7 @@ class _JuegoMemoramaState extends State<JuegoMemorama> {
   @override
   Widget build(BuildContext context) {
     final completado = _matches == (_items.length ~/ 2);
-    
+
     return PlantillaJuegoChemaKids(
       titulo: 'Memorama Letras y Números',
       icono: Icons.memory,
@@ -119,14 +129,11 @@ class _JuegoMemoramaState extends State<JuegoMemorama> {
             ],
           ),
           const SizedBox(height: 10),
-          
+
           // Grid del memorama
           Expanded(
             child: GridView.builder(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 16,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
                 mainAxisSpacing: 12,
@@ -143,9 +150,10 @@ class _JuegoMemoramaState extends State<JuegoMemorama> {
                     width: 48,
                     height: 48,
                     decoration: BoxDecoration(
-                      color: item.matched
-                          ? Colors.greenAccent
-                          : item.revealed
+                      color:
+                          item.matched
+                              ? Colors.greenAccent
+                              : item.revealed
                               ? Colors.amberAccent
                               : Colors.primaries[i % Colors.primaries.length]
                                   .withOpacity(0.85),
@@ -158,9 +166,10 @@ class _JuegoMemoramaState extends State<JuegoMemorama> {
                         ),
                       ],
                       border: Border.all(
-                        color: item.matched
-                            ? Colors.green
-                            : item.revealed
+                        color:
+                            item.matched
+                                ? Colors.green
+                                : item.revealed
                                 ? Colors.orange
                                 : Colors.deepPurple,
                         width: item.matched ? 3 : 2,
@@ -169,32 +178,34 @@ class _JuegoMemoramaState extends State<JuegoMemorama> {
                     child: Center(
                       child: AnimatedSwitcher(
                         duration: const Duration(milliseconds: 300),
-                        child: item.revealed || item.matched
-                            ? Text(
-                                item.value,
-                                key: ValueKey(
-                                  item.value + item.matched.toString(),
+                        child:
+                            item.revealed || item.matched
+                                ? Text(
+                                  item.value,
+                                  key: ValueKey(
+                                    item.value + item.matched.toString(),
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: 28,
+                                    color:
+                                        RegExp(r'^[0-9]$').hasMatch(item.value)
+                                            ? Colors.deepPurple
+                                            : Colors.orange[900],
+                                    fontWeight: FontWeight.bold,
+                                    shadows: [
+                                      Shadow(
+                                        color: Colors.white.withOpacity(0.3),
+                                        blurRadius: 6,
+                                        offset: const Offset(1, 2),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                                : const Icon(
+                                  Icons.help_outline,
+                                  color: Colors.white,
+                                  size: 28,
                                 ),
-                                style: TextStyle(
-                                  fontSize: 28,
-                                  color: RegExp(r'^[0-9]$').hasMatch(item.value)
-                                      ? Colors.deepPurple
-                                      : Colors.orange[900],
-                                  fontWeight: FontWeight.bold,
-                                  shadows: [
-                                    Shadow(
-                                      color: Colors.white.withOpacity(0.3),
-                                      blurRadius: 6,
-                                      offset: const Offset(1, 2),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : const Icon(
-                                Icons.help_outline,
-                                color: Colors.white,
-                                size: 28,
-                              ),
                       ),
                     ),
                   ),
@@ -202,7 +213,7 @@ class _JuegoMemoramaState extends State<JuegoMemorama> {
               },
             ),
           ),
-          
+
           // Contador de intentos
           const SizedBox(height: 10),
           Text(
@@ -213,7 +224,7 @@ class _JuegoMemoramaState extends State<JuegoMemorama> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          
+
           // Mensaje de completado
           if (completado)
             Padding(

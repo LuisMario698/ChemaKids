@@ -6,50 +6,61 @@ class JuegoFormarPalabrasNuevo extends StatefulWidget {
   const JuegoFormarPalabrasNuevo({Key? key}) : super(key: key);
 
   @override
-  State<JuegoFormarPalabrasNuevo> createState() => _JuegoFormarPalabrasNuevoState();
+  State<JuegoFormarPalabrasNuevo> createState() =>
+      _JuegoFormarPalabrasNuevoState();
 }
 
 class _JuegoFormarPalabrasNuevoState extends State<JuegoFormarPalabrasNuevo> {
   final List<Map<String, dynamic>> _palabras = [
     {
       'palabra': 'mono',
-      'img': 'https://cdn.pixabay.com/photo/2024/01/26/15/08/smiling-8534123_1280.png',
+      'img':
+          'https://cdn.pixabay.com/photo/2024/01/26/15/08/smiling-8534123_1280.png',
     },
     {
       'palabra': 'sol',
-      'img': 'https://static.vecteezy.com/system/resources/previews/018/931/339/original/kawaii-sun-icon-png.png',
+      'img':
+          'https://static.vecteezy.com/system/resources/previews/018/931/339/original/kawaii-sun-icon-png.png',
     },
     {
       'palabra': 'gato',
-      'img': 'https://1.bp.blogspot.com/-Mxy-rlTODB8/YCUlVzPyghI/AAAAAAAKsHc/zu6tq61Pj8AuRTHKrGApf1BEIBJbsHLUwCLcBGAsYHQ/s1389/cat5_1534270.png',
+      'img':
+          'https://1.bp.blogspot.com/-Mxy-rlTODB8/YCUlVzPyghI/AAAAAAAKsHc/zu6tq61Pj8AuRTHKrGApf1BEIBJbsHLUwCLcBGAsYHQ/s1389/cat5_1534270.png',
     },
     {
       'palabra': 'flor',
-      'img': 'https://i.pinimg.com/originals/aa/a4/8f/aaa48f4a1c63cb4b1670e6565f2d93b8.png',
+      'img':
+          'https://i.pinimg.com/originals/aa/a4/8f/aaa48f4a1c63cb4b1670e6565f2d93b8.png',
     },
     {
       'palabra': 'luna',
-      'img': 'https://cdn.pixabay.com/photo/2013/07/13/12/46/moon-146239_1280.png',
+      'img':
+          'https://cdn.pixabay.com/photo/2013/07/13/12/46/moon-146239_1280.png',
     },
     {
       'palabra': 'pez',
-      'img': 'https://cdn.pixabay.com/photo/2017/01/31/13/14/fish-2023925_1280.png',
+      'img':
+          'https://cdn.pixabay.com/photo/2017/01/31/13/14/fish-2023925_1280.png',
     },
     {
       'palabra': 'oso',
-      'img': 'https://cdn.pixabay.com/photo/2017/01/31/13/14/bear-2023923_1280.png',
+      'img':
+          'https://cdn.pixabay.com/photo/2017/01/31/13/14/bear-2023923_1280.png',
     },
     {
       'palabra': 'pato',
-      'img': 'https://cdn.pixabay.com/photo/2017/01/31/13/14/duck-2023927_1280.png',
+      'img':
+          'https://cdn.pixabay.com/photo/2017/01/31/13/14/duck-2023927_1280.png',
     },
     {
       'palabra': 'arbol',
-      'img': 'https://cdn.pixabay.com/photo/2012/04/13/00/22/tree-31253_1280.png',
+      'img':
+          'https://cdn.pixabay.com/photo/2012/04/13/00/22/tree-31253_1280.png',
     },
     {
       'palabra': 'casa',
-      'img': 'https://cdn.pixabay.com/photo/2012/04/13/00/21/home-31224_1280.png',
+      'img':
+          'https://cdn.pixabay.com/photo/2012/04/13/00/21/home-31224_1280.png',
     },
   ];
 
@@ -72,7 +83,8 @@ class _JuegoFormarPalabrasNuevoState extends State<JuegoFormarPalabrasNuevo> {
     _errorEnEspacio = List<bool>.filled(palabra.length, false);
 
     final int maxLetras = 8;
-    final int extrasCount = (palabra.length >= maxLetras) ? 0 : maxLetras - palabra.length;
+    final int extrasCount =
+        (palabra.length >= maxLetras) ? 0 : maxLetras - palabra.length;
 
     final extras = _letrasExtra(extrasCount);
     _letrasDisponibles = palabra.split('')..addAll(extras);
@@ -82,7 +94,25 @@ class _JuegoFormarPalabrasNuevoState extends State<JuegoFormarPalabrasNuevo> {
   }
 
   List<String> _letrasExtra(int cantidad) {
-    const extras = ['a', 'e', 'i', 'o', 'u', 'l', 'm', 'n', 'p', 'r', 's', 't', 'd', 'g', 'z', 'v', 'c'];
+    const extras = [
+      'a',
+      'e',
+      'i',
+      'o',
+      'u',
+      'l',
+      'm',
+      'n',
+      'p',
+      'r',
+      's',
+      't',
+      'd',
+      'g',
+      'z',
+      'v',
+      'c',
+    ];
     final random = Random();
     final extrasList = List<String>.from(extras);
     extrasList.shuffle(random);
@@ -187,7 +217,7 @@ class _JuegoFormarPalabrasNuevoState extends State<JuegoFormarPalabrasNuevo> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         const SizedBox(height: 10),
-        
+
         // Imagen animada
         TweenAnimationBuilder<double>(
           tween: Tween(begin: 0.85, end: 1.0),
@@ -215,20 +245,21 @@ class _JuegoFormarPalabrasNuevoState extends State<JuegoFormarPalabrasNuevo> {
                   child: Image.network(
                     imgUrl,
                     fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) => const Icon(
-                      Icons.image_not_supported,
-                      size: 80,
-                      color: Colors.deepPurple,
-                    ),
+                    errorBuilder:
+                        (context, error, stackTrace) => const Icon(
+                          Icons.image_not_supported,
+                          size: 80,
+                          color: Colors.deepPurple,
+                        ),
                   ),
                 ),
               ),
             );
           },
         ),
-        
+
         const SizedBox(height: 24),
-        
+
         // Espacios para la palabra
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -243,13 +274,22 @@ class _JuegoFormarPalabrasNuevoState extends State<JuegoFormarPalabrasNuevo> {
                     width: 54,
                     height: 66,
                     decoration: EstilosChemaKids.contenedorJuego(
-                      color: _espacios[i] != null ? Colors.deepPurple[100] : Colors.white,
-                      borderColor: _errorEnEspacio[i]
-                          ? Colors.red
-                          : (candidateData.isNotEmpty
-                              ? Colors.orange
-                              : (_espacios[i] != null ? Colors.deepPurple : Colors.grey[400]!)),
-                      borderWidth: _errorEnEspacio[i] ? 4 : (candidateData.isNotEmpty ? 3 : 2),
+                      color:
+                          _espacios[i] != null
+                              ? Colors.deepPurple[100]
+                              : Colors.white,
+                      borderColor:
+                          _errorEnEspacio[i]
+                              ? Colors.red
+                              : (candidateData.isNotEmpty
+                                  ? Colors.orange
+                                  : (_espacios[i] != null
+                                      ? Colors.deepPurple
+                                      : Colors.grey[400]!)),
+                      borderWidth:
+                          _errorEnEspacio[i]
+                              ? 4
+                              : (candidateData.isNotEmpty ? 3 : 2),
                     ),
                     child: Center(
                       child: AnimatedSwitcher(
@@ -269,45 +309,46 @@ class _JuegoFormarPalabrasNuevoState extends State<JuegoFormarPalabrasNuevo> {
             );
           }),
         ),
-        
+
         const SizedBox(height: 40),
-        
+
         // Letras disponibles
         Wrap(
           spacing: 18,
           runSpacing: 18,
           alignment: WrapAlignment.center,
-          children: _letrasDisponibles.map((letra) {
-            return Draggable<String>(
-              data: letra,
-              feedback: Material(
-                color: Colors.transparent,
-                child: _buildLetraDraggable(letra, dragging: true),
-              ),
-              childWhenDragging: Opacity(
-                opacity: 0.3,
-                child: _buildLetraDraggable(letra),
-              ),
-              child: TweenAnimationBuilder<double>(
-                tween: Tween(begin: 0.8, end: 1.0),
-                duration: const Duration(milliseconds: 400),
-                curve: Curves.elasticOut,
-                builder: (context, scale, child) {
-                  return Transform.scale(
-                    scale: scale,
+          children:
+              _letrasDisponibles.map((letra) {
+                return Draggable<String>(
+                  data: letra,
+                  feedback: Material(
+                    color: Colors.transparent,
+                    child: _buildLetraDraggable(letra, dragging: true),
+                  ),
+                  childWhenDragging: Opacity(
+                    opacity: 0.3,
                     child: _buildLetraDraggable(letra),
-                  );
-                },
-              ),
-            );
-          }).toList(),
+                  ),
+                  child: TweenAnimationBuilder<double>(
+                    tween: Tween(begin: 0.8, end: 1.0),
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.elasticOut,
+                    builder: (context, scale, child) {
+                      return Transform.scale(
+                        scale: scale,
+                        child: _buildLetraDraggable(letra),
+                      );
+                    },
+                  ),
+                );
+              }).toList(),
         ),
-        
+
         const SizedBox(height: 32),
-        
+
         // Mensaje de completado
         if (_completado) _buildMensajeCompletado(),
-        
+
         // Mensaje de pista
         if (_mostrarPista) _buildMensajePista(),
       ],
@@ -355,7 +396,10 @@ class _JuegoFormarPalabrasNuevoState extends State<JuegoFormarPalabrasNuevo> {
                   borderRadius: BorderRadius.circular(24),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 32,
+                  ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -385,7 +429,9 @@ class _JuegoFormarPalabrasNuevoState extends State<JuegoFormarPalabrasNuevo> {
                       ),
                       const SizedBox(height: 24),
                       ElevatedButton.icon(
-                        icon: Icon(esUltima ? Icons.replay : Icons.arrow_forward),
+                        icon: Icon(
+                          esUltima ? Icons.replay : Icons.arrow_forward,
+                        ),
                         label: Text(esUltima ? 'Jugar de nuevo' : 'Siguiente'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: EstilosChemaKids.colorPrimario,
@@ -393,7 +439,10 @@ class _JuegoFormarPalabrasNuevoState extends State<JuegoFormarPalabrasNuevo> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(18),
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 32,
+                            vertical: 12,
+                          ),
                         ),
                         onPressed: _siguiente,
                       ),

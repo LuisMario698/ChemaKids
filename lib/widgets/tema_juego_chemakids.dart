@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 class FondoAnimadoChemaKids extends StatefulWidget {
   /// Color de fondo base (por defecto gris claro)
   final Color backgroundColor;
-  
+
   /// Número de burbujas animadas (por defecto 10)
   final int numeroBurbujas;
-  
+
   /// Duración de la animación en segundos (por defecto 10)
   final int duracionSegundos;
-  
+
   /// Widget hijo que se renderiza sobre el fondo
   final Widget child;
 
@@ -29,7 +29,6 @@ class FondoAnimadoChemaKids extends StatefulWidget {
 
 class _FondoAnimadoChemaKidsState extends State<FondoAnimadoChemaKids>
     with SingleTickerProviderStateMixin {
-  
   late AnimationController _bgController;
   late Animation<double> _bgAnimation;
 
@@ -54,14 +53,11 @@ class _FondoAnimadoChemaKidsState extends State<FondoAnimadoChemaKids>
       duration: Duration(seconds: widget.duracionSegundos),
       vsync: this,
     )..repeat(reverse: true);
-    
+
     _bgAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(CurvedAnimation(
-      parent: _bgController, 
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _bgController, curve: Curves.easeInOut));
   }
 
   @override
@@ -82,33 +78,41 @@ class _FondoAnimadoChemaKidsState extends State<FondoAnimadoChemaKids>
             builder: (context, child) {
               final width = MediaQuery.of(context).size.width;
               final height = MediaQuery.of(context).size.height;
-              
+
               return Stack(
                 children: List.generate(widget.numeroBurbujas, (i) {
                   // Tamaño variable de las burbujas con animación
-                  final double size = 70 + 40 * 
-                      (i % 2 == 0 
-                          ? _bgAnimation.value 
-                          : 1 - _bgAnimation.value);
-                  
+                  final double size =
+                      70 +
+                      40 *
+                          (i % 2 == 0
+                              ? _bgAnimation.value
+                              : 1 - _bgAnimation.value);
+
                   // Posición vertical animada
-                  final double top = (height * 
-                      (0.1 + 0.7 * 
-                          ((i * 0.13 + _bgAnimation.value * 
-                              (i.isEven ? 0.5 : -0.5)) % 1)))
+                  final double top = (height *
+                          (0.1 +
+                              0.7 *
+                                  ((i * 0.13 +
+                                          _bgAnimation.value *
+                                              (i.isEven ? 0.5 : -0.5)) %
+                                      1)))
                       .clamp(0, height - size);
-                  
+
                   // Posición horizontal animada
-                  final double left = (width * 
-                      (0.05 + 0.8 * 
-                          ((i * 0.19 + (1 - _bgAnimation.value) * 
-                              (i.isOdd ? 0.4 : -0.4)) % 1)))
+                  final double left = (width *
+                          (0.05 +
+                              0.8 *
+                                  ((i * 0.19 +
+                                          (1 - _bgAnimation.value) *
+                                              (i.isOdd ? 0.4 : -0.4)) %
+                                      1)))
                       .clamp(0, width - size);
-                  
+
                   // Color con opacidad variable
                   final color = _bubbleColors[i % _bubbleColors.length]
                       .withOpacity(0.18 + 0.07 * (i % 3));
-                  
+
                   return Positioned(
                     top: top,
                     left: left,
@@ -144,19 +148,19 @@ class _FondoAnimadoChemaKidsState extends State<FondoAnimadoChemaKids>
 class EncabezadoJuegoChemaKids extends StatelessWidget {
   /// Título del juego que aparece en el centro
   final String titulo;
-  
+
   /// Icono que aparece junto al título (opcional)
   final IconData? icono;
-  
+
   /// Color del icono (por defecto amber)
   final Color colorIcono;
-  
+
   /// Función callback para el botón de regreso
   final VoidCallback? onBack;
-  
+
   /// Función callback para el botón de ayuda/pista (opcional)
   final VoidCallback? onAyuda;
-  
+
   /// Si mostrar o no el botón de ayuda
   final bool mostrarAyuda;
 
@@ -173,10 +177,7 @@ class EncabezadoJuegoChemaKids extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 12,
-        horizontal: 8,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       child: Row(
         children: [
           // Botón de regreso
@@ -190,13 +191,10 @@ class EncabezadoJuegoChemaKids extends StatelessWidget {
             tooltip: 'Volver',
           ),
           const Spacer(),
-          
+
           // Contenedor del título
           Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 18,
-              vertical: 8,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
             decoration: BoxDecoration(
               color: Colors.deepPurple[100],
               borderRadius: BorderRadius.circular(18),
@@ -205,11 +203,7 @@ class EncabezadoJuegoChemaKids extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (icono != null) ...[
-                  Icon(
-                    icono,
-                    color: colorIcono,
-                    size: 28,
-                  ),
+                  Icon(icono, color: colorIcono, size: 28),
                   const SizedBox(width: 8),
                 ],
                 Text(
@@ -224,20 +218,18 @@ class EncabezadoJuegoChemaKids extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          
+
           // Botón de ayuda (opcional)
           if (mostrarAyuda)
             IconButton(
-              icon: const Icon(
-                Icons.lightbulb,
-                color: Colors.amber,
-                size: 32,
-              ),
+              icon: const Icon(Icons.lightbulb, color: Colors.amber, size: 32),
               tooltip: 'Pista',
               onPressed: onAyuda,
             )
           else
-            const SizedBox(width: 48), // Espaciador para mantener centrado el título
+            const SizedBox(
+              width: 48,
+            ), // Espaciador para mantener centrado el título
         ],
       ),
     );
@@ -249,22 +241,22 @@ class EncabezadoJuegoChemaKids extends StatelessWidget {
 class PlantillaJuegoChemaKids extends StatelessWidget {
   /// Título que aparece en el encabezado
   final String titulo;
-  
+
   /// Icono del juego (opcional)
   final IconData? icono;
-  
+
   /// Color de fondo (por defecto gris claro)
   final Color backgroundColor;
-  
+
   /// Contenido principal del juego
   final Widget contenido;
-  
+
   /// Función callback para el botón de ayuda (opcional)
   final VoidCallback? onAyuda;
-  
+
   /// Si mostrar o no el botón de ayuda
   final bool mostrarAyuda;
-  
+
   /// Número de burbujas en el fondo
   final int numeroBurbujas;
 
@@ -294,11 +286,9 @@ class PlantillaJuegoChemaKids extends StatelessWidget {
               onAyuda: onAyuda,
               mostrarAyuda: mostrarAyuda,
             ),
-            
+
             // Contenido principal expandido
-            Expanded(
-              child: contenido,
-            ),
+            Expanded(child: contenido),
           ],
         ),
       ),
@@ -313,7 +303,7 @@ class EstilosChemaKids {
   static const Color colorSecundario = Colors.amber;
   static const Color colorFondo = Color(0xFFF6F6F6);
   static const Color colorTexto = Colors.deepPurple;
-  
+
   // Contenedor estándar para elementos de juego
   static BoxDecoration contenedorJuego({
     Color? color,
@@ -337,21 +327,21 @@ class EstilosChemaKids {
       ],
     );
   }
-  
+
   // Estilo de texto para botones
   static const TextStyle textoBoton = TextStyle(
     fontSize: 20,
     fontWeight: FontWeight.bold,
     color: Colors.white,
   );
-  
+
   // Estilo de texto para títulos
   static const TextStyle textoTitulo = TextStyle(
     fontSize: 32,
     color: colorPrimario,
     fontWeight: FontWeight.bold,
   );
-  
+
   // Estilo de texto para elementos de juego
   static const TextStyle textoJuego = TextStyle(
     fontSize: 38,

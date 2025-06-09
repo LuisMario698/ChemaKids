@@ -12,7 +12,7 @@ class NivelCard extends StatelessWidget {
 
   const NivelCard({
     super.key,
-    required this.nivel,
+    this.nivel = 1,
     required this.titulo,
     required this.color,
     this.onTap,

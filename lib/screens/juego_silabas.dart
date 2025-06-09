@@ -224,13 +224,13 @@ class _JuegoSilabasState extends State<JuegoSilabas>
   void dispose() {
     _controller.dispose();
     super.dispose();
-  }  @override
+  }
+
+  @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final isDesktop = screenWidth > 600;
-
-    return PlantillaJuegoChemaKids(
-      titulo: 'Forma la palabra',
+    final isDesktop = screenWidth > 600;    return PlantillaJuegoChemaKids(
+      titulo: 'Completar Palabras',
       icono: Icons.spellcheck,
       mostrarAyuda: false,
       contenido: Stack(
@@ -241,7 +241,7 @@ class _JuegoSilabasState extends State<JuegoSilabas>
             right: 16,
             child: ContadorPuntosRacha(score: _score, streak: _streak),
           ),
-          
+
           // Main content
           Center(
             child: Column(

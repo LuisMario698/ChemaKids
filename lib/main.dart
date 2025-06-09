@@ -8,6 +8,7 @@ import 'screens/menu.dart';
 import 'screens/nombre_edad.dart';
 import 'screens/auth.dart';
 import 'screens/juego_abc.dart';
+import 'screens/juego_abc_audio.dart';
 import 'screens/juego_que_es.dart';
 import 'screens/juego_silabas.dart';
 import 'screens/juego_rimas.dart';
@@ -15,6 +16,7 @@ import 'screens/juego_colores.dart';
 import 'screens/juego_formas.dart';
 import 'screens/juego_animales.dart';
 import 'screens/juego_silabasdesdecero.dart';
+import 'screens/juego_silabas_audio.dart';
 import 'screens/juego_numeros.dart';
 import 'screens/juego_formar_palabras.dart';
 import 'screens/juego_memorama.dart';
@@ -93,14 +95,14 @@ class ChemakidsApp extends StatelessWidget {
             title: 'Chemakids',
             debugShowCheckedModeBanner: false,
             // Determinar ruta inicial basándose en si hay sesión activa
-            initialRoute: estadoApp.tieneUsuario ? '/menu' : '/',
-            routes: {
+            initialRoute: estadoApp.tieneUsuario ? '/menu' : '/',            routes: {
               '/': (context) => const PantallaInicio(),
               '/menu': (context) => const PantallaMenu(),
               '/nombre-edad': (context) => const PantallaNombreEdad(),
               '/auth': (context) => const PantallaAuth(),
               '/abc': (context) => const JuegoABC(),
-              '/silabasdesdecero': (context) => const JuegoSilabasDesdeCero(),
+              '/abc-audio': (context) => const JuegoAbcAudio(),              '/silabasdesdecero': (context) => const JuegoSilabasDesdeCero(),
+              '/silabas-audio': (context) => const JuegoSilabasAudio(),
               '/silabas': (context) => const JuegoSilabas(),
               '/que-es': (context) => const JuegoQueEs(),
               '/rimas': (context) => const JuegoRimas(),

@@ -24,7 +24,7 @@ class EjemploFondosABC extends StatelessWidget {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-            
+
             // Ejemplo 1: Fondo completo para menú
             _buildEjemplo(
               titulo: '1. Fondo Completo de Menú',
@@ -46,7 +46,7 @@ class EjemploFondosABC extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             // Ejemplo 2: Fondo mini para tarjetas
             _buildEjemplo(
               titulo: '2. Fondo Mini para Tarjetas',
@@ -65,7 +65,7 @@ class EjemploFondosABC extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             // Ejemplo 3: Solo gradiente ABC
             _buildEjemplo(
               titulo: '3. Solo Gradiente ABC',
@@ -88,11 +88,12 @@ class EjemploFondosABC extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             // Ejemplo 4: Combinación con plantilla de juego
             _buildEjemplo(
               titulo: '4. Combinado con Plantilla de Juego',
-              descripcion: 'Fondo ABC + Plantilla de juego ChemaKids',                child: Container(
+              descripcion: 'Fondo ABC + Plantilla de juego ChemaKids',
+              child: Container(
                 height: 250,
                 child: PlantillaJuegoChemaKids(
                   titulo: 'Juego con Fondo ABC',
@@ -118,7 +119,7 @@ class EjemploFondosABC extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             // Ejemplo 5: Elementos decorativos
             _buildEjemplo(
               titulo: '5. Elementos Decorativos ABC',
@@ -159,7 +160,7 @@ class EjemploFondosABC extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             // Ejemplo 6: Paleta de colores
             _buildEjemplo(
               titulo: '6. Paleta de Colores ABC',
@@ -168,32 +169,34 @@ class EjemploFondosABC extends StatelessWidget {
                 children: [
                   const Text('Colores Principales:'),
                   Row(
-                    children: EfectosABC.coloresPrincipales.map((color) {
-                      return Container(
-                        width: 50,
-                        height: 50,
-                        margin: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: color,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      );
-                    }).toList(),
+                    children:
+                        EfectosABC.coloresPrincipales.map((color) {
+                          return Container(
+                            width: 50,
+                            height: 50,
+                            margin: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: color,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          );
+                        }).toList(),
                   ),
                   const SizedBox(height: 10),
                   const Text('Colores Secundarios:'),
                   Row(
-                    children: EfectosABC.coloresSecundarios.map((color) {
-                      return Container(
-                        width: 50,
-                        height: 50,
-                        margin: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: color,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      );
-                    }).toList(),
+                    children:
+                        EfectosABC.coloresSecundarios.map((color) {
+                          return Container(
+                            width: 50,
+                            height: 50,
+                            margin: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: color,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          );
+                        }).toList(),
                   ),
                 ],
               ),
@@ -203,7 +206,7 @@ class EjemploFondosABC extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildEjemplo({
     required String titulo,
     required String descripcion,
@@ -225,10 +228,7 @@ class EjemploFondosABC extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             descripcion,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
           ),
           const SizedBox(height: 12),
           Container(
@@ -285,7 +285,7 @@ class JuegoConFondoABC extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             // Contenido del juego
             Expanded(
               child: Container(
@@ -304,10 +304,7 @@ class JuegoConFondoABC extends StatelessWidget {
                     'El fondo ABC crea una atmósfera\n'
                     'consistente con el resto de la app',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                    ),
+                    style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
                 ),
               ),
