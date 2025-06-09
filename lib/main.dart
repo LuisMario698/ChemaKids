@@ -21,6 +21,7 @@ import 'screens/juego_numeros.dart';
 import 'screens/juego_formar_palabras.dart';
 import 'screens/juego_memorama.dart';
 import 'screens/juego_sumas_y_restas.dart';
+import 'screens/juego_123.dart';
 import 'pantallas/registro_invitado.dart';
 
 // Global navigator key
@@ -95,13 +96,15 @@ class ChemakidsApp extends StatelessWidget {
             title: 'Chemakids',
             debugShowCheckedModeBanner: false,
             // Determinar ruta inicial basándose en si hay sesión activa
-            initialRoute: estadoApp.tieneUsuario ? '/menu' : '/',            routes: {
+            initialRoute: estadoApp.tieneUsuario ? '/menu' : '/',
+            routes: {
               '/': (context) => const PantallaInicio(),
               '/menu': (context) => const PantallaMenu(),
               '/nombre-edad': (context) => const PantallaNombreEdad(),
               '/auth': (context) => const PantallaAuth(),
               '/abc': (context) => const JuegoABC(),
-              '/abc-audio': (context) => const JuegoAbcAudio(),              '/silabasdesdecero': (context) => const JuegoSilabasDesdeCero(),
+              '/abc-audio': (context) => const JuegoAbcAudio(),
+              '/silabasdesdecero': (context) => const JuegoSilabasDesdeCero(),
               '/silabas-audio': (context) => const JuegoSilabasAudio(),
               '/silabas': (context) => const JuegoSilabas(),
               '/que-es': (context) => const JuegoQueEs(),
@@ -113,6 +116,7 @@ class ChemakidsApp extends StatelessWidget {
               '/formar-palabras': (context) => const JuegoFormarPalabras(),
               '/memorama': (context) => const JuegoMemorama(),
               '/sumas-restas': (context) => const JuegoSumasYRestas(),
+              '/123': (context) => const Juego123(),
               '/registro-invitado':
                   (context) => const PantallaRegistroInvitado(),
             },

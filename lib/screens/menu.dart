@@ -183,61 +183,24 @@ class PantallaMenu extends StatelessWidget {
         imagenUrl:
             'https://img.freepik.com/premium-vector/colors-cute-cartoon-vector-illustration_480744-389.jpg',
       ),
-
-      // NivelCard(
-      //   nivel: 6,
-      //   titulo: 'Rima Rima',
-      //   color: const Color(0xFF90CAF9),
-      //   onTap: () => Navigator.pushNamed(context, '/rimas'),
-      //   bloqueado: false,
-      //   imagenUrl:
-      //       'https://img.freepik.com/premium-vector/poetry-book-cute-cartoon-vector-illustration_480744-383.jpg',
-      // ),
-      // NivelCard(
-      //   nivel: 7,
-      //   titulo: '¿Qué es?',
-      //   color: const Color(0xFFFFCC80),
-      //   onTap: () => Navigator.pushNamed(context, '/que-es'),
-      //   bloqueado: false,
-      //   imagenUrl:
-      //       'https://img.freepik.com/premium-vector/cute-toy-car-cartoon-vector-illustration_480744-357.jpg',
-      // ),
-      //   NivelCard(
-      //   nivel: 8,
-      //   titulo: 'Números y Letras',
-      //   color: const Color(0xFFA5D6A7),
-      //   onTap: () => Navigator.pushNamed(context, '/numeros'),
-      //   bloqueado: false,
-      //   imagenUrl:
-      //       'https://img.freepik.com/premium-vector/numbers-letters-cute-cartoon-vector-illustration_480744-384.jpg',
-      // ),
-      // NivelCard(
-      //   nivel: 9,
-      //   titulo: 'Sumas y Restas',
-      //   color: const Color(0xFFFFF59D),
-      //   onTap: () => Navigator.pushNamed(context, '/sumas-restas'),
-      //   bloqueado: false,
-      //   imagenUrl:
-      //       'https://img.freepik.com/premium-vector/math-addition-subtraction-cute-cartoon-vector-illustration_480744-390.jpg',
-      // ),
-      // NivelCard(
-      //   nivel: 11,
-      //   titulo: 'Sonidos y Palabras',
-      //   color: const Color(0xFFFFAB91),
-      //   onTap: () => Navigator.pushNamed(context, '/animales'),
-      //   bloqueado: false,
-      //   imagenUrl:
-      //       'https://img.freepik.com/premium-vector/animals-words-cute-cartoon-vector-illustration_480744-385.jpg',
-      // ),
+      NivelCard(
+        nivel: 4,
+        titulo: '123',
+        color: const Color(0xFFFFAB91),
+        onTap: () => Navigator.pushNamed(context, '/123'),
+        bloqueado: false,
+        imagenUrl:
+            'https://img.freepik.com/premium-vector/numbers-cute-cartoon-vector-illustration_480744-390.jpg',
+      ),
     ];
 
     return GridView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        mainAxisSpacing: 24,
-        crossAxisSpacing: 18,
-        childAspectRatio: 0.98,
+        mainAxisSpacing: 20,
+        crossAxisSpacing: 16,
+        childAspectRatio: MediaQuery.of(context).size.width > 600 ? 1.1 : 0.95,
       ),
       itemCount: niveles.length,
       itemBuilder: (context, index) {

@@ -187,70 +187,60 @@ class _JuegoSilabasAudioState extends State<JuegoSilabasAudio>
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            double screenWidth = constraints.maxWidth;
-            double emojiSize = screenWidth > 600 ? 80 : 60;
-            double titleSize = screenWidth > 600 ? 28 : 22;
-            double scoreSize = screenWidth > 600 ? 20 : 16;
-            double buttonSize = screenWidth > 600 ? 18 : 14;
-            
-            return AlertDialog(
-              backgroundColor: const Color(0xFF3D5A80),
-              title: Text(
-                emoji,
-                style: TextStyle(fontSize: emojiSize),
+        return AlertDialog(
+          backgroundColor: const Color(0xFF3D5A80),
+          title: Text(
+            emoji,
+            style: const TextStyle(fontSize: 60),
+            textAlign: TextAlign.center,
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                mensaje,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
                 textAlign: TextAlign.center,
               ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    mensaje,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: titleSize,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: screenWidth > 600 ? 20 : 16),
-                  Text(
-                    'Puntuación: $_puntuacion/${_preguntasActuales.length * 10}',
-                    style: TextStyle(color: Colors.white, fontSize: scoreSize),
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    '($porcentaje%)',
-                    style: TextStyle(color: Colors.white, fontSize: scoreSize - 2),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+              const SizedBox(height: 16),
+              Text(
+                'Puntuación: $_puntuacion/${_preguntasActuales.length * 10}',
+                style: const TextStyle(color: Colors.white, fontSize: 18),
+                textAlign: TextAlign.center,
               ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    _reiniciarJuego();
-                  },
-                  child: Text(
-                    'Jugar de nuevo',
-                    style: TextStyle(color: Colors.white, fontSize: buttonSize),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    'Menú Principal',
-                    style: TextStyle(color: Colors.white, fontSize: buttonSize),
-                  ),
-                ),
-              ],
-            );
-          },
+              Text(
+                '($porcentaje%)',
+                style: const TextStyle(color: Colors.white, fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _reiniciarJuego();
+              },
+              child: const Text(
+                'Jugar de nuevo',
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Menú Principal',
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            ),
+          ],
         );
       },
     );
@@ -366,7 +356,7 @@ class _JuegoSilabasAudioState extends State<JuegoSilabasAudio>
 
                 // Título
                 Text(
-                  '🎯 Formando Palabras 🎯',
+                  '🎯 Adivina la Sílaba 🎯',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: titleSize,
@@ -377,51 +367,25 @@ class _JuegoSilabasAudioState extends State<JuegoSilabasAudio>
 
                 SizedBox(height: screenHeight * 0.02),
 
-                // Botón de audio (placeholder por ahora)
-                GestureDetector(
-                  onTap: () {
-                    // TODO: Implementar reproducción de audio
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('🔊 Audio de la palabra'),
-                        duration: Duration(milliseconds: 1500),
+                // Emoji de la sílaba como pista
+                Container(
+                  width: containerSize,
+                  height: containerSize,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF98C1D9),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
                       ),
-                    );
-                  },
-                  child: Container(
-                    width: containerSize,
-                    height: containerSize,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF98C1D9),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
-                          blurRadius: 10,
-                          offset: const Offset(0, 5),
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.volume_up_rounded,
-                            color: Colors.white,
-                            size: emojiSize * 0.6,
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'AUDIO',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: emojiSize * 0.2,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Text(
+                      _preguntaActualData['emoji'],
+                      style: TextStyle(fontSize: emojiSize),
                     ),
                   ),
                 ),
@@ -429,7 +393,7 @@ class _JuegoSilabasAudioState extends State<JuegoSilabasAudio>
                 SizedBox(height: screenHeight * 0.02),
 
                 Text(
-                  '¿Cuál sílaba escuchaste?',
+                  '¿Cuál es la sílaba?',
                   style: TextStyle(
                     color: Colors.white, 
                     fontSize: questionSize,
@@ -450,11 +414,11 @@ class _JuegoSilabasAudioState extends State<JuegoSilabasAudio>
                       double horizontalPadding = screenWidth * 0.08;
                       double spacing = screenWidth * 0.04;
                       double fontSize = screenWidth > 600 ? 24 : 20;
-                      double aspectRatio = screenWidth > 600 ? 2.2 : 1.8;
+                      double aspectRatio = screenWidth > 600 ? 3.5 : 2.8;
                       
                       // Ajustar según la altura disponible
                       if (screenHeight < 400) {
-                        aspectRatio = 2.8; // Más ancho en pantallas muy cortas
+                        aspectRatio = 4.0; // Más ancho en pantallas muy cortas
                         fontSize = 18;
                       }
                       

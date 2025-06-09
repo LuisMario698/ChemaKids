@@ -385,7 +385,7 @@ class _JuegoAbcAudioState extends State<JuegoAbcAudio>
                             : () => _seleccionarLetra(letra),
                         child: Container(
                           width: 80,
-                          height: 105,
+                          height: 80,
                           decoration: BoxDecoration(
                             color: colorBoton,
                             borderRadius: BorderRadius.circular(20),

@@ -229,8 +229,10 @@ class _JuegoSilabasState extends State<JuegoSilabas>
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final isDesktop = screenWidth > 600;    return PlantillaJuegoChemaKids(
-      titulo: 'Completar Palabras',
+    final isDesktop = screenWidth > 600;
+
+    return PlantillaJuegoChemaKids(
+      titulo: 'Forma la palabra',
       icono: Icons.spellcheck,
       mostrarAyuda: false,
       contenido: Stack(
