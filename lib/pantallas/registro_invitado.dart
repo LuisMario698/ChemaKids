@@ -378,7 +378,7 @@ class _PantallaRegistroInvitadoState extends State<PantallaRegistroInvitado>
         // Establecer el invitado en el estado de la app
         final estadoApp = context.read<EstadoApp>();
         await estadoApp.establecerUsuarioInvitado(invitadoCreado);
-        
+
         print('✅ [RegistroInvitado] Estado de la app actualizado con invitado');
 
         // Mostrar mensaje de éxito
@@ -465,7 +465,8 @@ class UsuarioInvitado {
   UsuarioInvitado({required this.invitado});
 
   String get nombre => invitado.nombre;
-  int get nivel => 1; // Los invitados empiezan en nivel 1, el progreso se maneja por EstadoApp
+  int get nivel =>
+      1; // Los invitados empiezan en nivel 1, el progreso se maneja por EstadoApp
   int get edad => invitado.edad;
 
   // Métodos compatibles con el sistema de menú

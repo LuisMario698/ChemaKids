@@ -196,7 +196,7 @@ class _PantallaInicioState extends State<PantallaInicio>
       builder: (context, snapshot) {
         final estadoApp = context.watch<EstadoApp>();
         final tieneUsuario = estadoApp.tieneUsuario;
-        
+
         // Debug: imprimir el estado de autenticación
         print('🔍 Tiene usuario (EstadoApp): $tieneUsuario');
         print('🔍 Es invitado: ${estadoApp.esInvitado}');
@@ -229,14 +229,16 @@ class _PantallaInicioState extends State<PantallaInicio>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: estadoApp.esInvitado 
-                        ? Colors.orange.withValues(alpha: 0.2)
-                        : Colors.green.withValues(alpha: 0.2),
+                    color:
+                        estadoApp.esInvitado
+                            ? Colors.orange.withValues(alpha: 0.2)
+                            : Colors.green.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: estadoApp.esInvitado 
-                          ? Colors.orange.withValues(alpha: 0.5)
-                          : Colors.green.withValues(alpha: 0.5),
+                      color:
+                          estadoApp.esInvitado
+                              ? Colors.orange.withValues(alpha: 0.5)
+                              : Colors.green.withValues(alpha: 0.5),
                     ),
                   ),
                   child: Row(
@@ -244,7 +246,8 @@ class _PantallaInicioState extends State<PantallaInicio>
                     children: [
                       Icon(
                         estadoApp.esInvitado ? Icons.person : Icons.person,
-                        color: estadoApp.esInvitado ? Colors.orange : Colors.green,
+                        color:
+                            estadoApp.esInvitado ? Colors.orange : Colors.green,
                         size: 20,
                       ),
                       const SizedBox(width: 8),
@@ -258,8 +261,9 @@ class _PantallaInicioState extends State<PantallaInicio>
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                             ),
-                          ),                          Text(
-                            estadoApp.esInvitado 
+                          ),
+                          Text(
+                            estadoApp.esInvitado
                                 ? 'Invitado - Nivel ${estadoApp.nivelUsuario}'
                                 : 'Nivel ${estadoApp.nivelUsuario}',
                             style: TextStyle(
@@ -314,12 +318,20 @@ class _PantallaInicioState extends State<PantallaInicio>
                         pageBuilder: (context, animation, secondaryAnimation) {
                           return const PantallaRegistroInvitado();
                         },
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                        transitionsBuilder: (
+                          context,
+                          animation,
+                          secondaryAnimation,
+                          child,
+                        ) {
                           const begin = Offset(0.0, 1.0);
                           const end = Offset.zero;
                           const curve = Curves.easeInOut;
 
-                          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                          var tween = Tween(
+                            begin: begin,
+                            end: end,
+                          ).chain(CurveTween(curve: curve));
 
                           return SlideTransition(
                             position: animation.drive(tween),
@@ -427,7 +439,7 @@ class _PantallaInicioState extends State<PantallaInicio>
       final success = await _authService.cerrarSesion();
       final estadoApp = context.read<EstadoApp>();
       estadoApp.cerrarSesion();
-      
+
       if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

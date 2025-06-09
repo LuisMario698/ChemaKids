@@ -3,169 +3,116 @@ import 'package:provider/provider.dart';
 import '../services/estado_app.dart';
 import '../widgets/nivel_card.dart';
 import '../widgets/titulo_pagina.dart';
+import '../widgets/fondo_menu_abc.dart';
 
 class PantallaMenu extends StatelessWidget {
-  const PantallaMenu({super.key});
-  @override
+  const PantallaMenu({super.key});  @override
   Widget build(BuildContext context) {
     final estadoApp = context.watch<EstadoApp>();
     final screenWidth = MediaQuery.of(context).size.width;
     final isDesktop = screenWidth > 600;
 
-    return Scaffold(
-      body: Stack(
-        children: [
-          // Fondo colorido y decorativo
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFFB2EBF2),
-                  Color(0xFFFFF59D),
-                  Color(0xFFFFB0B0),
-                  Color(0xFFA5D6A7),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+    return FondoMenuABC(
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header con título y botón de cerrar sesión
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24,
+                vertical: 8,
               ),
-            ),
-          ),
-          // Burbujas decorativas
-          Positioned(
-            top: 40,
-            left: 20,
-            child: _burbuja(60, Colors.pinkAccent.withOpacity(0.18)),
-          ),
-          Positioned(
-            top: 120,
-            right: 30,
-            child: _burbuja(40, Colors.amber.withOpacity(0.18)),
-          ),
-          Positioned(
-            bottom: 80,
-            left: 60,
-            child: _burbuja(50, Colors.lightBlue.withOpacity(0.18)),
-          ),
-          Positioned(
-            bottom: 30,
-            right: 40,
-            child: _burbuja(70, Colors.greenAccent.withOpacity(0.18)),
-          ),
-          // Personajes decorativos (emojis)
-          Positioned(
-            top: 10,
-            right: 10,
-            child: Text('🦄', style: TextStyle(fontSize: 48)),
-          ),
-          Positioned(
-            bottom: 10,
-            left: 10,
-            child: Text('🐻', style: TextStyle(fontSize: 48)),
-          ),
-          Positioned(
-            bottom: 10,
-            right: 60,
-            child: Text('🐸', style: TextStyle(fontSize: 40)),
-          ),          // Contenido principal
-          SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header con título y botón de cerrar sesión
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: TituloPagina(
-                          texto: '¡Hola ${estadoApp.nombreUsuario}!',
-                          fontSize: isDesktop ? 48 : 40,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TituloPagina(
+                      texto: '¡Hola ${estadoApp.nombreUsuario}!',
+                      fontSize: isDesktop ? 48 : 40,
+                    ),
+                  ), // Botón de inicio
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () => _regresarInicio(context),
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
                         ),
-                      ),                      // Botón de inicio
-                      Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () => _regresarInicio(context),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.15),
                           borderRadius: BorderRadius.circular(12),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.3),
+                            width: 1,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.home,
+                              color: Colors.white,
+                              size: 20,
                             ),
-                            decoration: BoxDecoration(
-                              color: Colors.blue.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: Colors.blue.withOpacity(0.5),
-                                width: 1,
+                            const SizedBox(width: 6),
+                            Text(
+                              'Inicio',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.home,
-                                  color: Colors.blue[700],
-                                  size: 20,
-                                ),
-                                const SizedBox(width: 6),
-                                Text(
-                                  'Inicio',
-                                  style: TextStyle(
-                                    color: Colors.blue[700],
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 8,
-                  ),
-                  child: Text(
-                    '¡Elige un juego para aprender y divertirte!',
-                    style: TextStyle(
-                      fontSize: 22,
-                      color: Colors.deepPurple[700],
-                      fontWeight: FontWeight.bold,
-                      shadows: [
-                        Shadow(
-                          color: Colors.white.withOpacity(0.6),
-                          blurRadius: 6,
-                          offset: Offset(1, 2),
-                        ),
-                      ],
                     ),
                   ),
-                ),
-                Expanded(
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      if (isDesktop) {
-                        return Center(
-                          child: SizedBox(
-                            width: 600,
-                            child: _buildNivelGrid(context, estadoApp),
-                          ),
-                        );
-                      }
-                      return _buildNivelGrid(context, estadoApp);
-                    },
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24,
+                vertical: 8,
+              ),
+              child: Text(
+                '¡Elige un juego para aprender y divertirte!',
+                style: TextStyle(
+                  fontSize: 22,
+                  color: Colors.white.withOpacity(0.9),
+                  fontWeight: FontWeight.bold,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black.withOpacity(0.3),
+                      blurRadius: 6,
+                      offset: Offset(1, 2),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  if (isDesktop) {
+                    return Center(
+                      child: SizedBox(
+                        width: 600,
+                        child: _buildNivelGrid(context, estadoApp),
+                      ),
+                    );
+                  }
+                  return _buildNivelGrid(context, estadoApp);
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -292,23 +239,12 @@ class PantallaMenu extends StatelessWidget {
             child: niveles[index],
           ),
         );
-      },
-    );
+      },    );
   }
-  // Widget para burbujas decorativas
-  Widget _burbuja(double size, Color color) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-    );
-  }  // Método para regresar al inicio
+
+  // Método para regresar al inicio
   void _regresarInicio(BuildContext context) {
     // Navegar de vuelta a la pantalla de inicio
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      '/',
-      (route) => false,
-    );
+    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
   }
 }

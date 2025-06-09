@@ -5,11 +5,8 @@ import '../widgets/boton_animado.dart';
 
 class PantallaNombreEdad extends StatefulWidget {
   final bool esLogin;
-  
-  const PantallaNombreEdad({
-    super.key,
-    this.esLogin = false,
-  });
+
+  const PantallaNombreEdad({super.key, this.esLogin = false});
 
   @override
   State<PantallaNombreEdad> createState() => _PantallaNombreEdadState();
@@ -23,13 +20,13 @@ class _PantallaNombreEdadState extends State<PantallaNombreEdad>
   late Animation<double> _fadeAnimation;
 
   final AuthService _authService = AuthService();
-  
+
   // Controladores de formulario
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nombreController = TextEditingController();
   final TextEditingController _edadController = TextEditingController();
-  
+
   // Estado del formulario
   bool _isRegistro = true;
   bool _isLoading = false;
@@ -40,36 +37,32 @@ class _PantallaNombreEdadState extends State<PantallaNombreEdad>
   @override
   void initState() {
     super.initState();
-    
+
     // Configurar el estado inicial según el parámetro
     _isRegistro = !widget.esLogin;
-    
+
     _slideController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    
+
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 1),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _slideController,
-      curve: Curves.easeOutBack,
-    ));
-    
+    ).animate(
+      CurvedAnimation(parent: _slideController, curve: Curves.easeOutBack),
+    );
+
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _fadeController,
-      curve: Curves.easeIn,
-    ));
-    
+    ).animate(CurvedAnimation(parent: _fadeController, curve: Curves.easeIn));
+
     // Iniciar animaciones
     _slideController.forward();
     _fadeController.forward();
@@ -120,14 +113,16 @@ class _PantallaNombreEdadState extends State<PantallaNombreEdad>
                       ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 20),
-                
+
                 // Título animado
                 FadeTransition(
                   opacity: _fadeAnimation,
                   child: Text(
-                    _isRegistro ? '¡Únete a ChemaKids!' : '¡Bienvenido de vuelta!',
+                    _isRegistro
+                        ? '¡Únete a ChemaKids!'
+                        : '¡Bienvenido de vuelta!',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 28,
@@ -136,13 +131,13 @@ class _PantallaNombreEdadState extends State<PantallaNombreEdad>
                     textAlign: TextAlign.center,
                   ),
                 ),
-                
+
                 const SizedBox(height: 10),
-                
+
                 FadeTransition(
                   opacity: _fadeAnimation,
                   child: Text(
-                    _isRegistro 
+                    _isRegistro
                         ? 'Crea tu cuenta para guardar tu progreso'
                         : 'Inicia sesión para continuar tu aventura',
                     style: TextStyle(
@@ -152,9 +147,9 @@ class _PantallaNombreEdadState extends State<PantallaNombreEdad>
                     textAlign: TextAlign.center,
                   ),
                 ),
-                
+
                 const SizedBox(height: 40),
-                
+
                 // Formulario animado
                 SlideTransition(
                   position: _slideAnimation,
@@ -177,10 +172,7 @@ class _PantallaNombreEdadState extends State<PantallaNombreEdad>
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.2),
-          width: 1,
-        ),
+        border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
       ),
       child: Column(
         children: [
@@ -204,16 +196,16 @@ class _PantallaNombreEdadState extends State<PantallaNombreEdad>
             ),
             const SizedBox(height: 16),
           ],
-          
+
           _buildTextField(
             controller: _emailController,
             label: 'Email',
             icon: Icons.email,
             keyboardType: TextInputType.emailAddress,
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           _buildTextField(
             controller: _passwordController,
             label: 'Contraseña',
@@ -231,9 +223,9 @@ class _PantallaNombreEdadState extends State<PantallaNombreEdad>
               },
             ),
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Mensajes de error/éxito
           if (_errorMessage != null)
             Container(
@@ -257,7 +249,7 @@ class _PantallaNombreEdadState extends State<PantallaNombreEdad>
                 ],
               ),
             ),
-          
+
           if (_successMessage != null)
             Container(
               padding: const EdgeInsets.all(12),
@@ -280,43 +272,50 @@ class _PantallaNombreEdadState extends State<PantallaNombreEdad>
                 ],
               ),
             ),
-          
+
           // Botón principal
           BotonAnimado(
             onTap: _isLoading ? () {} : _submitForm,
-            child: _isLoading
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            child:
+                _isLoading
+                    ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    )
+                    : Text(
+                      _isRegistro ? 'Registrarse' : 'Iniciar Sesión',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
-                  )
-                : Text(
-                    _isRegistro ? 'Registrarse' : 'Iniciar Sesión',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Alternar entre registro e inicio de sesión
           TextButton(
-            onPressed: _isLoading ? null : () {
-              setState(() {
-                _isRegistro = !_isRegistro;
-                _errorMessage = null;
-                _successMessage = null;
-              });
-            },
+            onPressed:
+                _isLoading
+                    ? null
+                    : () {
+                      setState(() {
+                        _isRegistro = !_isRegistro;
+                        _errorMessage = null;
+                        _successMessage = null;
+                      });
+                    },
             child: RichText(
               text: TextSpan(
-                text: _isRegistro ? '¿Ya tienes una cuenta? ' : '¿No tienes cuenta? ',
+                text:
+                    _isRegistro
+                        ? '¿Ya tienes una cuenta? '
+                        : '¿No tienes cuenta? ',
                 style: TextStyle(
                   color: Colors.white.withOpacity(0.8),
                   fontSize: 14,
@@ -415,46 +414,46 @@ class _PantallaNombreEdadState extends State<PantallaNombreEdad>
   bool _validateFields() {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
-    
+
     if (email.isEmpty) {
       setState(() {
         _errorMessage = 'Por favor ingresa tu email';
       });
       return false;
     }
-    
+
     if (!email.contains('@') || !email.contains('.')) {
       setState(() {
         _errorMessage = 'Ingresa un email válido';
       });
       return false;
     }
-    
+
     if (password.isEmpty) {
       setState(() {
         _errorMessage = 'Por favor ingresa tu contraseña';
       });
       return false;
     }
-    
+
     if (_isRegistro) {
       final nombre = _nombreController.text.trim();
       final edadText = _edadController.text;
-      
+
       if (nombre.isEmpty) {
         setState(() {
           _errorMessage = 'Por favor ingresa tu nombre';
         });
         return false;
       }
-      
+
       if (edadText.isEmpty) {
         setState(() {
           _errorMessage = 'Por favor ingresa tu edad';
         });
         return false;
       }
-      
+
       final edad = int.tryParse(edadText);
       if (edad == null || edad < 3 || edad > 12) {
         setState(() {
@@ -462,7 +461,7 @@ class _PantallaNombreEdadState extends State<PantallaNombreEdad>
         });
         return false;
       }
-      
+
       if (password.length < 6) {
         setState(() {
           _errorMessage = 'La contraseña debe tener al menos 6 caracteres';
@@ -470,7 +469,7 @@ class _PantallaNombreEdadState extends State<PantallaNombreEdad>
         return false;
       }
     }
-    
+
     return true;
   }
 
@@ -487,10 +486,9 @@ class _PantallaNombreEdadState extends State<PantallaNombreEdad>
         setState(() {
           _successMessage = result.message;
         });
-        
+
         // Mostrar diálogo de verificación de email
         _showEmailVerificationDialog();
-        
       } else {
         setState(() {
           _errorMessage = result.message;
@@ -548,10 +546,7 @@ class _PantallaNombreEdadState extends State<PantallaNombreEdad>
             children: [
               Icon(Icons.email, color: Colors.yellow, size: 30),
               SizedBox(width: 10),
-              Text(
-                'Verifica tu email',
-                style: TextStyle(color: Colors.white),
-              ),
+              Text('Verifica tu email', style: TextStyle(color: Colors.white)),
             ],
           ),
           content: Column(
@@ -581,7 +576,9 @@ class _PantallaNombreEdadState extends State<PantallaNombreEdad>
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.of(context).pop(); // Cerrar también la pantalla de registro
+                Navigator.of(
+                  context,
+                ).pop(); // Cerrar también la pantalla de registro
               },
               child: const Text(
                 'Entendido',
@@ -590,7 +587,9 @@ class _PantallaNombreEdadState extends State<PantallaNombreEdad>
             ),
             TextButton(
               onPressed: () async {
-                await _authService.reenviarVerificacion(_emailController.text.trim());
+                await _authService.reenviarVerificacion(
+                  _emailController.text.trim(),
+                );
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(

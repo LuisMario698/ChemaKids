@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/contador_puntos_racha.dart';
-import '../widgets/dialogo_racha_perdida.dart';
+import '../widgets/tema_juego_chemakids.dart';
 import 'dart:math';
 
 class JuegoSilabasDesdeCero extends StatefulWidget {
@@ -95,19 +94,7 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
     });
     Future.delayed(const Duration(milliseconds: 350), () {
       if (mounted) setState(() => _animandoVocal[vocalIdx] = false);
-    });
-  }
-
-  void _reset() {
-    setState(() {
-      seleccionVocal = null;
-      silabaFormada = null;
-      showConfetti = false;
-      for (int i = 0; i < _animandoVocal.length; i++) {
-        _animandoVocal[i] = false;
-      }
-    });
-  }
+    });  }
 
   void _siguienteNivel() {
     setState(() {
@@ -200,25 +187,15 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
       ),
     );
   }
-
   @override
   Widget build(BuildContext context) {
     final String consonanteNivel = consonantes[nivelActual];
-    final Color bgColor = _bgColors[nivelActual % _bgColors.length];
     final String emoji = _emojiList[nivelActual % _emojiList.length];
 
-    // Animación de fondo con burbujas moviéndose
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final double screenHeight = MediaQuery.of(context).size.height;
-
-    return Scaffold(
-      backgroundColor: bgColor,
-      appBar: AppBar(
-        backgroundColor: bgColor,
-        elevation: 0,
-        title: const SizedBox.shrink(),
-      ),
-      body: Stack(
+    return PlantillaJuegoChemaKids(
+      titulo: 'Sílabas desde Cero',
+      icono: Icons.abc,
+      contenido: Stack(
         children: [
           // Fondo animado de burbujas
           ...List.generate(8, (i) {

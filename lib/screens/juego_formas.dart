@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/tema_juego_chemakids.dart';
 
 class JuegoFormas extends StatefulWidget {
   const JuegoFormas({Key? key}) : super(key: key);
@@ -32,15 +33,16 @@ class _JuegoFormasState extends State<JuegoFormas> {
       }
     });
   }
-
   @override
   Widget build(BuildContext context) {
     final pregunta = _preguntas[_indice];
     final opciones =
         _preguntas.map((e) => e['forma'] as BoxShape).toList()..shuffle();
-    return Scaffold(
-      appBar: AppBar(title: const Text('Formas')),
-      body: Center(
+    
+    return PlantillaJuegoChemaKids(
+      titulo: 'Formas',
+      icono: Icons.circle_outlined,
+      contenido: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

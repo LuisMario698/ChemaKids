@@ -35,7 +35,9 @@ void main() async {
     if (dbInitialized) {
       print('✅ Base de datos inicializada correctamente');
     } else {
-      print('⚠️ Base de datos no pudo inicializarse - funcionando en modo offline');
+      print(
+        '⚠️ Base de datos no pudo inicializarse - funcionando en modo offline',
+      );
     }
   } catch (e) {
     print('❌ Error al inicializar base de datos: $e');
@@ -55,7 +57,7 @@ void main() async {
 
 class ChemakidsApp extends StatelessWidget {
   const ChemakidsApp({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -77,10 +79,7 @@ class ChemakidsApp extends StatelessWidget {
                       SizedBox(height: 20),
                       Text(
                         'Cargando ChemaKids...',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                        ),
+                        style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
                     ],
                   ),
@@ -88,7 +87,7 @@ class ChemakidsApp extends StatelessWidget {
               ),
             );
           }
-            // App principal una vez inicializada
+          // App principal una vez inicializada
           return MaterialApp(
             navigatorKey: navigatorKey,
             title: 'Chemakids',
@@ -112,7 +111,8 @@ class ChemakidsApp extends StatelessWidget {
               '/formar-palabras': (context) => const JuegoFormarPalabras(),
               '/memorama': (context) => const JuegoMemorama(),
               '/sumas-restas': (context) => const JuegoSumasYRestas(),
-              '/registro-invitado': (context) => const PantallaRegistroInvitado(),
+              '/registro-invitado':
+                  (context) => const PantallaRegistroInvitado(),
             },
             theme: ThemeData(
               primarySwatch: Colors.deepPurple,

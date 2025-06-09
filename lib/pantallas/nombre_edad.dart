@@ -497,11 +497,15 @@ class _PantallaNombreEdadState extends State<PantallaNombreEdad>
               // Actualizar el EstadoApp con el usuario registrado
               final estadoApp = context.read<EstadoApp>();
               await estadoApp.establecerUsuarioAutenticado(perfil);
-              
-              print('✅ [PantallaNombreEdad] Usuario registrado y EstadoApp actualizado');
+
+              print(
+                '✅ [PantallaNombreEdad] Usuario registrado y EstadoApp actualizado',
+              );
             }
           } catch (e) {
-            print('⚠️ [PantallaNombreEdad] Error al obtener perfil después del registro: $e');
+            print(
+              '⚠️ [PantallaNombreEdad] Error al obtener perfil después del registro: $e',
+            );
           }
         }
 
@@ -530,13 +534,15 @@ class _PantallaNombreEdadState extends State<PantallaNombreEdad>
             // Actualizar el EstadoApp con el usuario autenticado
             final estadoApp = context.read<EstadoApp>();
             await estadoApp.establecerUsuarioAutenticado(perfil);
-            
-            print('✅ [PantallaNombreEdad] Usuario autenticado y EstadoApp actualizado');
+
+            print(
+              '✅ [PantallaNombreEdad] Usuario autenticado y EstadoApp actualizado',
+            );
           }
         } catch (e) {
           print('⚠️ [PantallaNombreEdad] Error al obtener perfil: $e');
         }
-        
+
         // Regresar al menú principal
         Navigator.of(context).pop();
       } else {

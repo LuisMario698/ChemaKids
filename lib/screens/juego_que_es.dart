@@ -4,6 +4,7 @@ import 'package:chemakids/models/question_que_es.dart';
 import '../widgets/boton_animado.dart';
 import '../widgets/dialogo_racha_perdida.dart';
 import '../widgets/contador_puntos_racha.dart';
+import '../widgets/tema_juego_chemakids.dart';
 
 class JuegoQueEs extends StatefulWidget {
   const JuegoQueEs({super.key});
@@ -189,162 +190,120 @@ class _JuegoQueEsState extends State<JuegoQueEs>
       ),
     );
   }
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isDesktop = screenWidth > 600;
     final currentQuestion = questions[_currentQuestionIndex];
 
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              const Color(0xFF2A0944), // Dark Purple
-              const Color(0xFF3B0B54), // Lighter Purple
-            ],
+    return PlantillaJuegoChemaKids(
+      titulo: '¿Qué es?',
+      icono: Icons.help_outline,
+      contenido: Stack(
+        children: [
+          // Score positioned overlay
+          Positioned(
+            top: 16,
+            right: 16,
+            child: ContadorPuntosRacha(score: _score, streak: _streak),
           ),
-        ),
-        child: SafeArea(
-          child: Stack(
-            children: [
-              // Back button and Score
-              Positioned(
-                top: 16,
-                left: 0,
-                right: 0,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                          size: 32,
-                        ),
-                        onPressed: () => Navigator.of(context).pop(),
-                      ),
-                      ContadorPuntosRacha(score: _score, streak: _streak),
-                    ],
-                  ),
-                ),
-              ), // Title
-              Positioned(
-                top: 80,
-                left: 24,
-                child: Text(
-                  '¿Qué es?',
-                  style: const TextStyle(
-                    fontSize: 48,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
 
-              // Main image
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 100),
-                  child: Transform.scale(
-                    scale: _showSuccess ? 1.1 : 1.0,
-                    child: Container(
-                      width: isDesktop ? 400 : 300,
-                      height: isDesktop ? 400 : 300,
-                      decoration: BoxDecoration(
-                        color:
-                            _showSuccess
-                                ? Colors.green[100]?.withOpacity(0.15)
+          // Main image
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 100),
+              child: Transform.scale(
+                scale: _showSuccess ? 1.1 : 1.0,
+                child: Container(
+                  width: isDesktop ? 400 : 300,
+                  height: isDesktop ? 400 : 300,
+                  decoration: BoxDecoration(
+                    color:
+                        _showSuccess
+                            ? Colors.green[100]?.withOpacity(0.15)
+                            : _showError
+                            ? Colors.red[100]?.withOpacity(0.15)
+                            : Colors.white.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: (_showSuccess
+                                ? Colors.green[400]
                                 : _showError
-                                ? Colors.red[100]?.withOpacity(0.15)
-                                : Colors.white.withOpacity(0.1),
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: (_showSuccess
-                                    ? Colors.green[400]
-                                    : _showError
-                                    ? Colors.red[400]
-                                    : Colors.white)!
-                                .withOpacity(0.2),
-                            blurRadius: 20,
-                            spreadRadius: 5,
-                          ),
-                        ],
-                      ),
-                      child: Center(
-                        child: Image.network(
-                          currentQuestion.imageUrl,
-                          width: isDesktop ? 300 : 200,
-                          height: isDesktop ? 300 : 200,
-                          errorBuilder:
-                              (context, error, stackTrace) => Icon(
-                                Icons.image_not_supported,
-                                color: Colors.red,
-                                size: isDesktop ? 200 : 150,
-                              ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              // Option buttons - Randomize the order
-              Positioned(
-                bottom: 40,
-                left: 0,
-                right: 0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    if (DateTime.now().millisecondsSinceEpoch % 2 == 0) ...[
-                      _buildOptionButton(
-                        text: currentQuestion.wrongAnswer,
-                        isCorrect: false,
-                      ),
-                      _buildOptionButton(
-                        text: currentQuestion.correctAnswer,
-                        isCorrect: true,
-                      ),
-                    ] else ...[
-                      _buildOptionButton(
-                        text: currentQuestion.correctAnswer,
-                        isCorrect: true,
-                      ),
-                      _buildOptionButton(
-                        text: currentQuestion.wrongAnswer,
-                        isCorrect: false,
+                                ? Colors.red[400]
+                                : Colors.white)!
+                            .withOpacity(0.2),
+                        blurRadius: 20,
+                        spreadRadius: 5,
                       ),
                     ],
-                  ],
-                ),
-              ),
-
-              // Success/Error overlay
-              if (_showSuccess || _showError)
-                Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  color: (_showSuccess ? Colors.green : Colors.red).withValues(
-                    alpha: 26,
                   ),
                   child: Center(
-                    child: Icon(
-                      _showSuccess ? Icons.check_circle : Icons.close,
-                      color: _showSuccess ? Colors.green : Colors.red,
-                      size: 100,
+                    child: Image.network(
+                      currentQuestion.imageUrl,
+                      width: isDesktop ? 300 : 200,
+                      height: isDesktop ? 300 : 200,
+                      errorBuilder:
+                          (context, error, stackTrace) => Icon(
+                            Icons.image_not_supported,
+                            color: Colors.red,
+                            size: isDesktop ? 200 : 150,
+                          ),
                     ),
                   ),
                 ),
-            ],
+              ),
+            ),
           ),
-        ),
+
+          // Option buttons - Randomize the order
+          Positioned(
+            bottom: 40,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                if (DateTime.now().millisecondsSinceEpoch % 2 == 0) ...[
+                  _buildOptionButton(
+                    text: currentQuestion.wrongAnswer,
+                    isCorrect: false,
+                  ),
+                  _buildOptionButton(
+                    text: currentQuestion.correctAnswer,
+                    isCorrect: true,
+                  ),
+                ] else ...[
+                  _buildOptionButton(
+                    text: currentQuestion.correctAnswer,
+                    isCorrect: true,
+                  ),
+                  _buildOptionButton(
+                    text: currentQuestion.wrongAnswer,
+                    isCorrect: false,
+                  ),
+                ],
+              ],
+            ),
+          ),
+
+          // Success/Error overlay
+          if (_showSuccess || _showError)
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: (_showSuccess ? Colors.green : Colors.red).withValues(
+                alpha: 26,
+              ),
+              child: Center(
+                child: Icon(
+                  _showSuccess ? Icons.check_circle : Icons.close,
+                  color: _showSuccess ? Colors.green : Colors.red,
+                  size: 100,
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

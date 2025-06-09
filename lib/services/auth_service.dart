@@ -174,7 +174,10 @@ class AuthService {
   }
 
   /// Inicia sesión permitiendo usuarios no verificados (para desarrollo)
-  Future<AuthResult> iniciarSesionSinVerificacion(String email, String password) async {
+  Future<AuthResult> iniciarSesionSinVerificacion(
+    String email,
+    String password,
+  ) async {
     try {
       print('🔐 [AuthService] Iniciando sesión sin verificación: $email');
 
@@ -185,20 +188,24 @@ class AuthService {
       );
 
       if (response.user != null) {
-        print('✅ [AuthService] Sesión iniciada exitosamente (sin verificación)');
+        print(
+          '✅ [AuthService] Sesión iniciada exitosamente (sin verificación)',
+        );
         return await _procesarLoginExitoso(response.user!);
       } else {
         return AuthResult.error('Error al iniciar sesión');
       }
     } on AuthException catch (e) {
       print('❌ [AuthService] Error de autenticación: ${e.message}');
-      
+
       // Si el error es por email no confirmado, permitir acceso en modo desarrollo
       if (e.message == 'Email not confirmed') {
-        print('⚠️ [AuthService] Email no confirmado, permitiendo acceso en modo desarrollo');
+        print(
+          '⚠️ [AuthService] Email no confirmado, permitiendo acceso en modo desarrollo',
+        );
         return await _loginSinVerificacion(email, password);
       }
-      
+
       return AuthResult.error(_getErrorMessage(e));
     } catch (e) {
       print('❌ [AuthService] Error inesperado: $e');
@@ -207,16 +214,19 @@ class AuthService {
   }
 
   /// Método interno para manejar login sin verificación
-  Future<AuthResult> _loginSinVerificacion(String email, String password) async {
+  Future<AuthResult> _loginSinVerificacion(
+    String email,
+    String password,
+  ) async {
     try {
       print('🔧 [AuthService] Intentando login sin verificación para: $email');
-      
+
       // Para desarrollo, verificar si el usuario existe en nuestra BD
       final usuarioExistente = await _verificarUsuarioEnBD(email);
-      
+
       if (usuarioExistente != null) {
         print('✅ [AuthService] Usuario encontrado en BD, permitiendo acceso');
-        
+
         return AuthResult.success(
           message: 'Acceso permitido (modo desarrollo sin verificación)',
           user: null, // En modo desarrollo no tenemos user de Supabase Auth
@@ -224,7 +234,7 @@ class AuthService {
       } else {
         return AuthResult.error(
           'Usuario no encontrado en la base de datos. '
-          'Por favor contacta al administrador.'
+          'Por favor contacta al administrador.',
         );
       }
     } catch (e) {
@@ -380,16 +390,13 @@ class AuthService {
 
       // Paso 1: Crear registro de progreso del usuario
       print('📊 [AuthService] Creando registro de progreso...');
-      final progresoResponse = await _supabase
-          .from('progreso_usuario')
-          .insert({
-            'nivel': 1,
-            'racha_1': 0,
-            'racha_2': 0,
-          })
-          .select()
-          .single();
-      
+      final progresoResponse =
+          await _supabase
+              .from('progreso_usuario')
+              .insert({'nivel': 1, 'racha_1': 0, 'racha_2': 0})
+              .select()
+              .single();
+
       final idProgreso = progresoResponse['id'] as int;
       print('✅ [AuthService] Progreso creado con ID: $idProgreso');
 

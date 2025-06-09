@@ -1,4 +1,3 @@
-
 import '../models/usuario_model.dart';
 import '../models/invitado_model.dart';
 import '../models/juego_model.dart';
@@ -14,7 +13,7 @@ class EjemploUsoBD {
   static Future<void> ejemploCrearPerfilUsuario() async {
     try {
       print('\n🎮 === EJEMPLO: Crear Perfil de Usuario ===');
-      
+
       // Crear usuario principal
       final nuevoUsuario = UsuarioModel(
         id: 0, // Se auto-genera en la BD
@@ -40,7 +39,6 @@ class EjemploUsoBD {
       print('👥 Invitado creado: ${invitadoCreado.nombre}');
 
       print('✅ Perfil completo creado exitosamente\n');
-      
     } catch (e) {
       print('❌ Error en ejemplo crear perfil: $e\n');
     }
@@ -50,7 +48,7 @@ class EjemploUsoBD {
   static Future<void> ejemploConfigurarJuegos() async {
     try {
       print('🎮 === EJEMPLO: Configurar Juegos Iniciales ===');
-      
+
       final juegosIniciales = [
         JuegoModel(
           id: 0,
@@ -77,7 +75,7 @@ class EjemploUsoBD {
       for (var juego in juegosIniciales) {
         // Verificar si ya existe
         final existe = await _db.juegos.existeJuegoConNombre(juego.nombre);
-        
+
         if (!existe) {
           final juegoCreado = await _db.juegos.crearJuego(juego);
           print('🎯 Juego agregado: ${juegoCreado?.nombre}');
@@ -87,7 +85,6 @@ class EjemploUsoBD {
       }
 
       print('✅ Configuración de juegos completada\n');
-      
     } catch (e) {
       print('❌ Error en configurar juegos: $e\n');
     }
@@ -97,11 +94,11 @@ class EjemploUsoBD {
   static Future<void> ejemploRegistrarProgreso() async {
     try {
       print('📈 === EJEMPLO: Registrar Progreso de Juego ===');
-      
+
       // Buscar un usuario y un juego para el ejemplo
       final usuarios = await _db.usuarios.obtenerTodos();
       final juegos = await _db.juegos.obtenerJuegos();
-      
+
       if (usuarios.isEmpty || juegos.isEmpty) {
         print('⚠️ No hay usuarios o juegos disponibles para el ejemplo');
         return;
@@ -109,7 +106,7 @@ class EjemploUsoBD {
 
       final usuario = usuarios.first;
       final juego = juegos.first;
-      
+
       // Crear progreso inicial
       final nuevoProgreso = ProgresoModel(
         id: 0,
@@ -121,8 +118,12 @@ class EjemploUsoBD {
         idInvitado: 0, // Si es 0, indica que no hay invitado
       );
 
-      final progresoCreado = await _db.progreso.crearProgreso(nuevoProgreso.toJson());
-      print('📊 Progreso registrado: Nivel ${progresoCreado?['nivel']}, Puntaje ${progresoCreado?['puntaje']}');
+      final progresoCreado = await _db.progreso.crearProgreso(
+        nuevoProgreso.toJson(),
+      );
+      print(
+        '📊 Progreso registrado: Nivel ${progresoCreado?['nivel']}, Puntaje ${progresoCreado?['puntaje']}',
+      );
 
       // Simular progreso en varios niveles
       for (int nivel = 2; nivel <= 5; nivel++) {
@@ -141,13 +142,14 @@ class EjemploUsoBD {
       }
 
       // Obtener estadísticas del juego
-      final estadisticas = await _db.progreso.obtenerEstadisticasJuego(juego.id);
+      final estadisticas = await _db.progreso.obtenerEstadisticasJuego(
+        juego.id,
+      );
       print('📈 Estadísticas del juego "${juego.nombre}":');
       print('   Total jugadores: ${estadisticas['totalJugadores']}');
       print('   Mejor puntaje: ${estadisticas['mejorPuntaje']}');
 
       print('✅ Registro de progreso completado\n');
-      
     } catch (e) {
       print('❌ Error en registrar progreso: $e\n');
     }
@@ -157,9 +159,9 @@ class EjemploUsoBD {
   static Future<void> ejemploConsultarProgreso() async {
     try {
       print('📊 === EJEMPLO: Consultar Progreso del Usuario ===');
-      
+
       final usuarios = await _db.usuarios.obtenerTodos();
-      
+
       if (usuarios.isEmpty) {
         print('⚠️ No hay usuarios disponibles');
         return;
@@ -169,8 +171,10 @@ class EjemploUsoBD {
       print('👤 Consultando progreso de: ${usuario.nombre}');
 
       // Obtener todo el progreso del usuario
-      final progreso = await _db.progreso.obtenerProgresoUsuario(usuario.idProgreso);
-      
+      final progreso = await _db.progreso.obtenerProgresoUsuario(
+        usuario.idProgreso,
+      );
+
       if (progreso == null || progreso.isEmpty) {
         print('📭 No hay progreso registrado para este usuario');
         return;
@@ -182,7 +186,6 @@ class EjemploUsoBD {
       print('   Racha 2: ${progreso['racha_2']}');
 
       print('✅ Consulta de progreso completada\n');
-      
     } catch (e) {
       print('❌ Error al consultar progreso: $e\n');
     }
@@ -192,11 +195,12 @@ class EjemploUsoBD {
   static Future<void> ejemploBusquedasYFiltros() async {
     try {
       print('🔍 === EJEMPLO: Búsquedas y Filtros ===');
-      
+
       // Buscar usuarios jóvenes (obtenemos todos y filtramos)
       print('👶 Usuarios menores de 10 años:');
       final todosLosUsuarios = await _db.usuarios.obtenerTodos();
-      final usuariosJovenes = todosLosUsuarios.where((usuario) => usuario.edad < 10).toList();
+      final usuariosJovenes =
+          todosLosUsuarios.where((usuario) => usuario.edad < 10).toList();
       for (var usuario in usuariosJovenes) {
         print('   ${usuario.nombre} (${usuario.edad} años)');
       }
@@ -211,15 +215,15 @@ class EjemploUsoBD {
       // Obtener mejores puntajes
       final usuarios = await _db.usuarios.obtenerTodos();
       final juegos = await _db.juegos.obtenerJuegos();
-      
+
       if (usuarios.isNotEmpty && juegos.isNotEmpty) {
         print('\n🏆 Mejores puntajes:');
         for (var juego in juegos.take(3)) {
           final mejorProgreso = await _db.progreso.obtenerMejorPuntaje(
-            usuarios.first.id, 
-            juego.nombre
+            usuarios.first.id,
+            juego.nombre,
           );
-          
+
           if (mejorProgreso != null) {
             print('   ${juego.nombre}: ${mejorProgreso['puntaje']} pts');
           }
@@ -227,7 +231,6 @@ class EjemploUsoBD {
       }
 
       print('✅ Búsquedas completadas\n');
-      
     } catch (e) {
       print('❌ Error en búsquedas: $e\n');
     }
@@ -236,13 +239,13 @@ class EjemploUsoBD {
   /// Ejecuta todos los ejemplos en secuencia
   static Future<void> ejecutarTodosLosEjemplos() async {
     print('🚀 === EJECUTANDO TODOS LOS EJEMPLOS DE USO DE BD ===\n');
-    
+
     await ejemploCrearPerfilUsuario();
     await ejemploConfigurarJuegos();
     await ejemploRegistrarProgreso();
     await ejemploConsultarProgreso();
     await ejemploBusquedasYFiltros();
-    
+
     print('🎉 === TODOS LOS EJEMPLOS COMPLETADOS ===');
   }
 }

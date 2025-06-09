@@ -17,62 +17,80 @@ class InvitadoService {
 
       // Verificar que Supabase esté inicializado
       if (!_supabase.isInitialized) {
-        print('⚠️ [InvitadoService] SupabaseService no está inicializado. Creando usuario en modo offline...');
-        
+        print(
+          '⚠️ [InvitadoService] SupabaseService no está inicializado. Creando usuario en modo offline...',
+        );
+
         // Crear invitado con ID temporal para modo offline pero con IDs válidos
         final timestampId = DateTime.now().millisecondsSinceEpoch;
         final invitadoOffline = invitado.copyWith(
           id: timestampId, // ID temporal basado en timestamp
           idProgreso: timestampId + 1, // ID temporal de progreso
         );
-        
-        print('✅ [InvitadoService] Invitado creado en modo offline: ${invitadoOffline.nombre}');
-        print('📋 [InvitadoService] Datos offline: ID=${invitadoOffline.id}, IdProgreso=${invitadoOffline.idProgreso}');
+
+        print(
+          '✅ [InvitadoService] Invitado creado en modo offline: ${invitadoOffline.nombre}',
+        );
+        print(
+          '📋 [InvitadoService] Datos offline: ID=${invitadoOffline.id}, IdProgreso=${invitadoOffline.idProgreso}',
+        );
         return invitadoOffline;
       }
 
       // Intentar crear en Supabase
       try {
         // Paso 1: Crear registro de progreso para invitado
-        print('📊 [InvitadoService] Creando registro de progreso para invitado...');
-        final progresoResponse = await _supabase.client
-            .from('progreso_invitado')
-            .insert({
-              'nivel': 1,
-              'racha_1': 0,
-              'racha_2': 0,
-            })
-            .select()
-            .single();
-        
+        print(
+          '📊 [InvitadoService] Creando registro de progreso para invitado...',
+        );
+        final progresoResponse =
+            await _supabase.client
+                .from('progreso_invitado')
+                .insert({'nivel': 1, 'racha_1': 0, 'racha_2': 0})
+                .select()
+                .single();
+
         final idProgreso = progresoResponse['id'] as int;
         print('✅ [InvitadoService] Progreso creado con ID: $idProgreso');
 
         // Paso 2: Crear invitado con referencia al progreso
-        print('👤 [InvitadoService] Creando invitado con progreso vinculado...');
+        print(
+          '👤 [InvitadoService] Creando invitado con progreso vinculado...',
+        );
         final invitadoData = invitado.toJson();
         invitadoData['id_progreso'] = idProgreso;
 
-        final response = await _supabase.client
-            .from(tableName)
-            .insert(invitadoData)
-            .select()
-            .single();
+        final response =
+            await _supabase.client
+                .from(tableName)
+                .insert(invitadoData)
+                .select()
+                .single();
 
         final invitadoCreado = InvitadoModel.fromJson(response);
-        print('✅ [InvitadoService] Invitado creado exitosamente en Supabase: $invitadoCreado');
+        print(
+          '✅ [InvitadoService] Invitado creado exitosamente en Supabase: $invitadoCreado',
+        );
 
         return invitadoCreado;
       } catch (e) {
-        print('⚠️ [InvitadoService] Error al crear en Supabase, creando en modo offline: $e');
-        
+        print(
+          '⚠️ [InvitadoService] Error al crear en Supabase, creando en modo offline: $e',
+        );
+
         // Fallback a modo offline si falla Supabase
         final invitadoOffline = invitado.copyWith(
-          id: DateTime.now().millisecondsSinceEpoch, // ID temporal basado en timestamp
-          idProgreso: DateTime.now().millisecondsSinceEpoch + 1, // ID temporal de progreso
+          id:
+              DateTime.now()
+                  .millisecondsSinceEpoch, // ID temporal basado en timestamp
+          idProgreso:
+              DateTime.now().millisecondsSinceEpoch +
+              1, // ID temporal de progreso
         );
-        
-        print('✅ [InvitadoService] Invitado creado en modo offline (fallback): ${invitadoOffline.nombre}');
+
+        print(
+          '✅ [InvitadoService] Invitado creado en modo offline (fallback): ${invitadoOffline.nombre}',
+        );
         return invitadoOffline;
       }
     } catch (e) {

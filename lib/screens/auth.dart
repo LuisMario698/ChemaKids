@@ -400,8 +400,7 @@ class _PantallaAuthState extends State<PantallaAuth> {
 
       setState(() {
         if (perfil != null) {
-          _mensaje =
-              '✅ Perfil encontrado: ${perfil.nombre}';
+          _mensaje = '✅ Perfil encontrado: ${perfil.nombre}';
         } else {
           _mensaje = '⚠️ No se encontró perfil en la base de datos';
         }

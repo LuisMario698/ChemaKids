@@ -82,21 +82,24 @@ class _PantallaInicioState extends State<PantallaInicio>
                   child: FadeTransition(
                     opacity: _fadeAnimation,
                     child: Column(
-                      children: [                        // Botón de Play principal (solo activo con sesión iniciada)
+                      children: [
+                        // Botón de Play principal (solo activo con sesión iniciada)
                         Consumer<EstadoApp>(
                           builder: (context, estadoApp, child) {
                             final tieneUsuario = estadoApp.tieneUsuario;
                             final inicializado = estadoApp.inicializado;
-                            
+
                             // Debug logs para diagnosticar el problema
                             print('🔍 [PantallaInicio] Estado actual:');
                             print('  - Inicializado: $inicializado');
                             print('  - Tiene usuario: $tieneUsuario');
                             print('  - Es invitado: ${estadoApp.esInvitado}');
                             if (tieneUsuario) {
-                              print('  - Nombre usuario: ${estadoApp.nombreUsuario}');
+                              print(
+                                '  - Nombre usuario: ${estadoApp.nombreUsuario}',
+                              );
                             }
-                            
+
                             return TweenAnimationBuilder<double>(
                               tween: Tween(begin: 0.8, end: 1.0),
                               duration: const Duration(seconds: 1),
@@ -105,30 +108,46 @@ class _PantallaInicioState extends State<PantallaInicio>
                                 return Transform.scale(
                                   scale: value,
                                   child: GestureDetector(
-                                    onTap: tieneUsuario ? () {
-                                      Navigator.pushReplacementNamed(
-                                        context,
-                                        '/menu',
-                                      );
-                                    } : () {
-                                      // Mostrar mensaje si no tiene sesión
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: const Row(
-                                            children: [
-                                              Icon(Icons.warning, color: Colors.white),
-                                              SizedBox(width: 8),
-                                              Text('Debes iniciar sesión o jugar como invitado primero'),
-                                            ],
-                                          ),
-                                          backgroundColor: Colors.orange,
-                                          behavior: SnackBarBehavior.floating,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(10),
-                                          ),
-                                        ),
-                                      );
-                                    },                                    child: Stack(
+                                    onTap:
+                                        tieneUsuario
+                                            ? () {
+                                              Navigator.pushReplacementNamed(
+                                                context,
+                                                '/menu',
+                                              );
+                                            }
+                                            : () {
+                                              // Mostrar mensaje si no tiene sesión
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  content: const Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.warning,
+                                                        color: Colors.white,
+                                                      ),
+                                                      SizedBox(width: 8),
+                                                      Text(
+                                                        'Debes iniciar sesión o jugar como invitado primero',
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  backgroundColor:
+                                                      Colors.orange,
+                                                  behavior:
+                                                      SnackBarBehavior.floating,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          10,
+                                                        ),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                    child: Stack(
                                       alignment: Alignment.center,
                                       children: [
                                         // Efecto de brillo
@@ -139,11 +158,10 @@ class _PantallaInicioState extends State<PantallaInicio>
                                             shape: BoxShape.circle,
                                             gradient: RadialGradient(
                                               colors: [
-                                                (tieneUsuario 
-                                                  ? Colors.red.shade400 
-                                                  : Colors.grey.shade600).withValues(
-                                                  alpha: 0.2,
-                                                ),
+                                                (tieneUsuario
+                                                        ? Colors.red.shade400
+                                                        : Colors.grey.shade600)
+                                                    .withValues(alpha: 0.2),
                                                 Colors.transparent,
                                               ],
                                               stops: const [0.5, 1.0],
@@ -155,17 +173,17 @@ class _PantallaInicioState extends State<PantallaInicio>
                                           width: 120,
                                           height: 120,
                                           decoration: BoxDecoration(
-                                            color: tieneUsuario 
-                                                ? Colors.red.shade700 
-                                                : Colors.grey.shade700,
+                                            color:
+                                                tieneUsuario
+                                                    ? Colors.red.shade700
+                                                    : Colors.grey.shade700,
                                             shape: BoxShape.circle,
                                             boxShadow: [
                                               BoxShadow(
-                                                color: (tieneUsuario 
-                                                    ? Colors.red 
-                                                    : Colors.grey).withValues(
-                                                  alpha: 0.3,
-                                                ),
+                                                color: (tieneUsuario
+                                                        ? Colors.red
+                                                        : Colors.grey)
+                                                    .withValues(alpha: 0.3),
                                                 blurRadius: 20,
                                                 spreadRadius: 5,
                                               ),
@@ -181,26 +199,33 @@ class _PantallaInicioState extends State<PantallaInicio>
                                             gradient: LinearGradient(
                                               begin: Alignment.topLeft,
                                               end: Alignment.bottomRight,
-                                              colors: tieneUsuario ? [
-                                                Colors.red.shade400,
-                                                Colors.red.shade700,
-                                              ] : [
-                                                Colors.grey.shade500,
-                                                Colors.grey.shade700,
-                                              ],
+                                              colors:
+                                                  tieneUsuario
+                                                      ? [
+                                                        Colors.red.shade400,
+                                                        Colors.red.shade700,
+                                                      ]
+                                                      : [
+                                                        Colors.grey.shade500,
+                                                        Colors.grey.shade700,
+                                                      ],
                                             ),
                                           ),
                                           child: Icon(
-                                            tieneUsuario 
-                                                ? Icons.play_circle_rounded 
+                                            tieneUsuario
+                                                ? Icons.play_circle_rounded
                                                 : Icons.lock,
                                             size: 70,
-                                            color: tieneUsuario 
-                                                ? Colors.white 
-                                                : Colors.white.withValues(alpha: 0.7),
+                                            color:
+                                                tieneUsuario
+                                                    ? Colors.white
+                                                    : Colors.white.withValues(
+                                                      alpha: 0.7,
+                                                    ),
                                             fill: 1,
                                           ),
-                                        ),                                      ],
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 );
@@ -210,7 +235,7 @@ class _PantallaInicioState extends State<PantallaInicio>
                         ),
 
                         const SizedBox(height: 70),
-                        
+
                         // Botón de "Jugar como Invitado"
                         // TweenAnimationBuilder<double>(
                         //   tween: Tween(begin: 0.0, end: 1.0),
@@ -254,146 +279,172 @@ class _PantallaInicioState extends State<PantallaInicio>
         ],
       ),
     );
-  }  Widget _buildAuthOptions() {
+  }
+
+  Widget _buildAuthOptions() {
     return StreamBuilder(
       stream: _authService.authStateChanges,
       builder: (context, snapshot) {
         try {
           final estadoApp = context.watch<EstadoApp>();
-          
+
           // Simplificar la lógica - solo verificar si hay usuario
           final tieneUsuario = estadoApp.tieneUsuario;
 
-        return Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.2),
-              width: 1,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.2),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
+          return Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.2),
+                width: 1,
               ),
-            ],
-          ),          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (tieneUsuario) ...[
-                // Usuario autenticado o invitado - mostrar info del usuario
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: estadoApp.esInvitado 
-                        ? Colors.orange.withValues(alpha: 0.2)
-                        : Colors.green.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: estadoApp.esInvitado 
-                          ? Colors.orange.withValues(alpha: 0.5)
-                          : Colors.green.withValues(alpha: 0.5),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.2),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (tieneUsuario) ...[
+                  // Usuario autenticado o invitado - mostrar info del usuario
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color:
+                          estadoApp.esInvitado
+                              ? Colors.orange.withValues(alpha: 0.2)
+                              : Colors.green.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color:
+                            estadoApp.esInvitado
+                                ? Colors.orange.withValues(alpha: 0.5)
+                                : Colors.green.withValues(alpha: 0.5),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          estadoApp.esInvitado ? Icons.person : Icons.person,
+                          color:
+                              estadoApp.esInvitado
+                                  ? Colors.orange
+                                  : Colors.green,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 8),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              estadoApp.nombreUsuario.isNotEmpty
+                                  ? estadoApp.nombreUsuario
+                                  : 'Usuario',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              estadoApp.esInvitado
+                                  ? 'Modo Invitado'
+                                  : 'Usuario Registrado',
+                              style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.8),
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        estadoApp.esInvitado ? Icons.person : Icons.person,
-                        color: estadoApp.esInvitado ? Colors.orange : Colors.green,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 8),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [                          Text(
-                            estadoApp.nombreUsuario.isNotEmpty 
-                                ? estadoApp.nombreUsuario 
-                                : 'Usuario',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),                          Text(
-                            estadoApp.esInvitado 
-                                ? 'Modo Invitado'
-                                : 'Usuario Registrado',
-                            style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.8),
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),                ),                const SizedBox(height: 8),
-                // Siempre mostrar botón de cerrar sesión/salir cuando hay usuario
-                if (estadoApp.esInvitado) ...[
-                  // Para invitados: botón para salir del modo invitado
+                  const SizedBox(height: 8),
+                  // Siempre mostrar botón de cerrar sesión/salir cuando hay usuario
+                  if (estadoApp.esInvitado) ...[
+                    // Para invitados: botón para salir del modo invitado
+                    _buildAnimatedButton(
+                      onPressed: () => _cerrarSesion(),
+                      icon: Icons.exit_to_app,
+                      label: 'Salir',
+                      color: Colors.orange,
+                    ),
+                  ] else ...[
+                    // Para usuarios autenticados: botón de cerrar sesión
+                    _buildAnimatedButton(
+                      onPressed: () => _cerrarSesion(),
+                      icon: Icons.logout,
+                      label: 'Cerrar Sesión',
+                      color: Colors.red,
+                    ),
+                  ],
+                ] else ...[
+                  // Usuario no autenticado - mostrar opciones de login/registro
                   _buildAnimatedButton(
-                    onPressed: () => _cerrarSesion(),
-                    icon: Icons.exit_to_app,
-                    label: 'Salir',
+                    onPressed: () => _mostrarPantallaAuth(),
+                    icon: Icons.person_add,
+                    label: 'Registrarse',
+                    color: Colors.green,
+                  ),
+                  const SizedBox(height: 8),
+                  _buildAnimatedButton(
+                    onPressed: () => _mostrarPantallaAuth(esLogin: true),
+                    icon: Icons.login,
+                    label: 'Iniciar Sesión',
+                    color: Colors.blue,
+                  ),
+                  const SizedBox(height: 8),
+                  _buildAnimatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          pageBuilder: (
+                            context,
+                            animation,
+                            secondaryAnimation,
+                          ) {
+                            return const PantallaRegistroInvitado();
+                          },
+                          transitionsBuilder: (
+                            context,
+                            animation,
+                            secondaryAnimation,
+                            child,
+                          ) {
+                            const begin = Offset(0.0, 1.0);
+                            const end = Offset.zero;
+                            const curve = Curves.easeInOut;
+
+                            var tween = Tween(
+                              begin: begin,
+                              end: end,
+                            ).chain(CurveTween(curve: curve));
+
+                            return SlideTransition(
+                              position: animation.drive(tween),
+                              child: child,
+                            );
+                          },
+                          transitionDuration: const Duration(milliseconds: 400),
+                        ),
+                      );
+                    },
+                    icon: Icons.person_add,
+                    label: 'Jugar como Invitado',
                     color: Colors.orange,
                   ),
-                ] else ...[
-                  // Para usuarios autenticados: botón de cerrar sesión
-                  _buildAnimatedButton(
-                    onPressed: () => _cerrarSesion(),
-                    icon: Icons.logout,
-                    label: 'Cerrar Sesión',
-                    color: Colors.red,
-                  ),
-                ],] else ...[
-                // Usuario no autenticado - mostrar opciones de login/registro
-                _buildAnimatedButton(
-                  onPressed: () => _mostrarPantallaAuth(),
-                  icon: Icons.person_add,
-                  label: 'Registrarse',
-                  color: Colors.green,
-                ),
-                const SizedBox(height: 8),
-                _buildAnimatedButton(
-                  onPressed: () => _mostrarPantallaAuth(esLogin: true),
-                  icon: Icons.login,
-                  label: 'Iniciar Sesión',
-                  color: Colors.blue,
-                ),
-                const SizedBox(height: 8),
-                _buildAnimatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) {
-                          return const PantallaRegistroInvitado();
-                        },
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                          const begin = Offset(0.0, 1.0);
-                          const end = Offset.zero;
-                          const curve = Curves.easeInOut;
-
-                          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-                          return SlideTransition(
-                            position: animation.drive(tween),
-                            child: child,
-                          );
-                        },
-                        transitionDuration: const Duration(milliseconds: 400),
-                      ),
-                    );
-                  },
-                  icon: Icons.person_add,
-                  label: 'Jugar como Invitado',
-                  color: Colors.orange,
-                ),
-              ],            ],
-          ),
-        );
+                ],
+              ],
+            ),
+          );
         } catch (e) {
           // Si hay algún error al acceder al estado, mostrar solo los botones básicos
           print('❌ Error al acceder a EstadoApp: $e');
@@ -502,7 +553,8 @@ class _PantallaInicioState extends State<PantallaInicio>
             child: child,
           );
         },
-        transitionDuration: const Duration(milliseconds: 300),      ),
+        transitionDuration: const Duration(milliseconds: 300),
+      ),
     );
   }
 
@@ -511,7 +563,7 @@ class _PantallaInicioState extends State<PantallaInicio>
       final success = await _authService.cerrarSesion();
       final estadoApp = context.read<EstadoApp>();
       estadoApp.cerrarSesion();
-      
+
       if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -539,5 +591,6 @@ class _PantallaInicioState extends State<PantallaInicio>
           ),
         );
       }
-    }  }
+    }
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/tema_juego_chemakids.dart';
 
 class JuegoAnimales extends StatefulWidget {
   const JuegoAnimales({Key? key}) : super(key: key);
@@ -34,15 +35,16 @@ class _JuegoAnimalesState extends State<JuegoAnimales> {
       }
     });
   }
-
   @override
   Widget build(BuildContext context) {
     final pregunta = _preguntas[_indice];
     final opciones =
         _preguntas.map((e) => e['nombre'] as String).toList()..shuffle();
-    return Scaffold(
-      appBar: AppBar(title: const Text('Animales')),
-      body: Center(
+    
+    return PlantillaJuegoChemaKids(
+      titulo: 'Animales',
+      icono: Icons.pets,
+      contenido: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

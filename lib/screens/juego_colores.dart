@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/tema_juego_chemakids.dart';
 
 class JuegoColores extends StatefulWidget {
   const JuegoColores({Key? key}) : super(key: key);
@@ -34,50 +35,90 @@ class _JuegoColoresState extends State<JuegoColores> {
       }
     });
   }
-
   @override
   Widget build(BuildContext context) {
     final pregunta = _preguntas[_indice];
     final opciones =
         _preguntas.map((e) => e['color'] as Color).toList()..shuffle();
-    return Scaffold(
-      appBar: AppBar(title: const Text('Colores')),
-      body: Center(
+    
+    return PlantillaJuegoChemaKids(
+      titulo: 'Juego de Colores',
+      icono: Icons.palette,
+      mostrarAyuda: false,
+      contenido: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              '¿Cuál es el color "${pregunta['nombre']}"?',
-              style: const TextStyle(fontSize: 24, color: Colors.white),
+            // Pregunta
+            Container(
+              padding: const EdgeInsets.all(20),
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.9),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Text(
+                '¿Cuál es el color "${pregunta['nombre']}"?',
+                style: const TextStyle(
+                  fontSize: 28,
+                  color: Colors.deepPurple,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 40),
+            
+            // Opciones de colores
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children:
-                  opciones.map((color) {
-                    return GestureDetector(
-                      onTap: _respondido ? null : () => _verificar(color),
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 16),
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          color: color,
-                          shape: BoxShape.circle,
-                          border: Border.all(width: 3, color: Colors.white),
+              children: opciones.map((color) {
+                return GestureDetector(
+                  onTap: _respondido ? null : () => _verificar(color),
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: color,
+                      shape: BoxShape.circle,
+                      border: Border.all(width: 4, color: Colors.white),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
                         ),
-                      ),
-                    );
-                  }).toList(),
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
             ),
             const SizedBox(height: 30),
+            
+            // Mensaje de feedback
             if (_respondido)
-              Text(
-                _correcto ? '¡Correcto!' : 'Intenta de nuevo',
-                style: TextStyle(
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                decoration: BoxDecoration(
                   color: _correcto ? Colors.green : Colors.red,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Text(
+                  _correcto ? '¡Correcto!' : 'Intenta de nuevo',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
           ],

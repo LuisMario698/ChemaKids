@@ -46,8 +46,7 @@ class _TestConnectivityState extends State<TestConnectivity> {
                     const SizedBox(height: 8),
                     Text(_status),
                     const SizedBox(height: 16),
-                    if (_isLoading)
-                      const LinearProgressIndicator(),
+                    if (_isLoading) const LinearProgressIndicator(),
                   ],
                 ),
               ),
@@ -95,14 +94,15 @@ class _TestConnectivityState extends State<TestConnectivity> {
 
     try {
       final db = DatabaseManager.instance;
-      
+
       // Probar conexión obteniendo información básica
       final juegos = await db.juegos.obtenerJuegos();
-      
+
       setState(() {
-        _status = '✅ Conexión exitosa!\n'
-                 'Juegos encontrados: ${juegos.length}\n'
-                 'Base de datos operativa.';
+        _status =
+            '✅ Conexión exitosa!\n'
+            'Juegos encontrados: ${juegos.length}\n'
+            'Base de datos operativa.';
       });
     } catch (e) {
       setState(() {
@@ -123,7 +123,7 @@ class _TestConnectivityState extends State<TestConnectivity> {
 
     try {
       final db = DatabaseManager.instance;
-      
+
       // Crear un invitado de prueba con el nuevo sistema
       final nuevoInvitado = InvitadoModel(
         id: 0,
@@ -135,11 +135,12 @@ class _TestConnectivityState extends State<TestConnectivity> {
       final invitadoCreado = await db.invitados.crear(nuevoInvitado);
 
       setState(() {
-        _status = '✅ Invitado creado exitosamente!\n'
-                 'ID: ${invitadoCreado.id}\n'
-                 'Nombre: ${invitadoCreado.nombre}\n'
-                 'ID Progreso: ${invitadoCreado.idProgreso}\n'
-                 'Sistema de progreso funcionando.';
+        _status =
+            '✅ Invitado creado exitosamente!\n'
+            'ID: ${invitadoCreado.id}\n'
+            'Nombre: ${invitadoCreado.nombre}\n'
+            'ID Progreso: ${invitadoCreado.idProgreso}\n'
+            'Sistema de progreso funcionando.';
       });
     } catch (e) {
       setState(() {
@@ -161,7 +162,7 @@ class _TestConnectivityState extends State<TestConnectivity> {
     try {
       final db = DatabaseManager.instance;
       final estadoApp = Provider.of<EstadoApp>(context, listen: false);
-      
+
       // Crear invitado temporal
       final invitado = InvitadoModel(
         id: 0,
@@ -171,19 +172,20 @@ class _TestConnectivityState extends State<TestConnectivity> {
       );
 
       final invitadoCreado = await db.invitados.crear(invitado);
-      
+
       // Configurar en EstadoApp
       await estadoApp.establecerUsuarioInvitado(invitadoCreado);
-      
+
       // Verificar integración
       final tieneProgreso = estadoApp.tieneUsuario;
       final esInvitado = estadoApp.esInvitado;
 
       setState(() {
-        _status = '✅ Integración EstadoApp exitosa!\n'
-                 'Usuario configurado: $tieneProgreso\n'
-                 'Es invitado: $esInvitado\n'
-                 'Sistema integrado correctamente.';
+        _status =
+            '✅ Integración EstadoApp exitosa!\n'
+            'Usuario configurado: $tieneProgreso\n'
+            'Es invitado: $esInvitado\n'
+            'Sistema integrado correctamente.';
       });
     } catch (e) {
       setState(() {
@@ -205,10 +207,10 @@ class _TestConnectivityState extends State<TestConnectivity> {
     try {
       final db = DatabaseManager.instance;
       final estadoApp = Provider.of<EstadoApp>(context, listen: false);
-      
+
       // 1. Probar conexión
       await db.juegos.obtenerJuegos();
-      
+
       // 2. Crear invitado
       final invitado = InvitadoModel(
         id: 0,
@@ -218,24 +220,25 @@ class _TestConnectivityState extends State<TestConnectivity> {
       );
 
       final invitadoCreado = await db.invitados.crear(invitado);
-      
+
       // 3. Configurar EstadoApp
       await estadoApp.establecerUsuarioInvitado(invitadoCreado);
-      
+
       // 4. Verificar progreso existe
       await db.progreso.obtenerProgresoInvitado(invitadoCreado.idProgreso);
-      
+
       // 5. Verificar estado final
       final estadoFinal = estadoApp.tieneUsuario;
 
       setState(() {
-        _status = '🎉 ¡Flujo completo exitoso!\n'
-                 '✅ Conexión DB: OK\n'
-                 '✅ Registro invitado: OK (ID: ${invitadoCreado.id})\n'
-                 '✅ Progreso creado: OK (ID: ${invitadoCreado.idProgreso})\n'
-                 '✅ EstadoApp integrado: OK\n'
-                 '✅ Tiene usuario: $estadoFinal\n'
-                 '🚀 Sistema listo para producción!';
+        _status =
+            '🎉 ¡Flujo completo exitoso!\n'
+            '✅ Conexión DB: OK\n'
+            '✅ Registro invitado: OK (ID: ${invitadoCreado.id})\n'
+            '✅ Progreso creado: OK (ID: ${invitadoCreado.idProgreso})\n'
+            '✅ EstadoApp integrado: OK\n'
+            '✅ Tiene usuario: $estadoFinal\n'
+            '🚀 Sistema listo para producción!';
       });
     } catch (e) {
       setState(() {
@@ -258,11 +261,12 @@ class _TestConnectivityState extends State<TestConnectivity> {
       // Limpiar EstadoApp
       final estadoApp = Provider.of<EstadoApp>(context, listen: false);
       await estadoApp.cerrarSesion();
-      
+
       setState(() {
-        _status = '✅ Sistema limpiado.\n'
-                 'EstadoApp reiniciado.\n'
-                 'Listo para nuevas pruebas.';
+        _status =
+            '✅ Sistema limpiado.\n'
+            'EstadoApp reiniciado.\n'
+            'Listo para nuevas pruebas.';
       });
     } catch (e) {
       setState(() {

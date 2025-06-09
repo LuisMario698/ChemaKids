@@ -5,6 +5,7 @@ import '../widgets/boton_animado.dart';
 import '../widgets/contador_puntos_racha.dart';
 import '../widgets/dialogo_racha_perdida.dart';
 import '../widgets/dialogo_victoria.dart';
+import '../widgets/tema_juego_chemakids.dart';
 
 class JuegoRimas extends StatefulWidget {
   const JuegoRimas({super.key});
@@ -210,177 +211,134 @@ class _JuegoRimasState extends State<JuegoRimas> with SingleTickerProviderStateM
     _controller.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isDesktop = screenWidth > 600;
 
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              const Color(0xFF2A0944),
-              const Color(0xFF3B0B54),
-            ],
+    return PlantillaJuegoChemaKids(
+      titulo: '¿Qué rima con...?',
+      icono: Icons.music_note,
+      contenido: Stack(
+        children: [
+          // Score overlay
+          Positioned(
+            top: 16,
+            right: 16,
+            child: ContadorPuntosRacha(
+              score: _score,
+              streak: _streak,
+            ),
           ),
-        ),
-        child: SafeArea(
-          child: Stack(
-            children: [
-              // Back button and Score
-              Positioned(
-                top: 16,
-                left: 0,
-                right: 0,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                          size: 32,
-                        ),
-                        onPressed: () => Navigator.of(context).pop(),
+
+          // Main content
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Palabra a rimar
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFA500),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFFFFA500).withValues(alpha: 77),
+                        blurRadius: 10,
+                        spreadRadius: 2,
                       ),
-                      ContadorPuntosRacha(
-                        score: _score,
-                        streak: _streak,
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Image.network(
+                        _rimaActual['imagen1'],
+                        width: isDesktop ? 150 : 120,
+                        height: isDesktop ? 150 : 120,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => const Icon(
+                          Icons.image,
+                          color: Colors.white,
+                          size: 80,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        _rimaActual['palabra'],
+                        style: const TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ),
-
-              // Title
-              Positioned(
-                top: 80,
-                left: 24,
-                child: Text(
-                  '¿Qué rima con...?',
-                  style: const TextStyle(
-                    fontSize: 48,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-
-              // Main content
-              Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Palabra a rimar
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFFA500),
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFFFFA500).withValues(alpha: 77),
-                            blurRadius: 10,
-                            spreadRadius: 2,
+                const SizedBox(height: 40),
+                
+                // Opciones de rima
+                Wrap(
+                  spacing: 20,
+                  runSpacing: 20,
+                  alignment: WrapAlignment.center,
+                  children: _opciones.map((opcion) {
+                    return BotonAnimado(
+                      onTap: () => _checkRespuesta(opcion),
+                      child: Container(
+                        width: isDesktop ? 160 : 140,
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Colors.white.withValues(alpha: 77),
+                              Colors.white.withValues(alpha: 26),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          Image.network(
-                            _rimaActual['imagen1'],
-                            width: isDesktop ? 150 : 120,
-                            height: isDesktop ? 150 : 120,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => const Icon(
-                              Icons.image,
-                              color: Colors.white,
-                              size: 80,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 51),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
                             ),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            _rimaActual['palabra'],
+                          ],
+                        ),
+                        child: Center(
+                          child: Text(
+                            opcion,
                             style: const TextStyle(
-                              fontSize: 40,
+                              fontSize: 32,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 40),
-                    
-                    // Opciones de rima
-                    Wrap(
-                      spacing: 20,
-                      runSpacing: 20,
-                      alignment: WrapAlignment.center,
-                      children: _opciones.map((opcion) {
-                        return BotonAnimado(
-                          onTap: () => _checkRespuesta(opcion),
-                          child: Container(
-                            width: isDesktop ? 160 : 140,
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  Colors.white.withValues(alpha: 77),
-                                  Colors.white.withValues(alpha: 26),
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 51),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: Center(
-                              child: Text(
-                                opcion,
-                                style: const TextStyle(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ],
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
+          ),
+
+          // Success/Error overlay
+          if (_showSuccess || _showError)
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: (_showSuccess ? Colors.green[100] : Colors.red[100])?.withOpacity(0.15),
+              child: Center(
+                child: Icon(
+                  _showSuccess ? Icons.check_circle : Icons.close,
+                  color: _showSuccess ? Colors.green[400] : Colors.red[400],
+                  size: 100,
                 ),
               ),
-
-              // Success/Error overlay
-              if (_showSuccess || _showError)
-                Container(                  width: double.infinity,
-                  height: double.infinity,
-                  color: (_showSuccess ? Colors.green[100] : Colors.red[100])?.withOpacity(0.15),
-                  child: Center(
-                    child: Icon(
-                      _showSuccess ? Icons.check_circle : Icons.close,
-                      color: _showSuccess ? Colors.green[400] : Colors.red[400],
-                      size: 100,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ),
+            ),
+        ],
       ),
     );
   }

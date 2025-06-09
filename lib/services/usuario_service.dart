@@ -17,16 +17,13 @@ class UsuarioService {
 
       // Paso 1: Crear registro de progreso
       print('📊 [UsuarioService] Creando registro de progreso...');
-      final progresoResponse = await _supabase.client
-          .from('progreso_usuario')
-          .insert({
-            'nivel': 1,
-            'racha_1': 0,
-            'racha_2': 0,
-          })
-          .select()
-          .single();
-      
+      final progresoResponse =
+          await _supabase.client
+              .from('progreso_usuario')
+              .insert({'nivel': 1, 'racha_1': 0, 'racha_2': 0})
+              .select()
+              .single();
+
       final idProgreso = progresoResponse['id'] as int;
       print('✅ [UsuarioService] Progreso creado con ID: $idProgreso');
 
@@ -35,11 +32,12 @@ class UsuarioService {
       final usuarioData = usuario.toJson();
       usuarioData['id_progreso'] = idProgreso;
 
-      final usuarioResponse = await _supabase.client
-          .from(tableName)
-          .insert(usuarioData)
-          .select()
-          .single();
+      final usuarioResponse =
+          await _supabase.client
+              .from(tableName)
+              .insert(usuarioData)
+              .select()
+              .single();
 
       final usuarioCreado = UsuarioModel.fromJson(usuarioResponse);
       print('✅ [UsuarioService] Usuario creado exitosamente: $usuarioCreado');
@@ -226,12 +224,13 @@ class UsuarioService {
   Future<UsuarioModel?> obtenerPorEmail(String email) async {
     try {
       print('🔍 [UsuarioService] Buscando usuario por email: $email');
-      
-      final response = await _supabase.client
-          .from(tableName)
-          .select()
-          .eq('email', email)
-          .maybeSingle();
+
+      final response =
+          await _supabase.client
+              .from(tableName)
+              .select()
+              .eq('email', email)
+              .maybeSingle();
 
       if (response != null) {
         final usuario = UsuarioModel.fromJson(response);

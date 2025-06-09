@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import '../widgets/tema_juego_chemakids.dart';
 
 class JuegoSumasYRestas extends StatefulWidget {
   const JuegoSumasYRestas({super.key});
@@ -78,16 +79,14 @@ class _JuegoSumasYRestasState extends State<JuegoSumasYRestas> {
     lista.shuffle();
     return lista;
   }
-
   @override
   Widget build(BuildContext context) {
     final opciones = _generarOpciones();
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sumas y Restas'),
-        backgroundColor: const Color(0xFF2A0944),
-      ),
-      body: Center(
+    return PlantillaJuegoChemaKids(
+      titulo: 'Sumas y Restas',
+      icono: Icons.calculate,
+      mostrarAyuda: false,
+      contenido: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Container(
@@ -230,7 +229,6 @@ class _JuegoSumasYRestasState extends State<JuegoSumasYRestas> {
           ),
         ),
       ),
-      backgroundColor: const Color(0xFF2A0944),
     );
   }
 

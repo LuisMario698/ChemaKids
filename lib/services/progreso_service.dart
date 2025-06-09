@@ -121,19 +121,18 @@ class ProgresoService {
   }
 
   /// Crear progreso inicial (método de compatibilidad)
-  Future<Map<String, dynamic>?> crearProgreso(Map<String, dynamic> progreso) async {
+  Future<Map<String, dynamic>?> crearProgreso(
+    Map<String, dynamic> progreso,
+  ) async {
     try {
       print('📊 [ProgresoService] Creando progreso: $progreso');
-      
+
       // Determinar si es para usuario o invitado
       final esUsuario = progreso.containsKey('id_usuario');
       final tabla = esUsuario ? 'progreso_usuario' : 'progreso_invitado';
-      
-      final response = await _supabase.client
-          .from(tabla)
-          .insert(progreso)
-          .select()
-          .single();
+
+      final response =
+          await _supabase.client.from(tabla).insert(progreso).select().single();
 
       print('✅ [ProgresoService] Progreso creado: $response');
       return response;
@@ -147,8 +146,10 @@ class ProgresoService {
   /// Obtener estadísticas de un juego (método de compatibilidad)
   Future<Map<String, dynamic>> obtenerEstadisticasJuego(int idJuego) async {
     try {
-      print('📊 [ProgresoService] Obteniendo estadísticas del juego ID: $idJuego');
-      
+      print(
+        '📊 [ProgresoService] Obteniendo estadísticas del juego ID: $idJuego',
+      );
+
       // Para estadísticas generales, devolver estructura por defecto
       return {
         'juego_id': idJuego,
@@ -168,10 +169,15 @@ class ProgresoService {
   }
 
   /// Obtener mejor puntaje (método de compatibilidad)
-  Future<Map<String, dynamic>?> obtenerMejorPuntaje(int idUsuario, String nombreJuego) async {
+  Future<Map<String, dynamic>?> obtenerMejorPuntaje(
+    int idUsuario,
+    String nombreJuego,
+  ) async {
     try {
-      print('🏆 [ProgresoService] Obteniendo mejor puntaje para usuario $idUsuario en $nombreJuego');
-      
+      print(
+        '🏆 [ProgresoService] Obteniendo mejor puntaje para usuario $idUsuario en $nombreJuego',
+      );
+
       // Por ahora devolver estructura por defecto
       return {
         'usuario_id': idUsuario,
