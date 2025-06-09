@@ -310,8 +310,7 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
     final numeroData = _numeros[_numeroActual - 1];
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
+      builder: (context) => AlertDialog(
             backgroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(24),
@@ -845,8 +844,8 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
                             ),
                           ),
                         );
-                      },
-                    ),
+                      }
+                    )
                   ],
                 ),
               ),

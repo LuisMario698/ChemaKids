@@ -290,7 +290,7 @@ class PlantillaJuegoChemaKids extends StatelessWidget {
     this.icono,
     this.backgroundColor = const Color(0xFFF6F6F6),
     this.onAyuda,
-    this.mostrarAyuda = true,
+    this.mostrarAyuda = false,
     this.numeroBurbujas = 10,
   });
 

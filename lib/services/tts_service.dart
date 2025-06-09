@@ -108,6 +108,33 @@ class TTSService {
     }
   }
 
+  /// Reproduce instrucciones largas con velocidad y pausas naturales
+  Future<void> speakInstructions(String text) async {
+    if (!_isInitialized) {
+      await initialize();
+    }
+
+    try {
+      // Detener cualquier reproducción anterior
+      await stop();
+
+      // Configurar velocidad más natural para instrucciones largas
+      await _flutterTts.setSpeechRate(0.5); // Más rápido que 0.1 pero no muy rápido
+      await _flutterTts.setPitch(1.1); // Tono ligeramente más bajo para mayor claridad
+
+      // Reproducir el texto completo
+      await _flutterTts.speak(text);
+
+      if (kDebugMode) {
+        print("🗣️ TTS: Reproduciendo instrucciones: '$text'");
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("❌ Error reproduciendo instrucciones: $e");
+      }
+    }
+  }
+
   /// Reproduce un número específico (optimizado para números del 1 al 10)
   Future<void> speakNumber(int number) async {
     if (number < 1 || number > 10) {

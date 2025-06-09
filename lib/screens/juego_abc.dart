@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import '../services/tts_service.dart';
+import '../widgets/dialogo_instrucciones.dart';
 
 class _Particle {
   double x;
@@ -59,12 +60,11 @@ class _JuegoABCState extends State<JuegoABC>
   int _letraActualIndex = 0;
   late final AnimationController _controller;
   late final Animation<double> _scaleAnimation;
-  late final Animation<double> _floatAnimation;
-
-  final List<_Particle> _particles = [];
+  late final Animation<double> _floatAnimation;  final List<_Particle> _particles = [];
   final Random _random = Random();
   final TTSService _ttsService = TTSService();
   bool _isPlayingAudio = false;
+
   @override
   void initState() {
     super.initState();
@@ -87,8 +87,12 @@ class _JuegoABCState extends State<JuegoABC>
 
     // Inicializar el servicio TTS
     _initializeTTS();
-  }
 
+    // Mostrar instrucciones al inicio
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _mostrarDialogoInstrucciones();
+    });
+  }
   /// Inicializa el servicio TTS
   Future<void> _initializeTTS() async {
     try {
@@ -97,6 +101,32 @@ class _JuegoABCState extends State<JuegoABC>
     } catch (e) {
       print('❌ Error inicializando TTS en ABC: $e');
     }
+  }
+
+  /// Muestra el diálogo de instrucciones al inicio del juego
+  void _mostrarDialogoInstrucciones() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => DialogoInstrucciones(
+        titulo: '¡Aprende el ABC!',
+        descripcion: 'Descubre cómo suenan las letras del abecedario',
+        icono: Icons.abc,
+        colorPrincipal: const Color(0xFF2A0944),
+        instrucciones: const [
+          'Toca la letra grande en el centro para escuchar cómo suena',
+          'Usa las flechas de los lados para cambiar de letra',
+          'También puedes deslizar hacia izquierda o derecha',
+          'Toca el botón azul grande de abajo para repetir el sonido',
+          'Cada letra tiene su propio sonido especial',
+        ],        onComenzar: () {
+          // Reproducir la primera letra automáticamente
+          Future.delayed(const Duration(milliseconds: 500), () {
+            _reproducirSonido();
+          });
+        },
+      ),
+    );
   }
 
   void _createParticles() {

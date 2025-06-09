@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import '../widgets/tema_juego_chemakids.dart';
 import '../widgets/boton_animado.dart';
+import '../widgets/dialogo_instrucciones.dart';
 import '../services/tts_service.dart';
 
 class JuegoAbcAudio extends StatefulWidget {
@@ -86,7 +87,10 @@ class _JuegoAbcAudioState extends State<JuegoAbcAudio>
     // Inicializar el servicio TTS
     _initializeTTS();
 
-    _nuevaRonda();
+    // Mostrar instrucciones al inicio
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _mostrarDialogoInstrucciones();
+    });
   }
 
   /// Inicializa el servicio TTS
@@ -97,6 +101,32 @@ class _JuegoAbcAudioState extends State<JuegoAbcAudio>
     } catch (e) {
       print('❌ Error inicializando TTS en ABC Audio: $e');
     }
+  }
+
+  /// Muestra el diálogo de instrucciones al inicio del juego
+  void _mostrarDialogoInstrucciones() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => DialogoInstrucciones(
+        titulo: '¡Identifica las Letras!',
+        descripcion: 'Escucha atentamente y elige la letra correcta',
+        icono: Icons.hearing,
+        colorPrincipal: const Color(0xFF2A0944),
+        instrucciones: const [
+          'Toca el botón "Reproducir sonido" para escuchar una letra',
+          'Escucha atentamente el sonido de la letra',
+          'Elige la letra correcta entre las 4 opciones',
+          'Si aciertas, ganarás puntos y aumentarás tu racha',
+          'Si fallas, tu racha se reiniciará pero puedes seguir jugando',
+          'Usa el botón "Repetir audio" si necesitas escuchar de nuevo',
+        ],
+        onComenzar: () {
+          // Iniciar la primera ronda
+          _nuevaRonda();
+        },
+      ),
+    );
   }
 
   @override
@@ -237,7 +267,7 @@ class _JuegoAbcAudioState extends State<JuegoAbcAudio>
                     Text(
                       '$_puntos',
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: Color.fromARGB(255, 0, 0, 0),
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -255,7 +285,7 @@ class _JuegoAbcAudioState extends State<JuegoAbcAudio>
                     Text(
                       '$_racha',
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: Color.fromARGB(255, 0, 0, 0),
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -273,7 +303,7 @@ class _JuegoAbcAudioState extends State<JuegoAbcAudio>
                     Text(
                       '$_maxRacha',
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: Color.fromARGB(255, 0, 0, 0),
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -308,7 +338,7 @@ class _JuegoAbcAudioState extends State<JuegoAbcAudio>
                 ),
                 child: Icon(
                   _isPlayingAudio ? Icons.volume_up_rounded : Icons.play_arrow,
-                  color: Colors.white,
+                  color: const Color.fromARGB(255, 0, 0, 0),
                   size: 60,
                 ),
               ),
@@ -362,7 +392,7 @@ class _JuegoAbcAudioState extends State<JuegoAbcAudio>
                         child: const Center(
                           child: Icon(
                             Icons.music_note,
-                            color: Colors.white,
+                            color: Color.fromARGB(255, 0, 0, 0),
                             size: 48,
                           ),
                         ),
@@ -385,7 +415,7 @@ class _JuegoAbcAudioState extends State<JuegoAbcAudio>
                       ? '🔊 Escucha atentamente...'
                       : '⏳ Preparando audio...',
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: Color.fromARGB(255, 0, 0, 0),
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
                   ),
@@ -399,7 +429,7 @@ class _JuegoAbcAudioState extends State<JuegoAbcAudio>
                 const Text(
                   '¿Qué letra sonó?',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Color.fromARGB(255, 0, 0, 0),
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
@@ -438,7 +468,7 @@ class _JuegoAbcAudioState extends State<JuegoAbcAudio>
                         Text(
                           'Repetir audio',
                           style: TextStyle(
-                            color: Colors.white,
+                            color: Color.fromARGB(255, 0, 0, 0),
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),

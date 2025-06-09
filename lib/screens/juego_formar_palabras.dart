@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import '../widgets/tema_juego_chemakids.dart';
+import '../widgets/dialogo_instrucciones.dart';
 import '../services/tts_service.dart';
 
 class JuegoFormarPalabras extends StatefulWidget {
@@ -104,9 +105,38 @@ class _JuegoFormarPalabrasState extends State<JuegoFormarPalabras>
     _iniciarPalabra();
     _initializeTTS();
   }
-
   void _initializeTTS() async {
     await _ttsService.initialize();
+    
+    // Mostrar instrucciones al inicializar
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _mostrarDialogoInstrucciones();
+    });
+  }
+
+  Future<void> _mostrarDialogoInstrucciones() async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {        return DialogoInstrucciones(
+          titulo: '¡Formar Palabras!',
+          descripcion: 'Completa palabras letra por letra',
+          instrucciones: [
+            '¡Hola! Vamos a formar palabras letra por letra.',
+            'Verás una imagen y espacios para las letras.',
+            'Toca las letras de abajo para completar la palabra.',
+            'Si te equivocas, puedes tocar otra letra.',
+            'Usa el botón de sonido para escuchar la palabra.',
+            '¡Completa todas las palabras!'
+          ],
+          icono: Icons.spellcheck,
+          onComenzar: () {
+            // Reproducir la primera palabra
+            _reproducirPalabra();
+          },
+        );
+      },
+    );
   }
 
   Future<void> _reproducirPalabra() async {

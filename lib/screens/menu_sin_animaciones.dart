@@ -15,11 +15,10 @@ class PantallaMenu extends StatefulWidget {
   State<PantallaMenu> createState() => _PantallaMenuState();
 }
 
-class _PantallaMenuState extends State<PantallaMenu>
-    with SingleTickerProviderStateMixin {
+class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _indiceColor = 0;
-
+  
   @override
   void initState() {
     super.initState();
@@ -46,18 +45,19 @@ class _PantallaMenuState extends State<PantallaMenu>
             children: [
               // Header ocupa 25% de la altura
               Container(
-                height: size.height * 0.4,
+                height: size.height * 0.25,
                 child: Column(
                   children: [
-                    Expanded(
-                      child: _construirEncabezado(estadoApp, esEscritorio),
-                    ),
+                    Expanded(child: _construirEncabezado(estadoApp, esEscritorio)),
                     _construirNavegacion(esEscritorio),
                   ],
                 ),
               ),
               // Contenido ocupa 75% de la altura
-              Expanded(flex: 3, child: _construirContenido(esEscritorio)),
+              Expanded(
+                flex: 3,
+                child: _construirContenido(esEscritorio),
+              ),
             ],
           ),
         ),
@@ -77,12 +77,16 @@ class _PantallaMenuState extends State<PantallaMenu>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.home, color: Colors.white, size: 32),
+                  icon: const Icon(
+                    Icons.home,
+                    color: Colors.white,
+                    size: 32,
+                  ),
                   onPressed: () => Navigator.pushReplacementNamed(context, '/'),
                 ),
                 IconButton(
                   icon: const Icon(
-                    Icons.record_voice_over,
+                    Icons.volume_up,
                     color: Colors.white,
                     size: 32,
                   ),
@@ -106,15 +110,17 @@ class _PantallaMenuState extends State<PantallaMenu>
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: EstiloInfantil.temasColores[_indiceColor][0]
-                            .withOpacity(0.3),
+                        color: EstiloInfantil.temasColores[_indiceColor][0].withOpacity(0.3),
                         blurRadius: 10,
                         spreadRadius: 2,
                       ),
                     ],
                   ),
                   child: Center(
-                    child: Text('🦸‍♂️', style: TextStyle(fontSize: 40)),
+                    child: Text(
+                      '🦸‍♂️',
+                      style: TextStyle(fontSize: 40),
+                    ),
                   ),
                 ),
                 SizedBox(width: 16),
@@ -123,10 +129,9 @@ class _PantallaMenuState extends State<PantallaMenu>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ShaderMask(
-                        shaderCallback:
-                            (bounds) => LinearGradient(
-                              colors: EstiloInfantil.temasColores[_indiceColor],
-                            ).createShader(bounds),
+                        shaderCallback: (bounds) => LinearGradient(
+                          colors: EstiloInfantil.temasColores[_indiceColor],
+                        ).createShader(bounds),
                         child: Text(
                           '¡Hola ${estadoApp.nombreUsuario.isNotEmpty ? estadoApp.nombreUsuario : "Pequeño Explorador"}! 🌟',
                           style: TextStyle(
@@ -155,146 +160,180 @@ class _PantallaMenuState extends State<PantallaMenu>
     }
 
     // Vista desktop optimizada
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.8,
-      alignment: Alignment.center,
-      padding: EdgeInsets.symmetric(horizontal: 32, vertical: 8),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Botones de navegación
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.home, color: Colors.white, size: 28),
-                onPressed: () => Navigator.pushReplacementNamed(context, '/'),
-              ),
-              IconButton(
-                icon: const Icon(
-                  Icons.record_voice_over,
-                  color: Colors.white,
-                  size: 28,
+    return Expanded(
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        alignment: Alignment.center,
+        padding: EdgeInsets.symmetric(
+          horizontal: 32,
+          vertical: 16
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Botones de navegación
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.home,
+                    color: Colors.white,
+                    size: 32,
+                  ),
+                  onPressed: () => Navigator.pushReplacementNamed(context, '/'),
                 ),
-                onPressed: () => _mostrarConfiguracionAudio(true),
-              ),
-            ],
-          ),
-          SizedBox(height: 8),
-          // Avatar simple sin animaciones
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                colors: EstiloInfantil.temasColores[_indiceColor],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: EstiloInfantil.temasColores[_indiceColor][0]
-                      .withOpacity(0.3),
-                  blurRadius: 6,
-                  spreadRadius: 1,
+                IconButton(
+                  icon: const Icon(
+                    Icons.volume_up,
+                    color: Colors.white,
+                    size: 32,
+                  ),
+                  onPressed: () => _mostrarConfiguracionAudio(true),
                 ),
               ],
             ),
-            child: Center(
-              child: Text('🦸‍♂️', style: TextStyle(fontSize: 24)),
-            ),
-          ),
-          SizedBox(height: 8),
-          Column(
-            children: [
-              ShaderMask(
-                shaderCallback:
-                    (bounds) => LinearGradient(
-                      colors: EstiloInfantil.temasColores[_indiceColor],
-                    ).createShader(bounds),
+            SizedBox(height: 12),
+            // Avatar simple sin animaciones
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: EstiloInfantil.temasColores[_indiceColor],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: EstiloInfantil.temasColores[_indiceColor][0].withOpacity(0.3),
+                    blurRadius: 8,
+                    spreadRadius: 2,
+                  ),
+                ],
+              ),
+              child: Center(
                 child: Text(
-                  '¡Hola ${estadoApp.nombreUsuario.isNotEmpty ? estadoApp.nombreUsuario : "Pequeño Explorador"}! 🌟',
+                  '🦸‍♂️',
+                  style: TextStyle(fontSize: 32),
+                ),
+              ),
+            ),
+            SizedBox(height: 16),
+            Column(
+              children: [
+                ShaderMask(
+                  shaderCallback: (bounds) => LinearGradient(
+                    colors: EstiloInfantil.temasColores[_indiceColor],
+                  ).createShader(bounds),
+                  child: Text(
+                    '¡Hola ${estadoApp.nombreUsuario.isNotEmpty ? estadoApp.nombreUsuario : "Pequeño Explorador"}! 🌟',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 8,
+                          color: Colors.black.withOpacity(0.3),
+                          offset: Offset(1, 1),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  '¡Vamos a jugar y aprender!',
                   style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    fontSize: 16,
+                    color: Colors.white.withOpacity(0.9),
+                    fontWeight: FontWeight.w500,
                     shadows: [
                       Shadow(
                         blurRadius: 6,
-                        color: Colors.black.withOpacity(0.3),
+                        color: Colors.black.withOpacity(0.2),
                         offset: Offset(1, 1),
                       ),
                     ],
                   ),
                 ),
-              ),
-              SizedBox(height: 2),
-              Text(
-                '¡Vamos a jugar y aprender!',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.white.withOpacity(0.9),
-                  fontWeight: FontWeight.w500,
-                  shadows: [
-                    Shadow(
-                      blurRadius: 4,
-                      color: Colors.black.withOpacity(0.2),
-                      offset: Offset(1, 1),
-                    ),
-                  ],
-                ),
-              ),
               ],
             ),
           ],
         ),
-      );
-    }
+      ),
+    );
+  }
 
   void _mostrarConfiguracionAudio(bool esEscritorio) {
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            backgroundColor: const Color(0xFF2A0944),
-            title: Text(
-              'Configuración de Voz',
-              style: TextStyle(
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF2A0944),
+        title: Text(
+          'Configuración de Audio',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: esEscritorio ? 20 : 18,
+          ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: Icon(
+                Icons.music_note,
                 color: Colors.white,
-                fontSize: esEscritorio ? 20 : 18,
-                fontWeight: FontWeight.bold,
+                size: esEscritorio ? 24 : 20,
+              ),
+              title: Text(
+                'Música de fondo',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: esEscritorio ? 16 : 14,
+                ),
+              ),
+              trailing: Switch(
+                value: true,
+                onChanged: (value) {},
               ),
             ),
-            content: ListTile(
+            ListTile(
+              leading: Icon(
+                Icons.volume_up,
+                color: Colors.white,
+                size: esEscritorio ? 24 : 20,
+              ),
+              title: Text(
+                'Efectos de sonido',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: esEscritorio ? 16 : 14,
+                ),
+              ),
+              trailing: Switch(
+                value: true,
+                onChanged: (value) {},
+              ),
+            ),
+            ListTile(
               leading: Icon(
                 Icons.record_voice_over,
                 color: Colors.white,
-                size: esEscritorio ? 28 : 24,
+                size: esEscritorio ? 24 : 20,
               ),
               title: Text(
                 'Configurar voz',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: esEscritorio ? 18 : 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              subtitle: Text(
-                'Ajustar velocidad y tipo de voz',
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: esEscritorio ? 14 : 12,
+                  fontSize: esEscritorio ? 16 : 14,
                 ),
               ),
               trailing: IconButton(
-                icon: Icon(
-                  Icons.settings,
-                  color: Colors.white,
-                  size: esEscritorio ? 28 : 24,
-                ),
+                icon: Icon(Icons.settings, color: Colors.white),
                 onPressed: () {
                   Navigator.pop(context);
                   Navigator.push(
@@ -304,32 +343,31 @@ class _PantallaMenuState extends State<PantallaMenu>
                 },
               ),
             ),
-            actions: [
-              TextButton(
-                child: Text(
-                  'Cerrar',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: esEscritorio ? 16 : 14,
-                  ),
-                ),
-                onPressed: () => Navigator.pop(context),
+          ],
+        ),
+        actions: [
+          TextButton(
+            child: Text(
+              'Cerrar',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: esEscritorio ? 16 : 14,
               ),
-            ],
+            ),
+            onPressed: () => Navigator.pop(context),
           ),
+        ],
+      ),
     );
   }
 
   Widget _construirNavegacion(bool esEscritorio) {
     return Center(
       child: Container(
-        width:
-            esEscritorio
-                ? MediaQuery.of(context).size.width * 0.6
-                : double.infinity,
+        width: esEscritorio ? MediaQuery.of(context).size.width * 0.6 : double.infinity,
         margin: EdgeInsets.symmetric(
           horizontal: esEscritorio ? 0 : 16,
-          vertical: esEscritorio ? 16 : 8,
+          vertical: esEscritorio ? 16 : 8
         ),
         height: esEscritorio ? 60 : 50,
         child: Stack(
@@ -360,7 +398,10 @@ class _PantallaMenuState extends State<PantallaMenu>
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
+                    colors: [
+                      Color(0xFFFFD700),
+                      Color(0xFFFFA500),
+                    ],
                   ),
                 ),
                 labelStyle: TextStyle(
@@ -395,7 +436,10 @@ class _PantallaMenuState extends State<PantallaMenu>
             ),
           ),
           SizedBox(width: 6),
-          Text(emoji, style: TextStyle(fontSize: esEscritorio ? 18 : 16)),
+          Text(
+            emoji,
+            style: TextStyle(fontSize: esEscritorio ? 18 : 16),
+          ),
         ],
       ),
     );
@@ -411,7 +455,7 @@ class _PantallaMenuState extends State<PantallaMenu>
           children: [
             EncabezadoNivel(
               nivel: "1",
-              titulo: "Primeros Pasos (Nivel 1)",
+              titulo: "Primeros Pasos (3 años)",
               emoji: "🌟",
             ),
             GridView.count(
@@ -426,24 +470,40 @@ class _PantallaMenuState extends State<PantallaMenu>
                 TarjetaJuego(
                   titulo: "ABC",
                   emoji: "📚",
-                  imageUrl: "assets/images/abc.png",
+                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3208/3208676.png",
                   onTap: () => Navigator.pushNamed(context, '/abc'),
                   indiceColor: indiceColor,
                   esEscritorio: esEscritorio,
                 ),
                 TarjetaJuego(
-                  titulo: "Identificar Letras",
-                  emoji: "🔤",
-                  imageUrl: "assets/images/identificarabc.png",
-                  onTap: () => Navigator.pushNamed(context, '/abc-audio'),
-                  indiceColor: indiceColor,
+                  titulo: "Colores",
+                  emoji: "🎨",
+                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3241/3241648.png",
+                  onTap: () => Navigator.pushNamed(context, '/colores'),
+                  indiceColor: indiceColor + 1,
+                  esEscritorio: esEscritorio,
+                ),
+                TarjetaJuego(
+                  titulo: "Formas",
+                  emoji: "⭐",
+                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3208/3208704.png",
+                  onTap: () => Navigator.pushNamed(context, '/formas'),
+                  indiceColor: indiceColor + 2,
+                  esEscritorio: esEscritorio,
+                ),
+                TarjetaJuego(
+                  titulo: "Animales",
+                  emoji: "🦁",
+                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3208/3208715.png",
+                  onTap: () => Navigator.pushNamed(context, '/animales'),
+                  indiceColor: indiceColor + 3,
                   esEscritorio: esEscritorio,
                 ),
               ],
             ),
             EncabezadoNivel(
               nivel: "2",
-              titulo: "Explorando Silabas (Nivel 2)",
+              titulo: "Explorando Sonidos (4 años)",
               emoji: "🚀",
             ),
             GridView.count(
@@ -456,27 +516,50 @@ class _PantallaMenuState extends State<PantallaMenu>
               crossAxisSpacing: 16,
               children: [
                 TarjetaJuego(
-                  titulo: "Silabas desde Cero",
-                  emoji: "📝",
-                  imageUrl: "assets/images/silabas.png",
-                  onTap: () => Navigator.pushNamed(context, '/silabasdesdecero'),
+                  titulo: "ABC Audio",
+                  emoji: "🔊",
+                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3208/3208693.png",
+                  onTap: () => Navigator.pushNamed(context, '/abc-audio'),
                   indiceColor: indiceColor,
                   esEscritorio: esEscritorio,
                 ),
                 TarjetaJuego(
-                  titulo: "Identifiar Silabas",
-                  emoji: "🔊",
-                  imageUrl: "assets/images/escuchar.png",
-                  onTap:
-                      () => Navigator.pushNamed(context, '/silabas-audio'),
+                  titulo: "Sílabas Básicas",
+                  emoji: "📝",
+                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3176/3176351.png",
+                  onTap: () => Navigator.pushNamed(context, '/silabasdesdecero'),
                   indiceColor: indiceColor + 1,
+                  esEscritorio: esEscritorio,
+                ),
+                TarjetaJuego(
+                  titulo: "Sílabas Audio",
+                  emoji: "🎵",
+                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3176/3176353.png",
+                  onTap: () => Navigator.pushNamed(context, '/silabas-audio'),
+                  indiceColor: indiceColor + 2,
+                  esEscritorio: esEscritorio,
+                ),
+                TarjetaJuego(
+                  titulo: "Memorama",
+                  emoji: "🎯",
+                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3176/3176359.png",
+                  onTap: () => Navigator.pushNamed(context, '/memorama'),
+                  indiceColor: indiceColor + 3,
+                  esEscritorio: esEscritorio,
+                ),
+                TarjetaJuego(
+                  titulo: "¿Qué es?",
+                  emoji: "🤔",
+                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3176/3176363.png",
+                  onTap: () => Navigator.pushNamed(context, '/que-es'),
+                  indiceColor: indiceColor + 4,
                   esEscritorio: esEscritorio,
                 ),
               ],
             ),
             EncabezadoNivel(
               nivel: "3",
-              titulo: "Palabras (Nivel 3)",
+              titulo: "Lectura y Palabras (5 años)",
               emoji: "🎯",
             ),
             GridView.count(
@@ -491,7 +574,7 @@ class _PantallaMenuState extends State<PantallaMenu>
                 TarjetaJuego(
                   titulo: "Sílabas Mágicas",
                   emoji: "✨",
-                  imageUrl: "assets/images/silabas.png",
+                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3176/3176366.png",
                   onTap: () => Navigator.pushNamed(context, '/silabas'),
                   indiceColor: indiceColor,
                   esEscritorio: esEscritorio,
@@ -499,17 +582,30 @@ class _PantallaMenuState extends State<PantallaMenu>
                 TarjetaJuego(
                   titulo: "Formar Palabras",
                   emoji: "📖",
-                  imageUrl: "assets/images/palabras.png",
+                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3176/3176368.png",
                   onTap: () => Navigator.pushNamed(context, '/formar-palabras'),
                   indiceColor: indiceColor + 1,
                   esEscritorio: esEscritorio,
                 ),
+                TarjetaJuego(
+                  titulo: "Rima Rima",
+                  emoji: "🎭",
+                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3176/3176370.png",
+                  onTap: () => Navigator.pushNamed(context, '/rimas'),
+                  indiceColor: indiceColor + 2,
+                  esEscritorio: esEscritorio,
+                ),
               ],
             ),
+          ],
+        ),
+        // Vista Matemáticas
+        ListView(
+          children: [
             EncabezadoNivel(
-              nivel: "3",
-              titulo: "Extra",
-              emoji: "🎯",
+              nivel: "1",
+              titulo: "Números Básicos (3 años)",
+              emoji: "🔢",
             ),
             GridView.count(
               shrinkWrap: true,
@@ -521,113 +617,65 @@ class _PantallaMenuState extends State<PantallaMenu>
               crossAxisSpacing: 16,
               children: [
                 TarjetaJuego(
-                  titulo: "Memorama",
-                  emoji: "🧠",
-                  imageUrl: "assets/images/memorama.png",
-                  onTap: () => Navigator.pushNamed(context, '/memorama'),
-                  indiceColor: indiceColor + 1,
-                  esEscritorio: esEscritorio,
-                ),
-              ],
-            ),
-          ],
-        ),
-        // Vista Matemáticas
-        // 
-        ListView(
-          children: [
-            EncabezadoNivel(
-              nivel: "1",
-              titulo: "Números Básicos (Nivel 1)",
-              emoji: "🔢",
-            ),
-            GridView.count(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              crossAxisCount: esEscritorio ? 3 : 2,
-              childAspectRatio: 0.85,
-              padding: EdgeInsets.all(16),
-              mainAxisSpacing: 16,
-              crossAxisSpacing: 16,
-              children: [                TarjetaJuego(
                   titulo: "123",
                   emoji: "🔢",
-                  imageUrl: "https://img.freepik.com/premium-vector/numbers-cute-cartoon-vector-illustration_480744-393.jpg",
+                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3176/3176372.png",
                   onTap: () => Navigator.pushNamed(context, '/123'),
                   indiceColor: indiceColor,
-                  esEscritorio: esEscritorio,
-                ),                TarjetaJuego(
-                  titulo: "Contar Animalitos",
-                  emoji: "🐾",
-                  imageUrl: "https://img.freepik.com/premium-vector/counting-animals-cute-cartoon-vector-illustration_480744-394.jpg",
-                  onTap: () => Navigator.pushNamed(context, '/contar-animalitos'),
-                  indiceColor: indiceColor + 1,
-                  esEscritorio: esEscritorio,
-                ),                TarjetaJuego(
-                  titulo: "Objetos y Números",
-                  emoji: "🎯",
-                  imageUrl: "https://img.freepik.com/premium-vector/matching-numbers-objects-cute-cartoon-vector-illustration_480744-395.jpg",
-                  onTap: () => Navigator.pushNamed(context, '/objetos-numero'),
-                  indiceColor: indiceColor + 2,
                   esEscritorio: esEscritorio,
                 ),
               ],
             ),
             EncabezadoNivel(
               nivel: "2",
-              titulo: "Aprender a sumar (Nivel 2)",
-              emoji: "➕",
+              titulo: "Números y Letras (4 años)",
+              emoji: "📚",
             ),
             GridView.count(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               crossAxisCount: esEscritorio ? 3 : 2,
-              childAspectRatio: 0.85,
+              childAspectRatio: esEscritorio ? 1.1 : 0.85,
               padding: EdgeInsets.all(16),
               mainAxisSpacing: 16,
-              crossAxisSpacing: 16,              children: [                TarjetaJuego(
-                  titulo: "Comparar Números",
-                  emoji: "⚖️",
-                  imageUrl: "https://img.freepik.com/premium-vector/comparison-cute-cartoon-vector-illustration_480744-396.jpg",
-                  onTap: () => Navigator.pushNamed(context, '/comparar-numeros'),
+              crossAxisSpacing: 16,
+              children: [
+                TarjetaJuego(
+                  titulo: "Números y Letras",
+                  emoji: "🎲",
+                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3176/3176374.png",
+                  onTap: () => Navigator.pushNamed(context, '/numeros'),
+                  indiceColor: indiceColor,
+                  esEscritorio: esEscritorio,
+                ),
+                TarjetaJuego(
+                  titulo: "Escuchando Números",
+                  emoji: "🎧",
+                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3176/3176376.png",
+                  onTap: () => Navigator.pushNamed(context, '/escuchando-numeros'),
                   indiceColor: indiceColor + 1,
-                  esEscritorio: esEscritorio,
-                ),
-                TarjetaJuego(
-                  titulo: "Aprende a Sumar",
-                  emoji: "🧮",
-                  imageUrl: "https://img.freepik.com/premium-vector/addition-learning-cute-cartoon-vector-illustration_480744-398.jpg",
-                  onTap: () => Navigator.pushNamed(context, '/presentacion-sumas'),
-                  indiceColor: indiceColor + 2,
-                  esEscritorio: esEscritorio,
-                ),
-                TarjetaJuego(
-                  titulo: "Sumas Básicas",
-                  emoji: "✨",
-                  imageUrl: "https://img.freepik.com/premium-vector/basic-addition-cute-cartoon-vector-illustration_480744-397.jpg",
-                  onTap: () => Navigator.pushNamed(context, '/sumas-basicas'),
-                  indiceColor: indiceColor + 3,
                   esEscritorio: esEscritorio,
                 ),
               ],
             ),
             EncabezadoNivel(
               nivel: "3",
-              titulo: "Operaciones (Nivel 3)",
+              titulo: "Operaciones (5 años)",
               emoji: "🧮",
             ),
             GridView.count(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               crossAxisCount: esEscritorio ? 3 : 2,
-              childAspectRatio: 0.85,
+              childAspectRatio: esEscritorio ? 1.1 : 0.85,
               padding: EdgeInsets.all(16),
               mainAxisSpacing: 16,
               crossAxisSpacing: 16,
-              children: [                TarjetaJuego(
+              children: [
+                TarjetaJuego(
                   titulo: "Sumas y Restas",
                   emoji: "➕",
-                  imageUrl: "https://img.freepik.com/premium-vector/math-addition-subtraction-cute-cartoon-vector-illustration_480744-390.jpg",
+                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3176/3176378.png",
                   onTap: () => Navigator.pushNamed(context, '/sumas-restas'),
                   indiceColor: indiceColor,
                   esEscritorio: esEscritorio,

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'screens/juego_comparar_numeros.dart';
+import 'screens/juego_contar_animalitos.dart';
+import 'screens/juego_objetos_numero.dart';
+import 'screens/juego_presentacion_sumas.dart';
 import 'services/estado_app.dart';
 import 'services/database_manager.dart';
 import 'services/deep_link_service.dart';
@@ -22,7 +26,9 @@ import 'screens/juego_formar_palabras.dart';
 import 'screens/juego_memorama.dart';
 import 'screens/juego_sumas_y_restas.dart';
 import 'screens/juego_123.dart';
+import 'screens/juego_escuchando_numeros.dart';
 import 'pantallas/registro_invitado.dart';
+import 'screens/juego_sumas_basicas.dart';
 
 // Global navigator key
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -117,6 +123,14 @@ class ChemakidsApp extends StatelessWidget {
               '/memorama': (context) => const JuegoMemorama(),
               '/sumas-restas': (context) => const JuegoSumasYRestas(),
               '/123': (context) => const Juego123(),
+              '/contar-animalitos': (context) => const JuegoContarAnimalitos(),
+              '/objetos-numero': (context) => const JuegoObjetosNumero(),
+              '/comparar-numeros': (context) => const JuegoCompararNumeros(),
+              '/presentacion-sumas':
+                  (context) => const JuegoPresentacionSumas(),
+              '/sumas-basicas': (context) => const JuegoSumasBasicas(),
+              '/escuchando-numeros':
+                  (context) => const JuegoEscuchandoNumeros(),
               '/registro-invitado':
                   (context) => const PantallaRegistroInvitado(),
             },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/tema_juego_chemakids.dart';
+import '../widgets/dialogo_instrucciones.dart';
 import '../services/tts_service.dart';
 import 'dart:math';
 
@@ -71,12 +72,16 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
     // Inicializar el servicio TTS
     _initializeTTS();
   }
-
   /// Inicializa el servicio TTS
   Future<void> _initializeTTS() async {
     try {
       await _ttsService.initialize();
       print('🎵 TTS Service inicializado para sílabas desde cero');
+      
+      // Mostrar instrucciones al inicializar
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _mostrarDialogoInstrucciones();
+      });
     } catch (e) {
       print('❌ Error inicializando TTS en sílabas desde cero: $e');
     }
@@ -86,7 +91,30 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
   void dispose() {
     _controller.dispose();
     _ttsService.stop(); // Detener cualquier reproducción en curso
-    super.dispose();
+    super.dispose();  }
+
+  Future<void> _mostrarDialogoInstrucciones() async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {        return DialogoInstrucciones(
+          titulo: '¡Aprendamos Sílabas!',
+          descripcion: 'Forma sílabas tocando las vocales',
+          instrucciones: [
+            '¡Hola! Vamos a aprender a formar sílabas.',
+            'Verás una consonante arriba y las vocales abajo.',
+            'Toca cualquier vocal para formar una sílaba.',
+            '¡Escucha cómo suena cada sílaba!',
+            'Usa las flechas para cambiar de consonante.',
+            '¡Diviértete aprendiendo!'
+          ],
+          icono: Icons.abc,
+          onComenzar: () {
+            // El juego ya está listo para empezar
+          },
+        );
+      },
+    );
   }
 
   void _formarSilaba(String vocal, int vocalIdx) async {
@@ -219,6 +247,33 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
     void Function()? onTap,
     void Function()? onLongPress,
   }) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth > 1200;
+    final isTablet = screenWidth > 600 && screenWidth <= 1200;
+
+    // Tamaños responsivos para los botones
+    double buttonSize;
+    double fontSize;
+    double iconSize;
+    double margin;
+
+    if (isDesktop) {
+      buttonSize = 80;
+      fontSize = 38;
+      iconSize = 16;
+      margin = 8;
+    } else if (isTablet) {
+      buttonSize = 70;
+      fontSize = 34;
+      iconSize = 14;
+      margin = 6;
+    } else {
+      buttonSize = 60;
+      fontSize = 28;
+      iconSize = 12;
+      margin = 4;
+    }
+
     return GestureDetector(
       onTap: onTap,
       onLongPress: onLongPress,
@@ -228,12 +283,12 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
         curve: Curves.elasticOut,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          margin: const EdgeInsets.all(5),
-          width: 60,
-          height: 60,
+          margin: EdgeInsets.all(margin),
+          width: buttonSize,
+          height: buttonSize,
           decoration: BoxDecoration(
             color: seleccionado ? color : Colors.white,
-            borderRadius: BorderRadius.circular(30),
+            borderRadius: BorderRadius.circular(buttonSize / 2),
             border: Border.all(
               color: seleccionado ? Colors.amber : color.withOpacity(0.5),
               width: seleccionado ? 4 : 2,
@@ -255,7 +310,7 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
                 child: Text(
                   letra.toUpperCase(),
                   style: TextStyle(
-                    fontSize: 32,
+                    fontSize: fontSize,
                     color: seleccionado ? Colors.white : color,
                     fontWeight: FontWeight.bold,
                   ),
@@ -268,7 +323,7 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
                   right: 4,
                   child: Icon(
                     Icons.volume_up,
-                    size: 12,
+                    size: iconSize,
                     color: color.withOpacity(0.6),
                   ),
                 ),
@@ -318,6 +373,41 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
   @override
   Widget build(BuildContext context) {
     final String consonanteNivel = consonantes[nivelActual];
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final isDesktop = screenWidth > 1200;
+    final isTablet = screenWidth > 600 && screenWidth <= 1200;
+
+    // Variables responsivas
+    double horizontalPadding;
+    double verticalSpacing;
+    double consonanteFontSize;
+    double silabaFontSize;
+    double progressIconSize;
+    double navigationIconSize;
+
+    if (isDesktop) {
+      horizontalPadding = 40;
+      verticalSpacing = 32;
+      consonanteFontSize = 60;
+      silabaFontSize = 70;
+      progressIconSize = 16;
+      navigationIconSize = 36;
+    } else if (isTablet) {
+      horizontalPadding = 30;
+      verticalSpacing = 24;
+      consonanteFontSize = 52;
+      silabaFontSize = 60;
+      progressIconSize = 14;
+      navigationIconSize = 32;
+    } else {
+      horizontalPadding = 20;
+      verticalSpacing = 16;
+      consonanteFontSize = 44;
+      silabaFontSize = 50;
+      progressIconSize = 12;
+      navigationIconSize = 28;
+    }
 
     return PlantillaJuegoChemaKids(
       titulo: 'Sílabas desde Cero',
@@ -341,219 +431,229 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
           }),
           Center(
             child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(
-                    height: 24,
-                  ), // Consonante grande con botón de audio
-                  Row(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: screenHeight * 0.6),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      GestureDetector(
-                        onTap: _reproducirConsonante,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 18,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color:
-                                _isPlayingAudio
-                                    ? Colors.amber[200]
-                                    : Colors.white,
-                            borderRadius: BorderRadius.circular(18),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.deepPurple.withOpacity(0.08),
-                                blurRadius: 8,
-                                spreadRadius: 2,
+                      SizedBox(height: verticalSpacing * 0.75),
+                      // Consonante grande con botón de audio
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: _reproducirConsonante,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 18,
+                                vertical: 8,
                               ),
-                            ],
+                              decoration: BoxDecoration(
+                                color:
+                                    _isPlayingAudio
+                                        ? Colors.amber[200]
+                                        : Colors.white,
+                                borderRadius: BorderRadius.circular(18),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.deepPurple.withOpacity(0.08),
+                                    blurRadius: 8,
+                                    spreadRadius: 2,
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    consonanteNivel.toUpperCase(),
+                                    style: TextStyle(
+                                      fontSize: consonanteFontSize,
+                                      color: Colors.deepPurple,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 2,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Icon(
+                                    _isPlayingAudio
+                                        ? Icons.volume_up
+                                        : Icons.volume_up_outlined,
+                                    color: Colors.deepPurple,
+                                    size: 24,
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
+                        ],
+                      ),
+                      SizedBox(height: verticalSpacing),
+                      // 5 vocales como botones responsivos
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 4,
+                        runSpacing: 8,
+                        children: List.generate(vocales.length, (i) {
+                          final v = vocales[i];
+                          return _buildBotonLetra(
+                            letra: v,
+                            seleccionado: seleccionVocal == v,
+                            color: Colors.orange,
+                            animando: _animandoVocal[i],
+                            onTap: () => _formarSilaba(v, i),
+                            onLongPress: () => _reproducirVocal(v),
+                          );
+                        }),
+                      ),
+                      SizedBox(height: verticalSpacing + 12),
+                      // Mostrar la sílaba formada con animación responsiva
+                      if (silabaFormada != null)
+                        ScaleTransition(
+                          scale: _animScale,
+                          child: Column(
                             children: [
-                              Text(
-                                consonanteNivel.toUpperCase(),
-                                style: const TextStyle(
-                                  fontSize: 56,
-                                  color: Colors.deepPurple,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 2,
+                              const SizedBox(height: 10),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: horizontalPadding * 0.8,
+                                  vertical: 16,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.orange[100],
+                                  borderRadius: BorderRadius.circular(24),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.orange.withOpacity(0.2),
+                                      blurRadius: 8,
+                                      spreadRadius: 1,
+                                    ),
+                                  ],
+                                ),
+                                child: Text(
+                                  silabaFormada!.toUpperCase(),
+                                  style: TextStyle(
+                                    fontSize: silabaFontSize,
+                                    color: Colors.deepPurple,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 4,
+                                  ),
                                 ),
                               ),
-                              const SizedBox(width: 8),
-                              Icon(
-                                _isPlayingAudio
-                                    ? Icons.volume_up
-                                    : Icons.volume_up_outlined,
-                                color: Colors.deepPurple,
-                                size: 24,
-                              ),
+                              const SizedBox(height: 18),
                             ],
                           ),
+                        ),
+                      SizedBox(height: verticalSpacing),
+                      // Barra de progreso visual simple (puntos) responsiva
+                      Padding(
+                        padding: const EdgeInsets.only(top: 18),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(consonantes.length, (i) {
+                            return Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 2),
+                              child: Icon(
+                                Icons.circle,
+                                size: progressIconSize,
+                                color:
+                                    i == nivelActual
+                                        ? Colors.deepPurple
+                                        : Colors.deepPurple.withOpacity(0.2),
+                              ),
+                            );
+                          }),
+                        ),
+                      ),
+                      // Navegación entre consonantes mejorada y responsiva
+                      Padding(
+                        padding: EdgeInsets.only(top: verticalSpacing),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Botón anterior
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(25),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.deepPurple.withOpacity(0.1),
+                                    blurRadius: 8,
+                                    spreadRadius: 1,
+                                  ),
+                                ],
+                              ),
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.arrow_back_rounded,
+                                  size: navigationIconSize,
+                                  color: Colors.deepPurple,
+                                ),
+                                tooltip: 'Consonante anterior',
+                                onPressed: _anteriorNivel,
+                              ),
+                            ),
+                            const SizedBox(width: 24),
+                            // Indicador de consonante actual
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 12,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.deepPurple,
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.deepPurple.withOpacity(0.3),
+                                    blurRadius: 8,
+                                    spreadRadius: 1,
+                                  ),
+                                ],
+                              ),
+                              child: Text(
+                                '${nivelActual + 1} / ${consonantes.length}',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize:
+                                      isDesktop ? 16 : (isTablet ? 14 : 12),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 24),
+                            // Botón siguiente
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(25),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.deepPurple.withOpacity(0.1),
+                                    blurRadius: 8,
+                                    spreadRadius: 1,
+                                  ),
+                                ],
+                              ),
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.arrow_forward_rounded,
+                                  size: navigationIconSize,
+                                  color: Colors.deepPurple,
+                                ),
+                                tooltip: 'Siguiente consonante',
+                                onPressed: _siguienteNivel,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 24,
-                  ), // 5 vocales como botones grandes y animados por nivel
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(vocales.length, (i) {
-                      final v = vocales[i];
-                      return _buildBotonLetra(
-                        letra: v,
-                        seleccionado: seleccionVocal == v,
-                        color: Colors.orange,
-                        animando: _animandoVocal[i],
-                        onTap: () => _formarSilaba(v, i),
-                        onLongPress: () => _reproducirVocal(v),
-                      );
-                    }),
-                  ),
-                  const SizedBox(height: 36),
-                  // Mostrar la sílaba formada con animación
-                  if (silabaFormada != null)
-                    ScaleTransition(
-                      scale: _animScale,
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 10),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 32,
-                              vertical: 16,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.orange[100],
-                              borderRadius: BorderRadius.circular(24),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.orange.withOpacity(0.2),
-                                  blurRadius: 8,
-                                  spreadRadius: 1,
-                                ),
-                              ],
-                            ),
-                            child: Text(
-                              silabaFormada!.toUpperCase(),
-                              style: const TextStyle(
-                                fontSize: 70,
-                                color: Colors.deepPurple,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 4,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 18),
-                        ],
-                      ),
-                    ),
-                  const SizedBox(height: 30),
-                  // Barra de progreso visual simple (puntos)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 18),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(consonantes.length, (i) {
-                        return Icon(
-                          Icons.circle,
-                          size: 14,
-                          color:
-                              i == nivelActual
-                                  ? Colors.deepPurple
-                                  : Colors.deepPurple.withOpacity(0.2),
-                        );
-                      }),
-                    ),
-                  ),
-                  // Navegación entre consonantes mejorada
-                  Padding(
-                    padding: const EdgeInsets.only(top: 24),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Botón anterior
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(25),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.deepPurple.withOpacity(0.1),
-                                blurRadius: 8,
-                                spreadRadius: 1,
-                              ),
-                            ],
-                          ),
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.arrow_back_rounded,
-                              size: 32,
-                              color: Colors.deepPurple,
-                            ),
-                            tooltip: 'Consonante anterior',
-                            onPressed: _anteriorNivel,
-                          ),
-                        ),
-                        const SizedBox(width: 24),
-                        // Indicador de consonante actual
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 12,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.deepPurple,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.deepPurple.withOpacity(0.3),
-                                blurRadius: 8,
-                                spreadRadius: 1,
-                              ),
-                            ],
-                          ),
-                          child: Text(
-                            '${nivelActual + 1} / ${consonantes.length}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 24),
-                        // Botón siguiente
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(25),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.deepPurple.withOpacity(0.1),
-                                blurRadius: 8,
-                                spreadRadius: 1,
-                              ),
-                            ],
-                          ),
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.arrow_forward_rounded,
-                              size: 32,
-                              color: Colors.deepPurple,
-                            ),
-                            tooltip: 'Siguiente consonante',
-                            onPressed: _siguienteNivel,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ),

@@ -5,6 +5,8 @@ import '../widgets/dialogo_racha_perdida.dart';
 import '../widgets/dialogo_victoria.dart';
 import '../widgets/contador_puntos_racha.dart';
 import '../widgets/tema_juego_chemakids.dart';
+import '../widgets/dialogo_instrucciones.dart';
+import '../services/tts_service.dart';
 
 class JuegoSilabas extends StatefulWidget {
   const JuegoSilabas({super.key});
@@ -24,6 +26,10 @@ class _JuegoSilabasState extends State<JuegoSilabas>
   final Random _random = Random();
   List<int> _palabrasUsadas = [];
   static const int _puntajeMaximo = 10;
+  
+  // Servicio TTS para audio
+  final TTSService _ttsService = TTSService();
+  bool _isPlayingAudio = false;
 
   final List<Map<String, dynamic>> _silabas = [
     {
@@ -114,7 +120,6 @@ class _JuegoSilabasState extends State<JuegoSilabas>
 
   late Map<String, dynamic> _palabraActual;
   late List<String> _opcionesSilaba2;
-
   @override
   void initState() {
     super.initState();
@@ -122,7 +127,96 @@ class _JuegoSilabasState extends State<JuegoSilabas>
       duration: const Duration(milliseconds: 500),
       vsync: this,
     );
+    _initializeTTS();
     _nuevaPregunta();
+  }
+  Future<void> _initializeTTS() async {
+    try {
+      await _ttsService.initialize();
+      print('🎵 TTS Service inicializado para Sílabas Mágicas');
+      
+      // Mostrar instrucciones al inicializar
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _mostrarDialogoInstrucciones();
+      });
+    } catch (e) {
+      print('❌ Error inicializando TTS: $e');
+    }
+  }
+
+  Future<void> _mostrarDialogoInstrucciones() async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {        return DialogoInstrucciones(
+          titulo: '¡Sílabas Mágicas!',
+          descripcion: 'Forma palabras arrastrando sílabas',
+          instrucciones: [
+            '¡Hola! Vamos a formar palabras con sílabas.',
+            'Verás una imagen y necesitas completar la palabra.',
+            'Arrastra las sílabas correctas a los espacios vacíos.',
+            'Si necesitas ayuda, toca el botón de sonido.',
+            '¡Gana puntos por cada palabra correcta!',
+            '¡Diviértete formando palabras!'
+          ],
+          icono: Icons.extension,
+          onComenzar: () {
+            // El juego ya está listo
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _reproducirPalabra() async {
+    if (_isPlayingAudio) return;
+    
+    setState(() {
+      _isPlayingAudio = true;
+    });
+
+    try {
+      final palabra = _palabraActual['palabra'] as String;
+      await _ttsService.speak(palabra.toLowerCase());
+      print('🔊 Reproduciendo palabra: $palabra');
+    } catch (e) {
+      print('❌ Error reproduciendo palabra: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isPlayingAudio = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _reproducirSilaba(String silaba) async {
+    if (_isPlayingAudio) return;
+    
+    setState(() {
+      _isPlayingAudio = true;
+    });
+
+    try {
+      await _ttsService.speakSyllable(silaba.toLowerCase());
+      print('🔊 Reproduciendo sílaba: $silaba');
+    } catch (e) {
+      print('❌ Error reproduciendo sílaba: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isPlayingAudio = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _reproducirFelicitacion() async {
+    try {
+      await _ttsService.speakCelebration();
+    } catch (e) {
+      print('❌ Error reproduciendo felicitación: $e');
+    }
   }
 
   void _nuevaPregunta() {
@@ -183,7 +277,6 @@ class _JuegoSilabasState extends State<JuegoSilabas>
           ),
     );
   }
-
   void _checkRespuesta(String silaba2) {
     setState(() {
       if (silaba2 == _palabraActual['silaba2']) {
@@ -193,6 +286,8 @@ class _JuegoSilabasState extends State<JuegoSilabas>
         if (_streak > _maxStreak) {
           _maxStreak = _streak;
         }
+        // Reproducir felicitación cuando la respuesta es correcta
+        _reproducirFelicitacion();
       } else {
         _showError = true;
         if (_streak > 0) {
@@ -232,7 +327,7 @@ class _JuegoSilabasState extends State<JuegoSilabas>
     final isDesktop = screenWidth > 600;
 
     return PlantillaJuegoChemaKids(
-      titulo: 'Forma la palabra',
+      titulo: 'Silabas Magicas',
       icono: Icons.spellcheck,
       mostrarAyuda: false,
       contenido: Stack(
@@ -247,106 +342,174 @@ class _JuegoSilabasState extends State<JuegoSilabas>
           // Main content
           Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Imagen
+              mainAxisAlignment: MainAxisAlignment.center,              children: [
+                // Botón para escuchar la palabra completa
                 Container(
-                  width: isDesktop ? 200 : 150,
-                  height: isDesktop ? 200 : 150,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.white.withOpacity(0.1),
-                        blurRadius: 10,
-                        spreadRadius: 2,
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.network(
-                      _palabraActual['imagen'],
-                      fit: BoxFit.cover,
-                      errorBuilder:
-                          (context, error, stackTrace) => const Icon(
-                            Icons.image,
-                            color: Colors.white,
-                            size: 80,
+                  margin: const EdgeInsets.only(bottom: 20),
+                  child: GestureDetector(
+                    onTap: _reproducirPalabra,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Colors.blue[300]!, Colors.blue[500]!],
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.blue.withOpacity(0.3),
+                            blurRadius: 10,
+                            spreadRadius: 2,
                           ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 40),
-                // Primera sílaba (fija)
-                Container(
-                  width: isDesktop ? 120 : 100,
-                  height: isDesktop ? 120 : 100,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFFA500),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFFFFA500).withOpacity(0.3),
-                        blurRadius: 10,
-                        spreadRadius: 2,
+                        ],
                       ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      _palabraActual['silaba1'],
-                      style: const TextStyle(
-                        fontSize: 48,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            _isPlayingAudio ? Icons.volume_up : Icons.play_arrow,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            _isPlayingAudio ? 'Escuchando...' : '🔊 Escuchar palabra',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
-                // Opciones de segunda sílaba
+
+                                const SizedBox(height: 40),
+                // Primera sílaba (fija) con botón de audio
+                Column(
+                  children: [
+                    Container(
+                      width: isDesktop ? 120 : 100,
+                      height: isDesktop ? 120 : 100,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFA500),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFFFFA500).withOpacity(0.3),
+                            blurRadius: 10,
+                            spreadRadius: 2,
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: Text(
+                          _palabraActual['silaba1'],
+                          style: const TextStyle(
+                            fontSize: 48,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    // Botón de audio para primera sílaba
+                    GestureDetector(
+                      onTap: () => _reproducirSilaba(_palabraActual['silaba1']),
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.withOpacity(0.8),
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.orange.withOpacity(0.3),
+                              blurRadius: 5,
+                              spreadRadius: 1,
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          _isPlayingAudio ? Icons.volume_up : Icons.play_arrow,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),                // Opciones de segunda sílaba
                 Wrap(
                   spacing: 20,
                   runSpacing: 20,
                   alignment: WrapAlignment.center,
                   children:
                       _opcionesSilaba2.map((silaba) {
-                        return BotonAnimado(
-                          onTap: () => _checkRespuesta(silaba),
-                          child: Container(
-                            width: isDesktop ? 120 : 100,
-                            height: isDesktop ? 120 : 100,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  Colors.white.withOpacity(0.3),
-                                  Colors.white.withOpacity(0.1),
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
+                        return Column(
+                          children: [
+                            BotonAnimado(
+                              onTap: () => _checkRespuesta(silaba),
+                              child: Container(
+                                width: isDesktop ? 120 : 100,
+                                height: isDesktop ? 120 : 100,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      Colors.white.withOpacity(0.3),
+                                      Colors.white.withOpacity(0.1),
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(20),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            child: Center(
-                              child: Text(
-                                silaba,
-                                style: const TextStyle(
-                                  fontSize: 48,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                child: Center(
+                                  child: Text(
+                                    silaba,
+                                    style: const TextStyle(
+                                      fontSize: 48,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
+                            const SizedBox(height: 8),
+                            // Botón de audio para cada opción de sílaba
+                            GestureDetector(
+                              onTap: () => _reproducirSilaba(silaba),
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.7),
+                                  borderRadius: BorderRadius.circular(15),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.white.withOpacity(0.3),
+                                      blurRadius: 5,
+                                      spreadRadius: 1,
+                                    ),
+                                  ],
+                                ),
+                                child: Icon(
+                                  _isPlayingAudio ? Icons.volume_up : Icons.play_arrow,
+                                  color: Colors.blue[700],
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                          ],
                         );
                       }).toList(),
                 ),

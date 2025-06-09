@@ -119,7 +119,7 @@ class _JuegoSumasYRestasState extends State<JuegoSumasYRestas> {
                         esSuma ? '+' : '-',
                         style: const TextStyle(
                           fontSize: 36,
-                          color: Colors.white,
+                          color: Color.fromARGB(255, 0, 0, 0),
                         ),
                       ),
                     ),
@@ -128,12 +128,12 @@ class _JuegoSumasYRestasState extends State<JuegoSumasYRestas> {
                       padding: EdgeInsets.symmetric(horizontal: 8),
                       child: Text(
                         '=',
-                        style: TextStyle(fontSize: 36, color: Colors.white),
+                        style: TextStyle(fontSize: 36, color: Color.fromARGB(255, 0, 0, 0)),
                       ),
                     ),
                     const Text(
                       '?',
-                      style: TextStyle(fontSize: 36, color: Colors.white),
+                      style: TextStyle(fontSize: 36, color: Color.fromARGB(255, 0, 0, 0)),
                     ),
                   ],
                 ),

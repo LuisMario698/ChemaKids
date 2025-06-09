@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import '../widgets/tema_juego_chemakids.dart';
+import '../widgets/dialogo_instrucciones.dart';
 
 class MemoramaItem {
   final String value;
@@ -31,6 +32,36 @@ class _JuegoMemoramaState extends State<JuegoMemorama> {
   void initState() {
     super.initState();
     _generarMemorama();
+    
+    // Mostrar instrucciones al inicializar
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _mostrarDialogoInstrucciones();
+    });
+  }
+
+  Future<void> _mostrarDialogoInstrucciones() async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return DialogoInstrucciones(
+          titulo: '¡Memorama!',
+          descripcion: 'Encuentra los pares iguales',
+          instrucciones: [
+            '¡Hola! Vamos a jugar memorama.',
+            'Toca las cartas para voltearlas y ver qué hay.',
+            'Encuentra los pares iguales.',
+            'Si las dos cartas son iguales, se quedan volteadas.',
+            'Si son diferentes, se voltean de nuevo.',
+            '¡Memoriza dónde están para encontrar todos los pares!'
+          ],
+          icono: Icons.memory,
+          onComenzar: () {
+            // El juego ya está listo
+          },
+        );
+      },
+    );
   }
 
   void _generarMemorama() {

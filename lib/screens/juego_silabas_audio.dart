@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/dialogo_instrucciones.dart';
 import '../services/tts_service.dart';
 import 'dart:math';
 
@@ -103,6 +104,37 @@ class _JuegoSilabasAudioState extends State<JuegoSilabasAudio>
 
   void _initializeTTS() async {
     await _ttsService.initialize();
+    
+    // Mostrar instrucciones al inicializar
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _mostrarDialogoInstrucciones();
+    });
+  }
+
+  Future<void> _mostrarDialogoInstrucciones() async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return DialogoInstrucciones(
+          titulo: '¡Identifica Sílabas!',
+          descripcion: 'Escucha y elige la sílaba correcta',
+          instrucciones: [
+            '¡Hola! Vamos a identificar sílabas por su sonido.',
+            'Toca el botón azul para escuchar una sílaba.',
+            'Luego elige la sílaba correcta entre las opciones.',
+            'Si no estás seguro, puedes escuchar otra vez.',
+            '¡Gana puntos por cada respuesta correcta!',
+            '¡Pon atención y diviértete!'
+          ],
+          icono: Icons.hearing,
+          onComenzar: () {
+            // Reproducir la primera sílaba automáticamente
+            _reproducirSilaba();
+          },
+        );
+      },
+    );
   }
 
   Future<void> _reproducirSilaba() async {
