@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../services/database_manager.dart';
 import '../services/estado_app.dart';
 import '../models/invitado_model.dart';
@@ -159,6 +160,7 @@ class _TestConnectivityState extends State<TestConnectivity> {
 
     try {
       final db = DatabaseManager.instance;
+      final estadoApp = Provider.of<EstadoApp>(context, listen: false);
       
       // Crear invitado temporal
       final invitado = InvitadoModel(
@@ -171,16 +173,16 @@ class _TestConnectivityState extends State<TestConnectivity> {
       final invitadoCreado = await db.invitados.crear(invitado);
       
       // Configurar en EstadoApp
-      EstadoApp.configurarInvitado(invitadoCreado);
+      await estadoApp.establecerUsuarioInvitado(invitadoCreado);
       
       // Verificar integración
-      final nivelUsuario = EstadoApp.nivelUsuario;
-      final tieneProgreso = EstadoApp.usuarioActual != null;
+      final tieneProgreso = estadoApp.tieneUsuario;
+      final esInvitado = estadoApp.esInvitado;
 
       setState(() {
         _status = '✅ Integración EstadoApp exitosa!\n'
                  'Usuario configurado: $tieneProgreso\n'
-                 'Nivel actual: $nivelUsuario\n'
+                 'Es invitado: $esInvitado\n'
                  'Sistema integrado correctamente.';
       });
     } catch (e) {
@@ -202,6 +204,7 @@ class _TestConnectivityState extends State<TestConnectivity> {
 
     try {
       final db = DatabaseManager.instance;
+      final estadoApp = Provider.of<EstadoApp>(context, listen: false);
       
       // 1. Probar conexión
       await db.juegos.obtenerJuegos();
@@ -217,13 +220,13 @@ class _TestConnectivityState extends State<TestConnectivity> {
       final invitadoCreado = await db.invitados.crear(invitado);
       
       // 3. Configurar EstadoApp
-      EstadoApp.configurarInvitado(invitadoCreado);
+      await estadoApp.establecerUsuarioInvitado(invitadoCreado);
       
-      // 4. Simular progreso
-      final progreso = await db.progreso.obtenerProgresoInvitado(invitadoCreado.idProgreso);
+      // 4. Verificar progreso existe
+      await db.progreso.obtenerProgresoInvitado(invitadoCreado.idProgreso);
       
       // 5. Verificar estado final
-      final estadoFinal = EstadoApp.nivelUsuario;
+      final estadoFinal = estadoApp.tieneUsuario;
 
       setState(() {
         _status = '🎉 ¡Flujo completo exitoso!\n'
@@ -231,7 +234,7 @@ class _TestConnectivityState extends State<TestConnectivity> {
                  '✅ Registro invitado: OK (ID: ${invitadoCreado.id})\n'
                  '✅ Progreso creado: OK (ID: ${invitadoCreado.idProgreso})\n'
                  '✅ EstadoApp integrado: OK\n'
-                 '✅ Nivel actual: $estadoFinal\n'
+                 '✅ Tiene usuario: $estadoFinal\n'
                  '🚀 Sistema listo para producción!';
       });
     } catch (e) {
@@ -253,7 +256,8 @@ class _TestConnectivityState extends State<TestConnectivity> {
 
     try {
       // Limpiar EstadoApp
-      EstadoApp.cerrarSesion();
+      final estadoApp = Provider.of<EstadoApp>(context, listen: false);
+      await estadoApp.cerrarSesion();
       
       setState(() {
         _status = '✅ Sistema limpiado.\n'

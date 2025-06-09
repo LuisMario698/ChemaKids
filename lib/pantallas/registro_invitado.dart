@@ -377,7 +377,9 @@ class _PantallaRegistroInvitadoState extends State<PantallaRegistroInvitado>
       if (mounted) {
         // Establecer el invitado en el estado de la app
         final estadoApp = context.read<EstadoApp>();
-        estadoApp.establecerUsuarioInvitado(invitadoCreado);
+        await estadoApp.establecerUsuarioInvitado(invitadoCreado);
+        
+        print('✅ [RegistroInvitado] Estado de la app actualizado con invitado');
 
         // Mostrar mensaje de éxito
         ScaffoldMessenger.of(context).showSnackBar(

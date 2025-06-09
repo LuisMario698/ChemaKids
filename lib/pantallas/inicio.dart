@@ -86,6 +86,16 @@ class _PantallaInicioState extends State<PantallaInicio>
                         Consumer<EstadoApp>(
                           builder: (context, estadoApp, child) {
                             final tieneUsuario = estadoApp.tieneUsuario;
+                            final inicializado = estadoApp.inicializado;
+                            
+                            // Debug logs para diagnosticar el problema
+                            print('🔍 [PantallaInicio] Estado actual:');
+                            print('  - Inicializado: $inicializado');
+                            print('  - Tiene usuario: $tieneUsuario');
+                            print('  - Es invitado: ${estadoApp.esInvitado}');
+                            if (tieneUsuario) {
+                              print('  - Nombre usuario: ${estadoApp.nombreUsuario}');
+                            }
                             
                             return TweenAnimationBuilder<double>(
                               tween: Tween(begin: 0.8, end: 1.0),

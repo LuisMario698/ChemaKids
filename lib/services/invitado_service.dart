@@ -19,13 +19,15 @@ class InvitadoService {
       if (!_supabase.isInitialized) {
         print('⚠️ [InvitadoService] SupabaseService no está inicializado. Creando usuario en modo offline...');
         
-        // Crear invitado con ID temporal para modo offline
+        // Crear invitado con ID temporal para modo offline pero con IDs válidos
+        final timestampId = DateTime.now().millisecondsSinceEpoch;
         final invitadoOffline = invitado.copyWith(
-          id: DateTime.now().millisecondsSinceEpoch, // ID temporal basado en timestamp
-          idProgreso: DateTime.now().millisecondsSinceEpoch + 1, // ID temporal de progreso
+          id: timestampId, // ID temporal basado en timestamp
+          idProgreso: timestampId + 1, // ID temporal de progreso
         );
         
         print('✅ [InvitadoService] Invitado creado en modo offline: ${invitadoOffline.nombre}');
+        print('📋 [InvitadoService] Datos offline: ID=${invitadoOffline.id}, IdProgreso=${invitadoOffline.idProgreso}');
         return invitadoOffline;
       }
 

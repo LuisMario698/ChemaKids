@@ -496,7 +496,7 @@ class _PantallaNombreEdadState extends State<PantallaNombreEdad>
             if (perfil != null) {
               // Actualizar el EstadoApp con el usuario registrado
               final estadoApp = context.read<EstadoApp>();
-              estadoApp.establecerUsuarioAutenticado(perfil);
+              await estadoApp.establecerUsuarioAutenticado(perfil);
               
               print('✅ [PantallaNombreEdad] Usuario registrado y EstadoApp actualizado');
             }
@@ -529,7 +529,7 @@ class _PantallaNombreEdadState extends State<PantallaNombreEdad>
           if (perfil != null) {
             // Actualizar el EstadoApp con el usuario autenticado
             final estadoApp = context.read<EstadoApp>();
-            estadoApp.establecerUsuarioAutenticado(perfil);
+            await estadoApp.establecerUsuarioAutenticado(perfil);
             
             print('✅ [PantallaNombreEdad] Usuario autenticado y EstadoApp actualizado');
           }
