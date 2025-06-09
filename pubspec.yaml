@@ -65,11 +65,11 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
-flutter:
-  # The following line ensures that the Material Icons font is
+flutter:  # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
   assets:
     - assets/images/123.png
     - assets/images/abc.png
@@ -79,12 +79,14 @@ flutter:
     - assets/images/memorama.png
     - assets/images/palabras.png
     - assets/images/silabas.png
+    - assets/images/Juego123.jpg
+    - assets/images/Juegoobjetosynumeros.jpg
+    - assets/images/aprendeasumar.jpg
+    - assets/images/compararnumeros.jpg
+    - assets/images/juego_contar_animalitos.jpg
+    - assets/images/sumas basicas.png
     - assets/images/
-    - assets/audio/
-    - web/icons/
-
-  # To add assets to your application, add an assets section  # assets:
-  #   - put your assets here
+    - assets/audio/    - web/icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

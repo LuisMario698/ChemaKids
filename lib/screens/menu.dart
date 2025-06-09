@@ -552,21 +552,21 @@ class _PantallaMenuState extends State<PantallaMenu>
               children: [                TarjetaJuego(
                   titulo: "123",
                   emoji: "🔢",
-                  imageUrl: "https://img.freepik.com/premium-vector/numbers-cute-cartoon-vector-illustration_480744-393.jpg",
+                  imageUrl: "assets/images/Juego123.jpg",
                   onTap: () => Navigator.pushNamed(context, '/123'),
                   indiceColor: indiceColor,
                   esEscritorio: esEscritorio,
                 ),                TarjetaJuego(
                   titulo: "Contar Animalitos",
                   emoji: "🐾",
-                  imageUrl: "https://img.freepik.com/premium-vector/counting-animals-cute-cartoon-vector-illustration_480744-394.jpg",
+                  imageUrl: "assets/images/juego_contar_animalitos.jpg",
                   onTap: () => Navigator.pushNamed(context, '/contar-animalitos'),
                   indiceColor: indiceColor + 1,
                   esEscritorio: esEscritorio,
                 ),                TarjetaJuego(
                   titulo: "Objetos y Números",
                   emoji: "🎯",
-                  imageUrl: "https://img.freepik.com/premium-vector/matching-numbers-objects-cute-cartoon-vector-illustration_480744-395.jpg",
+                  imageUrl: "assets/images/Juegoobjetosynumeros.jpg",
                   onTap: () => Navigator.pushNamed(context, '/objetos-numero'),
                   indiceColor: indiceColor + 2,
                   esEscritorio: esEscritorio,
@@ -588,7 +588,7 @@ class _PantallaMenuState extends State<PantallaMenu>
               crossAxisSpacing: 16,              children: [                TarjetaJuego(
                   titulo: "Comparar Números",
                   emoji: "⚖️",
-                  imageUrl: "https://img.freepik.com/premium-vector/comparison-cute-cartoon-vector-illustration_480744-396.jpg",
+                  imageUrl: "assets/images/compararnumeros.jpg",
                   onTap: () => Navigator.pushNamed(context, '/comparar-numeros'),
                   indiceColor: indiceColor + 1,
                   esEscritorio: esEscritorio,
@@ -596,7 +596,7 @@ class _PantallaMenuState extends State<PantallaMenu>
                 TarjetaJuego(
                   titulo: "Aprende a Sumar",
                   emoji: "🧮",
-                  imageUrl: "https://img.freepik.com/premium-vector/addition-learning-cute-cartoon-vector-illustration_480744-398.jpg",
+                  imageUrl: "assets/images/aprendeasumar.jpg",
                   onTap: () => Navigator.pushNamed(context, '/presentacion-sumas'),
                   indiceColor: indiceColor + 2,
                   esEscritorio: esEscritorio,
@@ -604,7 +604,7 @@ class _PantallaMenuState extends State<PantallaMenu>
                 TarjetaJuego(
                   titulo: "Sumas Básicas",
                   emoji: "✨",
-                  imageUrl: "https://img.freepik.com/premium-vector/basic-addition-cute-cartoon-vector-illustration_480744-397.jpg",
+                  imageUrl: "assets/images/sumas basicas.png",
                   onTap: () => Navigator.pushNamed(context, '/sumas-basicas'),
                   indiceColor: indiceColor + 3,
                   esEscritorio: esEscritorio,
@@ -627,7 +627,7 @@ class _PantallaMenuState extends State<PantallaMenu>
               children: [                TarjetaJuego(
                   titulo: "Sumas y Restas",
                   emoji: "➕",
-                  imageUrl: "https://img.freepik.com/premium-vector/math-addition-subtraction-cute-cartoon-vector-illustration_480744-390.jpg",
+                  imageUrl: "assets/images/aprendeasumar.jpg", // Usando la misma imagen de sumar
                   onTap: () => Navigator.pushNamed(context, '/sumas-restas'),
                   indiceColor: indiceColor,
                   esEscritorio: esEscritorio,
