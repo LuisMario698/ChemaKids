@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/tts_service.dart';
 import 'dart:math';
 
 class JuegoSilabasAudio extends StatefulWidget {
@@ -18,83 +19,94 @@ class _JuegoSilabasAudioState extends State<JuegoSilabasAudio>
   bool _preguntaRespondida = false;
   String? _respuestaSeleccionada;
   final Random _random = Random();
+  final TTSService _ttsService = TTSService();
 
-  // Lista de sílabas con emojis asociados
-  final List<Map<String, dynamic>> _silabas = [
-    {'silaba': 'BA', 'emoji': '🍌'},
-    {'silaba': 'BE', 'emoji': '👶'},
-    {'silaba': 'BI', 'emoji': '🚲'},
-    {'silaba': 'BO', 'emoji': '⚽'},
-    {'silaba': 'BU', 'emoji': '🦉'},
-    {'silaba': 'CA', 'emoji': '🏠'},
-    {'silaba': 'CO', 'emoji': '🥥'},
-    {'silaba': 'CU', 'emoji': '🐍'},
-    {'silaba': 'DA', 'emoji': '🎯'},
-    {'silaba': 'DE', 'emoji': '👆'},
-    {'silaba': 'DI', 'emoji': '💰'},
-    {'silaba': 'DO', 'emoji': '🎵'},
-    {'silaba': 'DU', 'emoji': '🍭'},
-    {'silaba': 'FA', 'emoji': '🎵'},
-    {'silaba': 'FE', 'emoji': '🧚'},
-    {'silaba': 'FI', 'emoji': '🔥'},
-    {'silaba': 'FO', 'emoji': '📱'},
-    {'silaba': 'FU', 'emoji': '⚽'},
-    {'silaba': 'GA', 'emoji': '🐱'},
-    {'silaba': 'GO', 'emoji': '⚽'},
-    {'silaba': 'GU', 'emoji': '🦆'},
-    {'silaba': 'JA', 'emoji': '😂'},
-    {'silaba': 'JE', 'emoji': '✅'},
-    {'silaba': 'JI', 'emoji': '🦒'},
-    {'silaba': 'JO', 'emoji': '💍'},
-    {'silaba': 'JU', 'emoji': '🧃'},
-    {'silaba': 'LA', 'emoji': '🎵'},
-    {'silaba': 'LE', 'emoji': '🥛'},
-    {'silaba': 'LI', 'emoji': '📚'},
-    {'silaba': 'LO', 'emoji': '🐺'},
-    {'silaba': 'LU', 'emoji': '🌙'},
-    {'silaba': 'MA', 'emoji': '👩'},
-    {'silaba': 'ME', 'emoji': '🍈'},
-    {'silaba': 'MI', 'emoji': '🎤'},
-    {'silaba': 'MO', 'emoji': '🐒'},
-    {'silaba': 'MU', 'emoji': '🐄'},
-    {'silaba': 'NA', 'emoji': '👃'},
-    {'silaba': 'NE', 'emoji': '❄️'},
-    {'silaba': 'NI', 'emoji': '👶'},
-    {'silaba': 'NO', 'emoji': '🚫'},
-    {'silaba': 'NU', 'emoji': '☁️'},
-    {'silaba': 'PA', 'emoji': '👨'},
-    {'silaba': 'PE', 'emoji': '🐟'},
-    {'silaba': 'PI', 'emoji': '🍕'},
-    {'silaba': 'PO', 'emoji': '🥔'},
-    {'silaba': 'PU', 'emoji': '🌸'},
-    {'silaba': 'RA', 'emoji': '🐸'},
-    {'silaba': 'RE', 'emoji': '👑'},
-    {'silaba': 'RI', 'emoji': '😄'},
-    {'silaba': 'RO', 'emoji': '🌹'},
-    {'silaba': 'RU', 'emoji': '🎯'},
-    {'silaba': 'SA', 'emoji': '🧂'},
-    {'silaba': 'SE', 'emoji': '🌱'},
-    {'silaba': 'SI', 'emoji': '💺'},
-    {'silaba': 'SO', 'emoji': '☀️'},
-    {'silaba': 'SU', 'emoji': '⬆️'},
-    {'silaba': 'TA', 'emoji': '🥤'},
-    {'silaba': 'TE', 'emoji': '🍵'},
-    {'silaba': 'TI', 'emoji': '🦈'},
-    {'silaba': 'TO', 'emoji': '🐂'},
-    {'silaba': 'TU', 'emoji': '🌷'},
-    {'silaba': 'VA', 'emoji': '🐄'},
-    {'silaba': 'VE', 'emoji': '👁️'},
-    {'silaba': 'VI', 'emoji': '🍷'},
-    {'silaba': 'VO', 'emoji': '🎤'},
+  // Lista de sílabas
+  final List<String> _silabas = [
+    'BA',
+    'BE',
+    'BI',
+    'BO',
+    'BU',
+    'CA',
+    'CO',
+    'CU',
+    'DA',
+    'DE',
+    'DI',
+    'DO',
+    'DU',
+    'FA',
+    'FE',
+    'FI',
+    'FO',
+    'FU',
+    'GA',
+    'GO',
+    'GU',
+    'JA',
+    'JE',
+    'JI',
+    'JO',
+    'JU',
+    'LA',
+    'LE',
+    'LI',
+    'LO',
+    'LU',
+    'MA',
+    'ME',
+    'MI',
+    'MO',
+    'MU',
+    'NA',
+    'NE',
+    'NI',
+    'NO',
+    'NU',
+    'PA',
+    'PE',
+    'PI',
+    'PO',
+    'PU',
+    'RA',
+    'RE',
+    'RI',
+    'RO',
+    'RU',
+    'SA',
+    'SE',
+    'SI',
+    'SO',
+    'SU',
+    'TA',
+    'TE',
+    'TI',
+    'TO',
+    'TU',
+    'VA',
+    'VE',
+    'VI',
+    'VO',
   ];
 
-  List<Map<String, dynamic>> _preguntasActuales = [];
+  List<String> _preguntasActuales = [];
+  List<String> _opcionesActuales = [];
 
   @override
   void initState() {
     super.initState();
     _initializeAnimations();
     _generarPreguntas();
+    _initializeTTS();
+  }
+
+  void _initializeTTS() async {
+    await _ttsService.initialize();
+  }
+
+  Future<void> _reproducirSilaba() async {
+    await _ttsService.speakSyllable(_preguntaActualData);
   }
 
   void _initializeAnimations() {
@@ -108,29 +120,28 @@ class _JuegoSilabasAudioState extends State<JuegoSilabasAudio>
   }
 
   void _generarPreguntas() {
-    final silabasAleatorias = List<Map<String, dynamic>>.from(_silabas);
+    final silabasAleatorias = List<String>.from(_silabas);
     silabasAleatorias.shuffle(_random);
     _preguntasActuales = silabasAleatorias.take(10).toList();
+    _generarOpcionesParaPreguntaActual();
   }
 
-  Map<String, dynamic> get _preguntaActualData =>
-      _preguntasActuales[_preguntaActual];
-
-  List<String> _generarOpciones() {
+  void _generarOpcionesParaPreguntaActual() {
     final opciones = <String>[];
-    opciones.add(_preguntaActualData['silaba']);
+    opciones.add(_preguntaActualData);
 
     while (opciones.length < 4) {
-      final silabaAleatoria =
-          _silabas[_random.nextInt(_silabas.length)]['silaba'];
+      final silabaAleatoria = _silabas[_random.nextInt(_silabas.length)];
       if (!opciones.contains(silabaAleatoria)) {
         opciones.add(silabaAleatoria);
       }
     }
 
     opciones.shuffle(_random);
-    return opciones;
+    _opcionesActuales = opciones;
   }
+
+  String get _preguntaActualData => _preguntasActuales[_preguntaActual];
 
   void _seleccionarRespuesta(String respuesta) {
     if (_preguntaRespondida) return;
@@ -140,7 +151,7 @@ class _JuegoSilabasAudioState extends State<JuegoSilabasAudio>
       _preguntaRespondida = true;
     });
 
-    if (respuesta == _preguntaActualData['silaba']) {
+    if (respuesta == _preguntaActualData) {
       _puntuacion += 10;
       _feedbackController.forward();
     }
@@ -160,6 +171,7 @@ class _JuegoSilabasAudioState extends State<JuegoSilabasAudio>
       _preguntaRespondida = false;
       _respuestaSeleccionada = null;
     });
+    _generarOpcionesParaPreguntaActual();
     _feedbackController.reset();
   }
 
@@ -167,20 +179,15 @@ class _JuegoSilabasAudioState extends State<JuegoSilabasAudio>
     final porcentaje =
         (_puntuacion / (_preguntasActuales.length * 10) * 100).round();
     String mensaje;
-    String emoji;
 
     if (porcentaje >= 90) {
-      mensaje = "¡EXCELENTE! 🌟";
-      emoji = "🎉";
+      mensaje = "¡EXCELENTE!";
     } else if (porcentaje >= 70) {
-      mensaje = "¡MUY BIEN! 👏";
-      emoji = "😊";
+      mensaje = "¡MUY BIEN!";
     } else if (porcentaje >= 50) {
-      mensaje = "¡BIEN! 👍";
-      emoji = "😄";
+      mensaje = "¡BIEN!";
     } else {
-      mensaje = "¡Sigue practicando! 💪";
-      emoji = "😅";
+      mensaje = "¡Sigue practicando!";
     }
 
     showDialog(
@@ -189,11 +196,7 @@ class _JuegoSilabasAudioState extends State<JuegoSilabasAudio>
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: const Color(0xFF3D5A80),
-          title: Text(
-            emoji,
-            style: const TextStyle(fontSize: 60),
-            textAlign: TextAlign.center,
-          ),
+          title: const Icon(Icons.emoji_events, size: 60, color: Colors.amber),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -262,10 +265,10 @@ class _JuegoSilabasAudioState extends State<JuegoSilabasAudio>
       return const Color(0xFF98C1D9);
     }
 
-    if (opcion == _preguntaActualData['silaba']) {
+    if (opcion == _preguntaActualData) {
       return Colors.green;
     } else if (opcion == _respuestaSeleccionada &&
-        opcion != _preguntaActualData['silaba']) {
+        opcion != _preguntaActualData) {
       return Colors.red;
     } else {
       return const Color(0xFF98C1D9).withOpacity(0.5);
@@ -284,7 +287,7 @@ class _JuegoSilabasAudioState extends State<JuegoSilabasAudio>
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    final opciones = _generarOpciones();
+    final opciones = _opcionesActuales;
 
     return Scaffold(
       backgroundColor: const Color(0xFF2A0944),
@@ -293,13 +296,13 @@ class _JuegoSilabasAudioState extends State<JuegoSilabasAudio>
           builder: (context, constraints) {
             double screenWidth = constraints.maxWidth;
             double screenHeight = constraints.maxHeight;
-            
+
             // Cálculos responsivos
             double titleSize = screenWidth > 600 ? 32 : 24;
-            double emojiSize = screenWidth > 600 ? 80 : 60;
+            double speakerSize = screenWidth > 600 ? 80 : 60;
             double containerSize = screenWidth > 600 ? 140 : 110;
             double questionSize = screenWidth > 600 ? 20 : 16;
-            
+
             return Column(
               children: [
                 // Header con progreso y puntuación
@@ -356,7 +359,7 @@ class _JuegoSilabasAudioState extends State<JuegoSilabasAudio>
 
                 // Título
                 Text(
-                  '🎯 Adivina la Sílaba 🎯',
+                  'Adivina la Sílaba',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: titleSize,
@@ -365,27 +368,31 @@ class _JuegoSilabasAudioState extends State<JuegoSilabasAudio>
                   textAlign: TextAlign.center,
                 ),
 
-                SizedBox(height: screenHeight * 0.02),
+                SizedBox(height: screenHeight * 0.04),
 
-                // Emoji de la sílaba como pista
-                Container(
-                  width: containerSize,
-                  height: containerSize,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF98C1D9),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
+                // Ícono de bocina para escuchar la sílaba
+                GestureDetector(
+                  onTap: _reproducirSilaba,
+                  child: Container(
+                    width: containerSize,
+                    height: containerSize,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF98C1D9),
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.3),
+                          blurRadius: 10,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.volume_up,
+                        size: speakerSize,
+                        color: Colors.deepPurple,
                       ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      _preguntaActualData['emoji'],
-                      style: TextStyle(fontSize: emojiSize),
                     ),
                   ),
                 ),
@@ -393,10 +400,19 @@ class _JuegoSilabasAudioState extends State<JuegoSilabasAudio>
                 SizedBox(height: screenHeight * 0.02),
 
                 Text(
+                  'Toca la bocina para escuchar',
+                  style: TextStyle(color: Colors.white, fontSize: questionSize),
+                  textAlign: TextAlign.center,
+                ),
+
+                SizedBox(height: screenHeight * 0.01),
+
+                Text(
                   '¿Cuál es la sílaba?',
                   style: TextStyle(
-                    color: Colors.white, 
-                    fontSize: questionSize,
+                    color: Colors.white,
+                    fontSize: questionSize + 2,
+                    fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -409,30 +425,33 @@ class _JuegoSilabasAudioState extends State<JuegoSilabasAudio>
                     builder: (context, constraints) {
                       double screenWidth = constraints.maxWidth;
                       double screenHeight = constraints.maxHeight;
-                      
+
                       // Cálculos responsivos
                       double horizontalPadding = screenWidth * 0.08;
                       double spacing = screenWidth * 0.04;
                       double fontSize = screenWidth > 600 ? 24 : 20;
                       double aspectRatio = screenWidth > 600 ? 3.5 : 2.8;
-                      
+
                       // Ajustar según la altura disponible
                       if (screenHeight < 400) {
                         aspectRatio = 4.0; // Más ancho en pantallas muy cortas
                         fontSize = 18;
                       }
-                      
+
                       return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: horizontalPadding,
+                        ),
                         child: GridView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: spacing,
-                            mainAxisSpacing: spacing * 0.7,
-                            childAspectRatio: aspectRatio,
-                          ),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: spacing,
+                                mainAxisSpacing: spacing * 0.7,
+                                childAspectRatio: aspectRatio,
+                              ),
                           itemCount: opciones.length,
                           itemBuilder: (context, index) {
                             final opcion = opciones[index];
@@ -452,9 +471,13 @@ class _JuegoSilabasAudioState extends State<JuegoSilabasAudio>
                                       offset: const Offset(0, 3),
                                     ),
                                   ],
-                                  border: _respuestaSeleccionada == opcion
-                                      ? Border.all(color: Colors.white, width: 3)
-                                      : null,
+                                  border:
+                                      _respuestaSeleccionada == opcion
+                                          ? Border.all(
+                                            color: Colors.white,
+                                            width: 3,
+                                          )
+                                          : null,
                                 ),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -468,19 +491,16 @@ class _JuegoSilabasAudioState extends State<JuegoSilabasAudio>
                                       ),
                                     ),
                                     if (_preguntaRespondida &&
-                                        opcion == _preguntaActualData['silaba'])
+                                        opcion == _preguntaActualData)
                                       AnimatedBuilder(
                                         animation: _feedbackAnimation,
                                         builder: (context, child) {
                                           return Transform.scale(
                                             scale: _feedbackAnimation.value,
-                                            child: Text(
-                                              '✓',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: fontSize + 2,
-                                                fontWeight: FontWeight.bold,
-                                              ),
+                                            child: Icon(
+                                              Icons.check_circle,
+                                              color: Colors.white,
+                                              size: fontSize + 2,
                                             ),
                                           );
                                         },

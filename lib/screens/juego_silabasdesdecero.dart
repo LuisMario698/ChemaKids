@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/tema_juego_chemakids.dart';
+import '../services/tts_service.dart';
 import 'dart:math';
 
 class JuegoSilabasDesdeCero extends StatefulWidget {
@@ -46,32 +47,8 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
   late Animation<double> _animScale;
   bool showConfetti = false;
   final List<bool> _animandoVocal = List<bool>.filled(5, false);
-
-  final List<String> _emojiList = [
-    '🐶',
-    '🐱',
-    '🦊',
-    '🐻',
-    '🐼',
-    '🐵',
-    '🦁',
-    '🐸',
-    '🐤',
-    '🐙',
-    '🦋',
-    '🐳',
-    '🦄',
-    '🦕',
-    '🐰',
-    '🐯',
-    '🐨',
-    '🐺',
-    '🦔',
-    '🦒',
-    '🐘',
-    '🦓',
-  ];
-
+  final TTSService _ttsService = TTSService();
+  bool _isPlayingAudio = false;
   final List<Color> _bgColors = [
     Color(0xFFFFF59D),
     Color(0xFFFFB0B0),
@@ -82,7 +59,6 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
     Color(0xFFFFCC80),
   ];
   final Random _random = Random();
-
   @override
   void initState() {
     super.initState();
@@ -91,16 +67,33 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
       vsync: this,
     );
     _animScale = CurvedAnimation(parent: _controller, curve: Curves.elasticOut);
+
+    // Inicializar el servicio TTS
+    _initializeTTS();
+  }
+
+  /// Inicializa el servicio TTS
+  Future<void> _initializeTTS() async {
+    try {
+      await _ttsService.initialize();
+      print('🎵 TTS Service inicializado para sílabas desde cero');
+    } catch (e) {
+      print('❌ Error inicializando TTS en sílabas desde cero: $e');
+    }
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _ttsService.stop(); // Detener cualquier reproducción en curso
     super.dispose();
   }
 
-  void _formarSilaba(String vocal, int vocalIdx) {
+  void _formarSilaba(String vocal, int vocalIdx) async {
+    if (_isPlayingAudio) return; // Evitar múltiples reproducciones
+
     setState(() {
+      _isPlayingAudio = true;
       seleccionVocal = vocal;
       // Manejar casos especiales para Q
       if (consonantes[nivelActual] == 'q') {
@@ -117,13 +110,74 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
       showConfetti = true;
       _animandoVocal[vocalIdx] = true;
     });
+
     _controller.forward(from: 0);
+
+    // Reproducir la sílaba formada usando TTS
+    try {
+      await _ttsService.speakSyllable(silabaFormada!);
+      print('🔊 Reproduciendo sílaba: $silabaFormada');
+    } catch (e) {
+      print('❌ Error reproduciendo sílaba: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isPlayingAudio = false;
+        });
+      }
+    }
+
     Future.delayed(const Duration(milliseconds: 1200), () {
       if (mounted) setState(() => showConfetti = false);
     });
     Future.delayed(const Duration(milliseconds: 350), () {
       if (mounted) setState(() => _animandoVocal[vocalIdx] = false);
     });
+  }
+
+  /// Reproduce la consonante actual
+  Future<void> _reproducirConsonante() async {
+    if (_isPlayingAudio) return;
+
+    setState(() {
+      _isPlayingAudio = true;
+    });
+
+    try {
+      final consonante = consonantes[nivelActual];
+      await _ttsService.speakLetter(consonante);
+      print('🔊 Reproduciendo consonante: $consonante');
+    } catch (e) {
+      print('❌ Error reproduciendo consonante: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isPlayingAudio = false;
+        });
+      }
+    }
+  }
+
+  /// Reproduce una vocal específica
+  Future<void> _reproducirVocal(String vocal) async {
+    if (_isPlayingAudio) return;
+
+    setState(() {
+      _isPlayingAudio = true;
+    });
+
+    try {
+      await _ttsService.speakLetter(vocal);
+      print('🔊 Reproduciendo vocal: $vocal');
+    } catch (e) {
+      print('❌ Error reproduciendo vocal: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isPlayingAudio = false;
+        });
+      }
+    }
   }
 
   void _siguienteNivel() {
@@ -163,16 +217,18 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
     required Color color,
     required bool animando,
     void Function()? onTap,
+    void Function()? onLongPress,
   }) {
     return GestureDetector(
       onTap: onTap,
+      onLongPress: onLongPress,
       child: AnimatedScale(
         scale: animando ? 1.3 : (seleccionado ? 1.15 : 1.0),
         duration: const Duration(milliseconds: 220),
         curve: Curves.elasticOut,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          margin: const EdgeInsets.all(10),
+          margin: const EdgeInsets.all(5),
           width: 60,
           height: 60,
           decoration: BoxDecoration(
@@ -193,15 +249,30 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
                     ]
                     : [],
           ),
-          child: Center(
-            child: Text(
-              letra.toUpperCase(),
-              style: TextStyle(
-                fontSize: 32,
-                color: seleccionado ? Colors.white : color,
-                fontWeight: FontWeight.bold,
+          child: Stack(
+            children: [
+              Center(
+                child: Text(
+                  letra.toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 32,
+                    color: seleccionado ? Colors.white : color,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-            ),
+              // Icono de audio pequeño en la esquina
+              if (!seleccionado)
+                Positioned(
+                  top: 4,
+                  right: 4,
+                  child: Icon(
+                    Icons.volume_up,
+                    size: 12,
+                    color: color.withOpacity(0.6),
+                  ),
+                ),
+            ],
           ),
         ),
       ),
@@ -216,14 +287,26 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
           duration: const Duration(milliseconds: 400),
           child: Stack(
             children: List.generate(8, (i) {
-              final emojis = ['🎉', '✨', '🎊', '🥳', '💫', '⭐', '🎈'];
-              final emoji = emojis[i % emojis.length];
+              final icons = [
+                Icons.star,
+                Icons.star_border,
+                Icons.favorite,
+                Icons.thumb_up,
+                Icons.celebration,
+                Icons.auto_awesome,
+                Icons.emoji_events,
+              ];
+              final icon = icons[i % icons.length];
               final left = (i * 0.12 + 0.1) % 1.0;
               final top = (i.isEven ? 0.1 : 0.2) + (i * 0.06);
               return Positioned(
                 left: left * MediaQuery.of(context).size.width,
                 top: top * MediaQuery.of(context).size.height,
-                child: Text(emoji, style: const TextStyle(fontSize: 28)),
+                child: Icon(
+                  icon,
+                  size: 28,
+                  color: Colors.orange.withOpacity(0.8),
+                ),
               );
             }),
           ),
@@ -235,7 +318,6 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
   @override
   Widget build(BuildContext context) {
     final String consonanteNivel = consonantes[nivelActual];
-    final String emoji = _emojiList[nivelActual % _emojiList.length];
 
     return PlantillaJuegoChemaKids(
       titulo: 'Sílabas desde Cero',
@@ -262,45 +344,62 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 24),
-                  // Emoji y consonante grande
+                  const SizedBox(
+                    height: 24,
+                  ), // Consonante grande con botón de audio
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(emoji, style: const TextStyle(fontSize: 60)),
-                      const SizedBox(width: 16),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 18,
-                          vertical: 8,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(18),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.deepPurple.withOpacity(0.08),
-                              blurRadius: 8,
-                              spreadRadius: 2,
-                            ),
-                          ],
-                        ),
-                        child: Text(
-                          consonanteNivel.toUpperCase(),
-                          style: const TextStyle(
-                            fontSize: 56,
-                            color: Colors.deepPurple,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 2,
+                      GestureDetector(
+                        onTap: _reproducirConsonante,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 18,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color:
+                                _isPlayingAudio
+                                    ? Colors.amber[200]
+                                    : Colors.white,
+                            borderRadius: BorderRadius.circular(18),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.deepPurple.withOpacity(0.08),
+                                blurRadius: 8,
+                                spreadRadius: 2,
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                consonanteNivel.toUpperCase(),
+                                style: const TextStyle(
+                                  fontSize: 56,
+                                  color: Colors.deepPurple,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 2,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Icon(
+                                _isPlayingAudio
+                                    ? Icons.volume_up
+                                    : Icons.volume_up_outlined,
+                                color: Colors.deepPurple,
+                                size: 24,
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                      const SizedBox(width: 16),
-                      Text(emoji, style: const TextStyle(fontSize: 60)),
                     ],
                   ),
-                  const SizedBox(height: 24),
-                  // 5 vocales como botones grandes y animados por nivel
+                  const SizedBox(
+                    height: 24,
+                  ), // 5 vocales como botones grandes y animados por nivel
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(vocales.length, (i) {
@@ -311,6 +410,7 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
                         color: Colors.orange,
                         animando: _animandoVocal[i],
                         onTap: () => _formarSilaba(v, i),
+                        onLongPress: () => _reproducirVocal(v),
                       );
                     }),
                   ),
@@ -338,53 +438,21 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
                                 ),
                               ],
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  silabaFormada!.toUpperCase(),
-                                  style: const TextStyle(
-                                    fontSize: 70,
-                                    color: Colors.deepPurple,
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 4,
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                Text(
-                                  emoji,
-                                  style: const TextStyle(fontSize: 56),
-                                ),
-                              ],
+                            child: Text(
+                              silabaFormada!.toUpperCase(),
+                              style: const TextStyle(
+                                fontSize: 70,
+                                color: Colors.deepPurple,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 4,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 18),
-                          // Celebración visual
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Text('🎉', style: TextStyle(fontSize: 40)),
-                              SizedBox(width: 8),
-                              Text('👏', style: TextStyle(fontSize: 40)),
-                            ],
-                          ),
                         ],
                       ),
                     ),
                   const SizedBox(height: 30),
-                  // Emoji grande decorativo cuando no hay sílaba formada
-                  if (silabaFormada == null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 24),
-                      child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 400),
-                        child: Text(
-                          emoji,
-                          key: ValueKey(emoji),
-                          style: const TextStyle(fontSize: 120),
-                        ),
-                      ),
-                    ),
                   // Barra de progreso visual simple (puntos)
                   Padding(
                     padding: const EdgeInsets.only(top: 18),

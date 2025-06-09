@@ -99,6 +99,17 @@ class _JuegoMemoramaState extends State<JuegoMemorama> {
   @override
   Widget build(BuildContext context) {
     final completado = _matches == (_items.length ~/ 2);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth > 600;
+    final isTablet = screenWidth > 400 && screenWidth <= 600;
+
+    // Tamaños responsivos
+    final crossAxisCount = isDesktop ? 4 : (isTablet ? 4 : 3);
+    final itemSpacing = isDesktop ? 16.0 : (isTablet ? 14.0 : 12.0);
+    final gridPadding = isDesktop ? 24.0 : (isTablet ? 20.0 : 16.0);
+    final fontSize = isDesktop ? 32.0 : (isTablet ? 30.0 : 24.0);
+    final buttonFontSize = isDesktop ? 18.0 : (isTablet ? 16.0 : 14.0);
+    final iconSize = isDesktop ? 24.0 : (isTablet ? 22.0 : 20.0);
 
     return PlantillaJuegoChemaKids(
       titulo: 'Memorama Letras y Números',
@@ -112,10 +123,13 @@ class _JuegoMemoramaState extends State<JuegoMemorama> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton.icon(
-                icon: const Icon(Icons.refresh, color: Colors.white),
-                label: const Text(
+                icon: Icon(Icons.refresh, color: Colors.white, size: iconSize),
+                label: Text(
                   'Reiniciar',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: buttonFontSize,
+                  ),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange,
@@ -133,11 +147,14 @@ class _JuegoMemoramaState extends State<JuegoMemorama> {
           // Grid del memorama
           Expanded(
             child: GridView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                mainAxisSpacing: 12,
-                crossAxisSpacing: 12,
+              padding: EdgeInsets.symmetric(
+                horizontal: gridPadding,
+                vertical: gridPadding,
+              ),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount,
+                mainAxisSpacing: itemSpacing,
+                crossAxisSpacing: itemSpacing,
                 childAspectRatio: 1,
               ),
               itemCount: _items.length,
@@ -186,7 +203,7 @@ class _JuegoMemoramaState extends State<JuegoMemorama> {
                                     item.value + item.matched.toString(),
                                   ),
                                   style: TextStyle(
-                                    fontSize: 28,
+                                    fontSize: fontSize,
                                     color:
                                         RegExp(r'^[0-9]$').hasMatch(item.value)
                                             ? Colors.deepPurple

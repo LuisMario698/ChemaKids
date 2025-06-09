@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import '../widgets/tema_juego_chemakids.dart';
+import '../services/tts_service.dart';
 
 class JuegoFormarPalabrasNuevo extends StatefulWidget {
   const JuegoFormarPalabrasNuevo({Key? key}) : super(key: key);
@@ -11,6 +12,8 @@ class JuegoFormarPalabrasNuevo extends StatefulWidget {
 }
 
 class _JuegoFormarPalabrasNuevoState extends State<JuegoFormarPalabrasNuevo> {
+  final TTSService _ttsService = TTSService();
+
   final List<Map<String, dynamic>> _palabras = [
     {
       'palabra': 'mono',
@@ -75,6 +78,24 @@ class _JuegoFormarPalabrasNuevoState extends State<JuegoFormarPalabrasNuevo> {
   void initState() {
     super.initState();
     _iniciarPalabra();
+    _initializeTTS();
+  }
+
+  void _initializeTTS() async {
+    await _ttsService.initialize();
+  }
+
+  Future<void> _reproducirPalabra() async {
+    final palabra = _palabras[_indice]['palabra'] as String;
+    await _ttsService.speak(palabra);
+  }
+
+  Future<void> _reproducirLetra(String letra) async {
+    await _ttsService.speakLetter(letra);
+  }
+
+  Future<void> _reproducirFelicitacion() async {
+    await _ttsService.speakCelebration();
   }
 
   void _iniciarPalabra() {
@@ -128,6 +149,9 @@ class _JuegoFormarPalabrasNuevoState extends State<JuegoFormarPalabrasNuevo> {
           _letrasDisponibles.remove(letra);
           _errorEnEspacio[pos] = false;
           _verificarPalabra();
+
+          // Reproducir sonido de la letra al colocarla correctamente
+          _reproducirLetra(letra);
         } else {
           _errorEnEspacio[pos] = true;
           Future.delayed(const Duration(milliseconds: 400), () {
@@ -156,6 +180,11 @@ class _JuegoFormarPalabrasNuevoState extends State<JuegoFormarPalabrasNuevo> {
       setState(() {
         _completado = _espacios.join() == palabra;
       });
+
+      // Si se completó correctamente, reproducir felicitación
+      if (_completado) {
+        _reproducirFelicitacion();
+      }
     }
   }
 
@@ -258,7 +287,26 @@ class _JuegoFormarPalabrasNuevoState extends State<JuegoFormarPalabrasNuevo> {
           },
         ),
 
-        const SizedBox(height: 24),
+        const SizedBox(height: 16),
+
+        // Botón de audio para escuchar la palabra
+        Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          child: ElevatedButton.icon(
+            onPressed: _reproducirPalabra,
+            icon: const Icon(Icons.volume_up, size: 24),
+            label: const Text('Escuchar palabra'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.deepPurple[100],
+              foregroundColor: Colors.deepPurple,
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            ),
+          ),
+        ),
 
         // Espacios para la palabra
         Row(
@@ -385,6 +433,10 @@ class _JuegoFormarPalabrasNuevoState extends State<JuegoFormarPalabrasNuevo> {
       builder: (context, scale, child) {
         Future.microtask(() async {
           if (ModalRoute.of(context)?.isCurrent != true) return;
+
+          // Reproducir la palabra completada
+          await _reproducirPalabra();
+
           await showDialog(
             context: context,
             barrierDismissible: false,
@@ -403,7 +455,19 @@ class _JuegoFormarPalabrasNuevoState extends State<JuegoFormarPalabrasNuevo> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text('🎉🌟', style: TextStyle(fontSize: 48)),
+                      // Iconos de celebración con Material Design
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.celebration,
+                            color: Colors.amber,
+                            size: 48,
+                          ),
+                          const SizedBox(width: 16),
+                          Icon(Icons.star, color: Colors.orange, size: 48),
+                        ],
+                      ),
                       const SizedBox(height: 12),
                       Text(
                         '¡Lo lograste!',

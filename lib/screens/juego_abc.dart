@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import '../services/tts_service.dart';
 
 class _Particle {
   double x;
@@ -62,7 +63,8 @@ class _JuegoABCState extends State<JuegoABC>
 
   final List<_Particle> _particles = [];
   final Random _random = Random();
-
+  final TTSService _ttsService = TTSService();
+  bool _isPlayingAudio = false;
   @override
   void initState() {
     super.initState();
@@ -82,6 +84,19 @@ class _JuegoABCState extends State<JuegoABC>
       begin: -10.0,
       end: 10.0,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+
+    // Inicializar el servicio TTS
+    _initializeTTS();
+  }
+
+  /// Inicializa el servicio TTS
+  Future<void> _initializeTTS() async {
+    try {
+      await _ttsService.initialize();
+      print('🎵 TTS Service inicializado para juego ABC');
+    } catch (e) {
+      print('❌ Error inicializando TTS en ABC: $e');
+    }
   }
 
   void _createParticles() {
@@ -111,14 +126,40 @@ class _JuegoABCState extends State<JuegoABC>
     });
   }
 
-  void _reproducirSonido() {
+  void _reproducirSonido() async {
+    if (_isPlayingAudio) return; // Evitar múltiples reproducciones
+
+    setState(() {
+      _isPlayingAudio = true;
+    });
+
     _createParticles();
     _controller.forward().then((_) => _controller.reverse());
+
+    // Reproducir el sonido de la letra actual usando TTS
+    try {
+      final letraActual = _letras[_letraActualIndex];
+      await _ttsService.speakLetter(letraActual);
+      print('🔊 Reproduciendo letra: $letraActual');
+    } catch (e) {
+      print('❌ Error reproduciendo letra: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isPlayingAudio = false;
+        });
+      }
+    }
   }
 
   void _siguienteLetra() {
     setState(() {
       _letraActualIndex = (_letraActualIndex + 1) % _letras.length;
+    });
+
+    // Reproducir automáticamente la nueva letra
+    Future.delayed(const Duration(milliseconds: 300), () {
+      _reproducirSonido();
     });
   }
 
@@ -126,6 +167,11 @@ class _JuegoABCState extends State<JuegoABC>
     setState(() {
       _letraActualIndex =
           (_letraActualIndex - 1 + _letras.length) % _letras.length;
+    });
+
+    // Reproducir automáticamente la nueva letra
+    Future.delayed(const Duration(milliseconds: 300), () {
+      _reproducirSonido();
     });
   }
 
@@ -188,6 +234,7 @@ class _JuegoABCState extends State<JuegoABC>
   @override
   void dispose() {
     _controller.dispose();
+    _ttsService.stop(); // Detener cualquier reproducción en curso
     super.dispose();
   }
 
@@ -430,25 +477,38 @@ class _JuegoABCState extends State<JuegoABC>
                             color: const Color(0xFF0D47A1),
                             borderRadius: BorderRadius.circular(50),
                           ),
-                        ),
-                        // Botón principal con efecto 3D
+                        ), // Botón principal con efecto 3D
                         Positioned(
                           top: 0,
-                          child: Container(
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
                             width: isDesktop ? 340 : 280,
                             height: isDesktop ? 110 : 90,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(45),
-                              gradient: const LinearGradient(
+                              gradient: LinearGradient(
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
-                                colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
+                                colors:
+                                    _isPlayingAudio
+                                        ? [
+                                          const Color(0xFF4CAF50),
+                                          const Color(0xFF388E3C),
+                                        ]
+                                        : [
+                                          const Color(0xFF2196F3),
+                                          const Color(0xFF1976D2),
+                                        ],
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.3),
+                                  color: (_isPlayingAudio
+                                          ? Colors.green
+                                          : Colors.blue)
+                                      .withOpacity(0.4),
                                   offset: const Offset(0, 4),
-                                  blurRadius: 6,
+                                  blurRadius: _isPlayingAudio ? 12 : 6,
+                                  spreadRadius: _isPlayingAudio ? 3 : 0,
                                 ),
                               ],
                             ),
@@ -470,43 +530,72 @@ class _JuegoABCState extends State<JuegoABC>
                                             size: isDesktop ? 50 : 40,
                                           ),
                                     ),
-                                    const SizedBox(width: 16),
-                                    // Ondas de sonido animadas
+                                    const SizedBox(
+                                      width: 16,
+                                    ), // Ondas de sonido animadas
                                     Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: List.generate(3, (index) {
                                         return TweenAnimationBuilder<double>(
-                                          tween: Tween(begin: 0.3, end: 1.0),
-                                          duration: Duration(
-                                            milliseconds: 400 + (index * 200),
+                                          key: ValueKey(
+                                            '$_isPlayingAudio-$index',
                                           ),
-                                          curve: Curves.easeInOut,
+                                          tween: Tween(
+                                            begin: _isPlayingAudio ? 0.2 : 0.3,
+                                            end: _isPlayingAudio ? 1.2 : 1.0,
+                                          ),
+                                          duration: Duration(
+                                            milliseconds:
+                                                _isPlayingAudio
+                                                    ? 200 + (index * 100)
+                                                    : 400 + (index * 200),
+                                          ),
+                                          curve:
+                                              _isPlayingAudio
+                                                  ? Curves.bounceOut
+                                                  : Curves.easeInOut,
                                           builder: (context, value, child) {
-                                            return Container(
+                                            return AnimatedContainer(
+                                              duration: const Duration(
+                                                milliseconds: 200,
+                                              ),
                                               width: 6,
                                               height:
                                                   (index + 1) *
-                                                  (isDesktop ? 20 : 15),
+                                                  (isDesktop ? 20 : 15) *
+                                                  value,
                                               margin:
                                                   const EdgeInsets.symmetric(
                                                     horizontal: 5,
                                                   ),
                                               decoration: BoxDecoration(
                                                 color: Colors.white.withOpacity(
-                                                  value,
+                                                  value * 0.9,
                                                 ),
                                                 borderRadius:
                                                     BorderRadius.circular(3),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.white
-                                                        .withOpacity(
-                                                          value * 0.3,
-                                                        ),
-                                                    blurRadius: 8,
-                                                    spreadRadius: 2,
-                                                  ),
-                                                ],
+                                                boxShadow:
+                                                    _isPlayingAudio
+                                                        ? [
+                                                          BoxShadow(
+                                                            color: Colors.white
+                                                                .withOpacity(
+                                                                  value * 0.5,
+                                                                ),
+                                                            blurRadius: 12,
+                                                            spreadRadius: 4,
+                                                          ),
+                                                        ]
+                                                        : [
+                                                          BoxShadow(
+                                                            color: Colors.white
+                                                                .withOpacity(
+                                                                  value * 0.3,
+                                                                ),
+                                                            blurRadius: 8,
+                                                            spreadRadius: 2,
+                                                          ),
+                                                        ],
                                               ),
                                             );
                                           },
@@ -520,6 +609,37 @@ class _JuegoABCState extends State<JuegoABC>
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                ),
+              ),
+
+              // Texto indicativo del estado del audio
+              Positioned(
+                bottom: 10,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: AnimatedOpacity(
+                    opacity: _isPlayingAudio ? 1.0 : 0.0,
+                    duration: const Duration(milliseconds: 300),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.7),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        '🔊 Reproduciendo "${_letras[_letraActualIndex]}"',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                   ),
                 ),

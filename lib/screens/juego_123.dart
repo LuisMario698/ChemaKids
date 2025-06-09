@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/tema_juego_chemakids.dart';
+import '../services/tts_service.dart';
 
 class Juego123 extends StatefulWidget {
   const Juego123({super.key});
@@ -15,76 +16,79 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
   late AnimationController _pulseController;
   late Animation<double> _numeroAnimation;
   late Animation<double> _pulseAnimation;
+  final TTSService _ttsService = TTSService();
+  bool _isPlayingAudio = false;
+  late ScrollController _selectorScrollController;
 
   // Lista de números con datos más ricos para una experiencia más inmersiva
   final List<Map<String, dynamic>> _numeros = [
     {
       'numero': 1,
       'palabra': 'UNO',
-      'objetos': ['🍎'],
+      'objetos': ['🔴'],
       'color': const Color(0xFFE91E63),
       'descripcion': 'El número uno representa la unidad',
     },
     {
       'numero': 2,
       'palabra': 'DOS',
-      'objetos': ['🍎', '🍎'],
+      'objetos': ['🔴', '🔴'],
       'color': const Color(0xFF2196F3),
       'descripcion': 'Dos significa un par de cosas',
     },
     {
       'numero': 3,
       'palabra': 'TRES',
-      'objetos': ['🍎', '🍎', '🍎'],
+      'objetos': ['🔴', '🔴', '🔴'],
       'color': const Color(0xFF4CAF50),
       'descripcion': 'Tres forma un pequeño grupo',
     },
     {
       'numero': 4,
       'palabra': 'CUATRO',
-      'objetos': ['🍎', '🍎', '🍎', '🍎'],
+      'objetos': ['🔴', '🔴', '🔴', '🔴'],
       'color': const Color(0xFFFF9800),
       'descripcion': 'Cuatro elementos juntos',
     },
     {
       'numero': 5,
       'palabra': 'CINCO',
-      'objetos': ['⭐', '⭐', '⭐', '⭐', '⭐'],
+      'objetos': ['🟡', '🟡', '🟡', '🟡', '🟡'],
       'color': const Color(0xFF9C27B0),
       'descripcion': 'Cinco como los dedos de una mano',
     },
     {
       'numero': 6,
       'palabra': 'SEIS',
-      'objetos': ['⭐', '⭐', '⭐', '⭐', '⭐', '⭐'],
+      'objetos': ['🟡', '🟡', '🟡', '🟡', '🟡', '🟡'],
       'color': const Color(0xFF009688),
-      'descripcion': 'Seis estrellas brillantes',
+      'descripcion': 'Seis círculos brillantes',
     },
     {
       'numero': 7,
       'palabra': 'SIETE',
-      'objetos': ['🌟', '🌟', '🌟', '🌟', '🌟', '🌟', '🌟'],
+      'objetos': ['🟢', '🟢', '🟢', '🟢', '🟢', '🟢', '🟢'],
       'color': const Color(0xFFFF5722),
       'descripcion': 'Siete es un número especial',
     },
     {
       'numero': 8,
       'palabra': 'OCHO',
-      'objetos': ['🌟', '🌟', '🌟', '🌟', '🌟', '🌟', '🌟', '🌟'],
+      'objetos': ['🟢', '🟢', '🟢', '🟢', '🟢', '🟢', '🟢', '🟢'],
       'color': const Color(0xFF795548),
-      'descripcion': 'Ocho estrellas en el cielo',
+      'descripcion': 'Ocho círculos en el cielo',
     },
     {
       'numero': 9,
       'palabra': 'NUEVE',
-      'objetos': ['🎈', '🎈', '🎈', '🎈', '🎈', '🎈', '🎈', '🎈', '🎈'],
+      'objetos': ['🔵', '🔵', '🔵', '🔵', '🔵', '🔵', '🔵', '🔵', '🔵'],
       'color': const Color(0xFF607D8B),
-      'descripcion': 'Nueve globos de colores',
+      'descripcion': 'Nueve círculos de colores',
     },
     {
       'numero': 10,
       'palabra': 'DIEZ',
-      'objetos': ['🎈', '🎈', '🎈', '🎈', '🎈', '🎈', '🎈', '🎈', '🎈', '🎈'],
+      'objetos': ['🔵', '🔵', '🔵', '🔵', '🔵', '🔵', '🔵', '🔵', '🔵', '🔵'],
       'color': const Color(0xFF3F51B5),
       'descripcion': 'Diez es nuestro número completo',
     },
@@ -102,6 +106,9 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
       vsync: this,
     );
 
+    // Inicializar el scroll controller para el selector de números
+    _selectorScrollController = ScrollController();
+
     _numeroAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _numeroController, curve: Curves.elasticOut),
     );
@@ -112,12 +119,32 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
 
     _numeroController.forward();
     _pulseController.repeat(reverse: true);
+
+    // Inicializar el servicio TTS
+    _initializeTTS();
+
+    // Hacer scroll inicial después de que se construya el widget
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToCurrentNumber();
+    });
+  }
+
+  /// Inicializa el servicio TTS
+  Future<void> _initializeTTS() async {
+    try {
+      await _ttsService.initialize();
+      print('🎵 TTS Service inicializado para juego 123');
+    } catch (e) {
+      print('❌ Error inicializando TTS en juego 123: $e');
+    }
   }
 
   @override
   void dispose() {
     _numeroController.dispose();
     _pulseController.dispose();
+    _selectorScrollController.dispose();
+    _ttsService.stop(); // Detener cualquier reproducción en curso
     super.dispose();
   }
 
@@ -128,6 +155,7 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
         _numeroActual++;
       });
       _numeroController.forward();
+      _scrollToCurrentNumber();
     }
   }
 
@@ -138,6 +166,7 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
         _numeroActual--;
       });
       _numeroController.forward();
+      _scrollToCurrentNumber();
     }
   }
 
@@ -148,6 +177,115 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
         _numeroActual = numero;
       });
       _numeroController.forward();
+      _scrollToCurrentNumber();
+    }
+  }
+
+  /// Hace scroll al número actual en el selector horizontal
+  void _scrollToCurrentNumber() {
+    if (_selectorScrollController.hasClients) {
+      final screenWidth = MediaQuery.of(context).size.width;
+      final isDesktop = screenWidth > 600;
+      final isTablet = screenWidth > 400 && screenWidth <= 600;
+      final selectorItemSize = isDesktop ? 60.0 : (isTablet ? 55.0 : 50.0);
+
+      // Calcular el ancho total de cada item incluyendo márgenes
+      const marginPerItem = 12.0; // 6 de cada lado
+      final itemWidth = selectorItemSize + marginPerItem;
+
+      // Calcular la posición objetivo para centrar el número actual
+      final targetOffset =
+          (_numeroActual - 1) * itemWidth - (screenWidth / 2 - itemWidth / 2);
+
+      // Aplicar límites para evitar scroll fuera de rango
+      final maxOffset = _selectorScrollController.position.maxScrollExtent;
+      final clampedOffset = targetOffset.clamp(0.0, maxOffset);
+
+      _selectorScrollController.animateTo(
+        clampedOffset,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  /// Reproduce el número actual (número + palabra)
+  Future<void> _reproducirNumero() async {
+    if (_isPlayingAudio) return;
+
+    setState(() {
+      _isPlayingAudio = true;
+    });
+
+    try {
+      // Reproducir el número usando el método speakNumber
+      await _ttsService.speakNumber(_numeroActual);
+
+      print('🔊 Reproduciendo número: $_numeroActual');
+    } catch (e) {
+      print('❌ Error reproduciendo número: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isPlayingAudio = false;
+        });
+      }
+    }
+  }
+
+  /// Reproduce solo la palabra del número actual
+  Future<void> _reproducirPalabra() async {
+    if (_isPlayingAudio) return;
+
+    setState(() {
+      _isPlayingAudio = true;
+    });
+
+    try {
+      final numeroData = _numeros[_numeroActual - 1];
+      final palabra = numeroData['palabra'];
+
+      await _ttsService.speak(palabra);
+      print('🔊 Reproduciendo palabra: $palabra');
+    } catch (e) {
+      print('❌ Error reproduciendo palabra: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isPlayingAudio = false;
+        });
+      }
+    }
+  }
+
+  /// Reproduce una cuenta hacia el número actual
+  Future<void> _reproducirConteo() async {
+    if (_isPlayingAudio) return;
+
+    setState(() {
+      _isPlayingAudio = true;
+    });
+
+    try {
+      final numeroActual = _numeroActual;
+
+      // Contar del 1 al número actual
+      for (int i = 1; i <= numeroActual; i++) {
+        await _ttsService.speakNumber(i);
+        if (i < numeroActual) {
+          await Future.delayed(const Duration(milliseconds: 800));
+        }
+      }
+
+      print('🔊 Reproduciendo conteo hasta: $numeroActual');
+    } catch (e) {
+      print('❌ Error reproduciendo conteo: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isPlayingAudio = false;
+        });
+      }
     }
   }
 
@@ -356,6 +494,21 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final numeroData = _numeros[_numeroActual - 1];
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth > 600;
+    final isTablet = screenWidth > 400 && screenWidth <= 600;
+
+    // Tamaños responsivos - haciendo los elementos centrales más pequeños
+    final circleSize = isDesktop ? 120.0 : (isTablet ? 100.0 : 80.0);
+    final numberFontSize = isDesktop ? 48.0 : (isTablet ? 40.0 : 32.0);
+    final wordFontSize = isDesktop ? 24.0 : (isTablet ? 20.0 : 18.0);
+    final horizontalPadding = isDesktop ? 24.0 : (isTablet ? 20.0 : 16.0);
+    final buttonFontSize = isDesktop ? 18.0 : (isTablet ? 16.0 : 14.0);
+    final iconSize = isDesktop ? 32.0 : (isTablet ? 28.0 : 24.0);
+    final selectorHeight = isDesktop ? 70.0 : (isTablet ? 65.0 : 60.0);
+    final selectorItemSize = isDesktop ? 60.0 : (isTablet ? 55.0 : 50.0);
+    final verticalSpacing = isDesktop ? 20.0 : (isTablet ? 16.0 : 12.0);
+    final countSectionFontSize = isDesktop ? 18.0 : (isTablet ? 16.0 : 14.0);
 
     return PlantillaJuegoChemaKids(
       titulo: '123 - Aprende Números',
@@ -441,41 +594,43 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
                             builder: (context, child) {
                               return Transform.scale(
                                 scale: _pulseAnimation.value,
-                                child: Container(
-                                  width: 180,
-                                  height: 180,
-                                  decoration: BoxDecoration(
-                                    gradient: RadialGradient(
-                                      colors: [
-                                        numeroData['color'],
-                                        numeroData['color'].withOpacity(0.8),
+                                child: GestureDetector(
+                                  onTap: _reproducirNumero,
+                                  child: Container(
+                                    width: circleSize,
+                                    height: circleSize,
+                                    decoration: BoxDecoration(
+                                      gradient: RadialGradient(
+                                        colors: [
+                                          numeroData['color'],
+                                          numeroData['color'].withOpacity(0.8),
+                                        ],
+                                      ),
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: numeroData['color']
+                                              .withOpacity(0.4),
+                                          blurRadius: 30,
+                                          spreadRadius: 10,
+                                        ),
                                       ],
                                     ),
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: numeroData['color'].withOpacity(
-                                          0.4,
+                                    child: Center(
+                                      child: Text(
+                                        '${numeroData['numero']}',
+                                        style: TextStyle(
+                                          fontSize: numberFontSize,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          shadows: const [
+                                            Shadow(
+                                              offset: Offset(2, 2),
+                                              blurRadius: 4,
+                                              color: Colors.black26,
+                                            ),
+                                          ],
                                         ),
-                                        blurRadius: 30,
-                                        spreadRadius: 10,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      '${numeroData['numero']}',
-                                      style: const TextStyle(
-                                        fontSize: 72,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                        shadows: [
-                                          Shadow(
-                                            offset: Offset(2, 2),
-                                            blurRadius: 4,
-                                            color: Colors.black26,
-                                          ),
-                                        ],
                                       ),
                                     ),
                                   ),
@@ -487,7 +642,7 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
                       },
                     ),
 
-                    const SizedBox(height: 32),
+                    SizedBox(height: verticalSpacing),
 
                     // Palabra del número con animación
                     AnimatedBuilder(
@@ -496,42 +651,45 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
                         return Transform.translate(
                           offset: Offset(0, 50 * (1 - _numeroAnimation.value)),
                           child: Opacity(
-                            opacity: _numeroAnimation.value,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 32,
-                                vertical: 16,
-                              ),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Colors.amber[300]!,
-                                    Colors.amber[400]!,
-                                  ],
+                            opacity: _numeroAnimation.value.clamp(0.0, 1.0),
+                            child: GestureDetector(
+                              onTap: _reproducirPalabra,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: horizontalPadding,
+                                  vertical: 12,
                                 ),
-                                borderRadius: BorderRadius.circular(24),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.amber.withOpacity(0.3),
-                                    blurRadius: 15,
-                                    spreadRadius: 3,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.amber[300]!,
+                                      Colors.amber[400]!,
+                                    ],
                                   ),
-                                ],
-                              ),
-                              child: Text(
-                                numeroData['palabra'],
-                                style: const TextStyle(
-                                  fontSize: 36,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  letterSpacing: 3,
-                                  shadows: [
-                                    Shadow(
-                                      offset: Offset(1, 1),
-                                      blurRadius: 3,
-                                      color: Colors.black26,
+                                  borderRadius: BorderRadius.circular(24),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.amber.withOpacity(0.3),
+                                      blurRadius: 15,
+                                      spreadRadius: 3,
                                     ),
                                   ],
+                                ),
+                                child: Text(
+                                  numeroData['palabra'],
+                                  style: TextStyle(
+                                    fontSize: wordFontSize,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    letterSpacing: 3,
+                                    shadows: const [
+                                      Shadow(
+                                        offset: Offset(1, 1),
+                                        blurRadius: 3,
+                                        color: Colors.black26,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -540,7 +698,7 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
                       },
                     ),
 
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 24),
 
                     // Objetos para contar con animación escalonada
                     AnimatedBuilder(
@@ -549,9 +707,9 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
                         return Transform.translate(
                           offset: Offset(0, 30 * (1 - _numeroAnimation.value)),
                           child: Opacity(
-                            opacity: _numeroAnimation.value,
+                            opacity: _numeroAnimation.value.clamp(0.0, 1.0),
                             child: Container(
-                              padding: const EdgeInsets.all(24),
+                              padding: const EdgeInsets.all(20),
                               margin: const EdgeInsets.symmetric(
                                 horizontal: 20,
                               ),
@@ -572,12 +730,43 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
                               ),
                               child: Column(
                                 children: [
-                                  Text(
-                                    'Cuenta conmigo:',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      color: numeroData['color'],
-                                      fontWeight: FontWeight.bold,
+                                  GestureDetector(
+                                    onTap: _reproducirConteo,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 8,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: numeroData['color'].withOpacity(
+                                          0.1,
+                                        ),
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: numeroData['color']
+                                              .withOpacity(0.3),
+                                          width: 1,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.play_circle,
+                                            color: numeroData['color'],
+                                            size: 16,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            'Cuenta conmigo:',
+                                            style: TextStyle(
+                                              fontSize: countSectionFontSize,
+                                              color: numeroData['color'],
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(height: 16),
@@ -590,7 +779,7 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
                       },
                     ),
 
-                    const SizedBox(height: 32),
+                    SizedBox(height: verticalSpacing),
 
                     // Botón de audio mejorado
                     AnimatedBuilder(
@@ -599,7 +788,7 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
                         return Transform.translate(
                           offset: Offset(0, 20 * (1 - _numeroAnimation.value)),
                           child: Opacity(
-                            opacity: _numeroAnimation.value,
+                            opacity: _numeroAnimation.value.clamp(0.0, 1.0),
                             child: Container(
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
@@ -623,53 +812,27 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
                                 color: Colors.transparent,
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(28),
-                                  onTap: () {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.volume_up,
-                                              color: Colors.white,
-                                            ),
-                                            const SizedBox(width: 12),
-                                            Text(
-                                              '🔊 "${numeroData['palabra']}" (próximamente)',
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        backgroundColor: numeroData['color'],
-                                        behavior: SnackBarBehavior.floating,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                        ),
-                                        duration: const Duration(seconds: 2),
-                                      ),
-                                    );
-                                  },
+                                  onTap: _reproducirNumero,
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 32,
-                                      vertical: 16,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: horizontalPadding,
+                                      vertical: 12,
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Icon(
-                                          Icons.volume_up,
+                                          _isPlayingAudio
+                                              ? Icons.volume_up
+                                              : Icons.volume_up_outlined,
                                           color: Colors.white,
-                                          size: 28,
+                                          size: iconSize,
                                         ),
                                         const SizedBox(width: 12),
                                         Text(
-                                          'Escuchar',
-                                          style: const TextStyle(
-                                            fontSize: 20,
+                                          'Escuchar número',
+                                          style: TextStyle(
+                                            fontSize: buttonFontSize + 2,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white,
                                           ),
@@ -695,55 +858,156 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                // Selector rápido de números
-                Container(
-                  height: 60,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _numeroMaximo,
-                    itemBuilder: (context, index) {
-                      final numero = index + 1;
-                      final isSelected = numero == _numeroActual;
-                      final colorNumero = _numeros[index]['color'];
+                // Título del selector
+                Text(
+                  'Selecciona un número:',
+                  style: TextStyle(
+                    fontSize: buttonFontSize,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey[700],
+                  ),
+                ),
+                const SizedBox(height: 12),
 
-                      return GestureDetector(
-                        onTap: () => _irANumero(numero),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          width: 50,
-                          height: 50,
-                          margin: const EdgeInsets.symmetric(horizontal: 6),
-                          decoration: BoxDecoration(
-                            color: isSelected ? colorNumero : Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: colorNumero,
-                              width: isSelected ? 3 : 2,
-                            ),
-                            boxShadow:
-                                isSelected
-                                    ? [
-                                      BoxShadow(
-                                        color: colorNumero.withOpacity(0.4),
-                                        blurRadius: 10,
-                                        spreadRadius: 2,
-                                      ),
-                                    ]
-                                    : [],
-                          ),
-                          child: Center(
-                            child: Text(
-                              '$numero',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: isSelected ? Colors.white : colorNumero,
+                // Contenedor del selector con indicadores de scroll
+                Stack(
+                  children: [
+                    // Selector rápido de números con scroll horizontal mejorado
+                    Container(
+                      height: selectorHeight,
+                      child: ListView.builder(
+                        controller: _selectorScrollController,
+                        scrollDirection: Axis.horizontal,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: horizontalPadding,
+                        ),
+                        itemCount: _numeroMaximo,
+                        itemBuilder: (context, index) {
+                          final numero = index + 1;
+                          final isSelected = numero == _numeroActual;
+                          final colorNumero = _numeros[index]['color'];
+
+                          return GestureDetector(
+                            onTap: () => _irANumero(numero),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              width: selectorItemSize,
+                              height: selectorItemSize,
+                              margin: const EdgeInsets.symmetric(horizontal: 6),
+                              decoration: BoxDecoration(
+                                color: isSelected ? colorNumero : Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: colorNumero,
+                                  width: isSelected ? 3 : 2,
+                                ),
+                                boxShadow:
+                                    isSelected
+                                        ? [
+                                          BoxShadow(
+                                            color: colorNumero.withOpacity(0.4),
+                                            blurRadius: 10,
+                                            spreadRadius: 2,
+                                          ),
+                                        ]
+                                        : [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(
+                                              0.1,
+                                            ),
+                                            blurRadius: 4,
+                                            spreadRadius: 1,
+                                          ),
+                                        ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '$numero',
+                                  style: TextStyle(
+                                    fontSize:
+                                        isSelected
+                                            ? buttonFontSize + 2
+                                            : buttonFontSize,
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        isSelected ? Colors.white : colorNumero,
+                                  ),
+                                ),
                               ),
                             ),
+                          );
+                        },
+                      ),
+                    ),
+
+                    // Indicadores de scroll sutiles en los extremos
+                    Positioned(
+                      left: 0,
+                      top: 0,
+                      bottom: 0,
+                      child: Container(
+                        width: 20,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: [
+                              Colors.white.withOpacity(0.8),
+                              Colors.white.withOpacity(0.0),
+                            ],
                           ),
                         ),
-                      );
-                    },
+                        child: Icon(
+                          Icons.chevron_left,
+                          color: Colors.grey[400],
+                          size: 16,
+                        ),
+                      ),
+                    ),
+
+                    Positioned(
+                      right: 0,
+                      top: 0,
+                      bottom: 0,
+                      child: Container(
+                        width: 20,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.centerRight,
+                            end: Alignment.centerLeft,
+                            colors: [
+                              Colors.white.withOpacity(0.8),
+                              Colors.white.withOpacity(0.0),
+                            ],
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.chevron_right,
+                          color: Colors.grey[400],
+                          size: 16,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                // Texto de ayuda sutil
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.swipe, color: Colors.grey[400], size: 16),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Desliza para ver todos los números',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[500],
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
 
@@ -782,8 +1046,8 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
                           borderRadius: BorderRadius.circular(20),
                           onTap: _numeroActual > 1 ? _numeroAnterior : null,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 24,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: horizontalPadding,
                               vertical: 14,
                             ),
                             child: Row(
@@ -792,13 +1056,13 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
                                 Icon(
                                   Icons.arrow_back,
                                   color: Colors.white,
-                                  size: 24,
+                                  size: iconSize,
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
                                   'Anterior',
-                                  style: const TextStyle(
-                                    fontSize: 16,
+                                  style: TextStyle(
+                                    fontSize: buttonFontSize,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                   ),
@@ -842,8 +1106,8 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
                                   ? _siguienteNumero
                                   : null,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 24,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: horizontalPadding,
                               vertical: 14,
                             ),
                             child: Row(
@@ -851,8 +1115,8 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
                               children: [
                                 Text(
                                   'Siguiente',
-                                  style: const TextStyle(
-                                    fontSize: 16,
+                                  style: TextStyle(
+                                    fontSize: buttonFontSize,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                   ),
@@ -861,7 +1125,7 @@ class _Juego123State extends State<Juego123> with TickerProviderStateMixin {
                                 Icon(
                                   Icons.arrow_forward,
                                   color: Colors.white,
-                                  size: 24,
+                                  size: iconSize,
                                 ),
                               ],
                             ),
@@ -930,21 +1194,32 @@ class _ObjectAnimatedItemState extends State<_ObjectAnimatedItem>
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth > 600;
+    final isTablet = screenWidth > 400 && screenWidth <= 600;
+
+    // Tamaños responsivos para objetos más pequeños
+    final objectSize = isDesktop ? 40.0 : (isTablet ? 35.0 : 30.0);
+    final objectFontSize = isDesktop ? 24.0 : (isTablet ? 20.0 : 18.0);
+
     return AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (context, child) {
         return Transform.scale(
           scale: _scaleAnimation.value,
           child: Container(
-            width: 48,
-            height: 48,
+            width: objectSize,
+            height: objectSize,
             decoration: BoxDecoration(
               color: widget.color.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: widget.color.withOpacity(0.3)),
             ),
             child: Center(
-              child: Text(widget.objeto, style: const TextStyle(fontSize: 28)),
+              child: Text(
+                widget.objeto,
+                style: TextStyle(fontSize: objectFontSize),
+              ),
             ),
           ),
         );

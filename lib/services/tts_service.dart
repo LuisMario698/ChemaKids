@@ -28,7 +28,7 @@ class TTSService {
       await _flutterTts.setLanguage("es-ES");
 
       // Configuración de velocidad (más lenta para niños)
-      await _flutterTts.setSpeechRate(0.4);
+      await _flutterTts.setSpeechRate(0.1);
 
       // Configuración de volumen
       await _flutterTts.setVolume(1.0);
@@ -62,6 +62,9 @@ class TTSService {
       if (kDebugMode) {
         print("🎉 TTSService inicializado correctamente");
       }
+
+      // Configurar automáticamente la mejor voz para niños
+      await setBestVoiceForChildren();
     } catch (e) {
       if (kDebugMode) {
         print("❌ Error inicializando TTSService: $e");
@@ -127,17 +130,17 @@ class TTSService {
       10: "diez",
     };
 
-    await speak(numberWords[number]!, speedRate: 0.3, pitch: 1.3);
+    await speak(numberWords[number]!, speedRate: 0.1, pitch: 1.3);
   }
 
   /// Reproduce una letra del alfabeto
   Future<void> speakLetter(String letter) async {
-    await speak(letter.toLowerCase(), speedRate: 0.3, pitch: 1.3);
+    await speak(letter.toLowerCase(), speedRate: 0.1, pitch: 1.3);
   }
 
   /// Reproduce una sílaba
   Future<void> speakSyllable(String syllable) async {
-    await speak(syllable.toLowerCase(), speedRate: 0.3, pitch: 1.2);
+    await speak(syllable.toLowerCase(), speedRate: 0.1, pitch: 1.2);
   }
 
   /// Reproduce mensajes de felicitación para niños
@@ -152,7 +155,7 @@ class TTSService {
 
     final randomCelebration =
         celebrations[DateTime.now().millisecond % celebrations.length];
-    await speak(randomCelebration, speedRate: 0.4, pitch: 1.4);
+    await speak(randomCelebration, speedRate: 0.2, pitch: 1.4);
   }
 
   /// Reproduce mensajes de ánimo
@@ -166,7 +169,7 @@ class TTSService {
 
     final randomEncouragement =
         encouragements[DateTime.now().millisecond % encouragements.length];
-    await speak(randomEncouragement, speedRate: 0.4, pitch: 1.1);
+    await speak(randomEncouragement, speedRate: 0.2, pitch: 1.1);
   }
 
   /// Detiene la reproducción actual
@@ -218,6 +221,48 @@ class TTSService {
     }
   }
 
+  /// Obtiene solo las voces en español disponibles
+  Future<List<Map<String, String>>> getSpanishVoices() async {
+    final allVoices = await getAvailableVoices();
+    final spanishVoices = <Map<String, String>>[];
+
+    for (var voice in allVoices) {
+      if (voice is Map) {
+        final voiceMap = Map<String, String>.from(voice);
+        final locale = voiceMap['locale']?.toLowerCase() ?? '';
+
+        // Filtrar voces en español
+        if (locale.startsWith('es-') || locale == 'es') {
+          spanishVoices.add(voiceMap);
+          if (kDebugMode) {
+            print(
+              "🗣️ Voz española encontrada: ${voiceMap['name']} (${voiceMap['locale']})",
+            );
+          }
+        }
+      }
+    }
+
+    return spanishVoices;
+  }
+
+  /// Obtiene voces femeninas en español (mejor para niños)
+  Future<List<Map<String, String>>> getFemaleSpanishVoices() async {
+    final spanishVoices = await getSpanishVoices();
+    return spanishVoices.where((voice) {
+      final name = voice['name']?.toLowerCase() ?? '';
+      // Buscar indicadores de voces femeninas
+      return name.contains('female') ||
+          name.contains('mujer') ||
+          name.contains('woman') ||
+          name.contains('monica') ||
+          name.contains('paulina') ||
+          name.contains('sabina') ||
+          name.contains('ines') ||
+          name.contains('marisol');
+    }).toList();
+  }
+
   /// Establece una voz específica
   Future<void> setVoice(Map<String, String> voice) async {
     if (!_isInitialized) {
@@ -226,9 +271,49 @@ class TTSService {
 
     try {
       await _flutterTts.setVoice(voice);
+      if (kDebugMode) {
+        print("✅ Voz establecida: ${voice['name']} (${voice['locale']})");
+      }
     } catch (e) {
       if (kDebugMode) {
         print("❌ Error estableciendo voz: $e");
+      }
+    }
+  }
+
+  /// Establece automáticamente la mejor voz disponible para niños
+  Future<void> setBestVoiceForChildren() async {
+    try {
+      // Intentar primero con voces femeninas en español
+      final femaleVoices = await getFemaleSpanishVoices();
+      if (femaleVoices.isNotEmpty) {
+        await setVoice(femaleVoices.first);
+        if (kDebugMode) {
+          print(
+            "🎵 Voz femenina establecida para niños: ${femaleVoices.first['name']}",
+          );
+        }
+        return;
+      }
+
+      // Si no hay voces femeninas, usar cualquier voz en español
+      final spanishVoices = await getSpanishVoices();
+      if (spanishVoices.isNotEmpty) {
+        await setVoice(spanishVoices.first);
+        if (kDebugMode) {
+          print(
+            "🎵 Voz en español establecida: ${spanishVoices.first['name']}",
+          );
+        }
+        return;
+      }
+
+      if (kDebugMode) {
+        print("⚠️ No se encontraron voces en español, usando voz por defecto");
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("❌ Error estableciendo mejor voz: $e");
       }
     }
   }

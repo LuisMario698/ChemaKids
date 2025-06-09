@@ -176,59 +176,82 @@ class EncabezadoJuegoChemaKids extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth > 600;
+    final isTablet = screenWidth > 400 && screenWidth <= 600;
+
+    // Tamaños responsivos para títulos
+    final titleFontSize = isDesktop ? 22.0 : (isTablet ? 18.0 : 16.0);
+    final iconSize = isDesktop ? 28.0 : (isTablet ? 24.0 : 20.0);
+    final buttonIconSize = isDesktop ? 32.0 : (isTablet ? 28.0 : 24.0);
+    final horizontalPadding = isDesktop ? 18.0 : (isTablet ? 14.0 : 10.0);
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       child: Row(
         children: [
           // Botón de regreso
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back,
               color: Colors.deepPurple,
-              size: 32,
+              size: buttonIconSize,
             ),
             onPressed: onBack ?? () => Navigator.of(context).pop(),
             tooltip: 'Volver',
           ),
-          const Spacer(),
+          SizedBox(width: isDesktop ? 24 : (isTablet ? 20 : 16)),
 
           // Contenedor del título
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.deepPurple[100],
-              borderRadius: BorderRadius.circular(18),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (icono != null) ...[
-                  Icon(icono, color: colorIcono, size: 28),
-                  const SizedBox(width: 8),
-                ],
-                Text(
-                  titulo,
-                  style: const TextStyle(
-                    fontSize: 22,
-                    color: Colors.deepPurple,
-                    fontWeight: FontWeight.bold,
+          Flexible(
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: horizontalPadding,
+                vertical: 8,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.deepPurple[100],
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (icono != null) ...[
+                    Icon(icono, color: colorIcono, size: iconSize),
+                    const SizedBox(width: 8),
+                  ],
+                  Flexible(
+                    child: Text(
+                      titulo,
+                      style: TextStyle(
+                        fontSize: titleFontSize,
+                        color: Colors.deepPurple,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-          const Spacer(),
+          SizedBox(width: isDesktop ? 24 : (isTablet ? 20 : 16)),
 
           // Botón de ayuda (opcional)
           if (mostrarAyuda)
             IconButton(
-              icon: const Icon(Icons.lightbulb, color: Colors.amber, size: 32),
+              icon: Icon(
+                Icons.lightbulb,
+                color: Colors.amber,
+                size: buttonIconSize,
+              ),
               tooltip: 'Pista',
               onPressed: onAyuda,
             )
           else
-            const SizedBox(
-              width: 48,
+            SizedBox(
+              width: isDesktop ? 48 : (isTablet ? 44 : 40),
             ), // Espaciador para mantener centrado el título
         ],
       ),

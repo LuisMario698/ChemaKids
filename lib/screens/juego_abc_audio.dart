@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import '../widgets/tema_juego_chemakids.dart';
 import '../widgets/boton_animado.dart';
+import '../services/tts_service.dart';
 
 class JuegoAbcAudio extends StatefulWidget {
   const JuegoAbcAudio({Key? key}) : super(key: key);
@@ -57,6 +58,8 @@ class _JuegoAbcAudioState extends State<JuegoAbcAudio>
   int _maxRacha = 0;
 
   final Random _random = Random();
+  final TTSService _ttsService = TTSService();
+  bool _isPlayingAudio = false;
 
   @override
   void initState() {
@@ -80,13 +83,27 @@ class _JuegoAbcAudioState extends State<JuegoAbcAudio>
       CurvedAnimation(parent: _waveController, curve: Curves.easeInOut),
     );
 
+    // Inicializar el servicio TTS
+    _initializeTTS();
+
     _nuevaRonda();
+  }
+
+  /// Inicializa el servicio TTS
+  Future<void> _initializeTTS() async {
+    try {
+      await _ttsService.initialize();
+      print('🎵 TTS Service inicializado para juego ABC Audio');
+    } catch (e) {
+      print('❌ Error inicializando TTS en ABC Audio: $e');
+    }
   }
 
   @override
   void dispose() {
     _pulseController.dispose();
     _waveController.dispose();
+    _ttsService.stop(); // Detener cualquier reproducción en curso
     super.dispose();
   }
 
@@ -118,28 +135,44 @@ class _JuegoAbcAudioState extends State<JuegoAbcAudio>
   }
 
   void _reproducirSonido() async {
+    if (_isPlayingAudio) return; // Evitar múltiples reproducciones
+
     setState(() {
       _mostrandoLetra = true;
       _puedeSeleccionar = false;
+      _isPlayingAudio = true;
     });
 
     // Animación de pulso y ondas
     _pulseController.repeat(reverse: true);
     _waveController.repeat();
 
-    // Simular duración del audio (3 segundos)
-    await Future.delayed(const Duration(seconds: 3));
+    try {
+      // Reproducir el sonido de la letra usando TTS
+      await _ttsService.speakLetter(_letraActual);
+      print('🔊 Reproduciendo letra en ABC Audio: $_letraActual');
+
+      // Esperar un poco más para que la animación termine bien
+      await Future.delayed(const Duration(milliseconds: 500));
+    } catch (e) {
+      print('❌ Error reproduciendo letra en ABC Audio: $e');
+      // En caso de error, esperar el tiempo original
+      await Future.delayed(const Duration(seconds: 2));
+    }
 
     _pulseController.stop();
     _waveController.stop();
 
-    setState(() {
-      _mostrandoLetra = false;
-      _puedeSeleccionar = true;
-    });
+    if (mounted) {
+      setState(() {
+        _mostrandoLetra = false;
+        _puedeSeleccionar = true;
+        _isPlayingAudio = false;
+      });
+    }
   }
 
-  void _seleccionarLetra(String letra) {
+  void _seleccionarLetra(String letra) async {
     if (!_puedeSeleccionar || _respondido) return;
 
     setState(() {
@@ -157,8 +190,22 @@ class _JuegoAbcAudioState extends State<JuegoAbcAudio>
       }
     });
 
-    // Mostrar resultado por 2 segundos antes de continuar
-    Future.delayed(const Duration(seconds: 2), () {
+    // Reproducir retroalimentación de audio
+    try {
+      if (_respuestaCorrecta) {
+        await _ttsService.speakCelebration();
+      } else {
+        await _ttsService.speakEncouragement();
+        // También reproducir la letra correcta
+        await Future.delayed(const Duration(milliseconds: 500));
+        await _ttsService.speak("La letra era $_letraActual");
+      }
+    } catch (e) {
+      print('❌ Error reproduciendo retroalimentación: $e');
+    }
+
+    // Mostrar resultado por 3 segundos antes de continuar
+    Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
         _nuevaRonda();
       }
@@ -243,22 +290,24 @@ class _JuegoAbcAudioState extends State<JuegoAbcAudio>
           if (!_mostrandoLetra && !_puedeSeleccionar && !_respondido)
             BotonAnimado(
               onTap: _reproducirSonido,
-              child: Container(
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
                 width: 120,
                 height: 120,
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: _isPlayingAudio ? Colors.green : Colors.blue,
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.blue.withOpacity(0.3),
-                      blurRadius: 20,
-                      spreadRadius: 5,
+                      color: (_isPlayingAudio ? Colors.green : Colors.blue)
+                          .withOpacity(0.4),
+                      blurRadius: _isPlayingAudio ? 25 : 20,
+                      spreadRadius: _isPlayingAudio ? 8 : 5,
                     ),
                   ],
                 ),
-                child: const Icon(
-                  Icons.volume_up_rounded,
+                child: Icon(
+                  _isPlayingAudio ? Icons.volume_up_rounded : Icons.play_arrow,
                   color: Colors.white,
                   size: 60,
                 ),
@@ -326,29 +375,79 @@ class _JuegoAbcAudioState extends State<JuegoAbcAudio>
 
           // Texto de instrucción
           if (_mostrandoLetra)
-            const Padding(
-              padding: EdgeInsets.only(top: 20),
-              child: Text(
-                '🔊 Escucha atentamente...',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: AnimatedOpacity(
+                opacity: _isPlayingAudio ? 1.0 : 0.7,
+                duration: const Duration(milliseconds: 300),
+                child: Text(
+                  _isPlayingAudio
+                      ? '🔊 Escucha atentamente...'
+                      : '⏳ Preparando audio...',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
 
           if (_puedeSeleccionar && !_respondido)
-            const Padding(
-              padding: EdgeInsets.only(top: 20),
-              child: Text(
-                '¿Qué letra sonó?',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+            Column(
+              children: [
+                const Text(
+                  '¿Qué letra sonó?',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
+                const SizedBox(height: 10),
+                // Botón para repetir el audio
+                BotonAnimado(
+                  onTap: () async {
+                    try {
+                      await _ttsService.speakLetter(_letraActual);
+                    } catch (e) {
+                      print('❌ Error repitiendo letra: $e');
+                    }
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.orange.withOpacity(0.3),
+                          blurRadius: 10,
+                          spreadRadius: 2,
+                        ),
+                      ],
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.replay, color: Colors.white, size: 20),
+                        SizedBox(width: 8),
+                        Text(
+                          'Repetir audio',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
 
           const Spacer(),
@@ -380,9 +479,10 @@ class _JuegoAbcAudioState extends State<JuegoAbcAudio>
                       }
 
                       return BotonAnimado(
-                        onTap: _respondido 
-                            ? () {} 
-                            : () => _seleccionarLetra(letra),
+                        onTap:
+                            _respondido
+                                ? () {}
+                                : () => _seleccionarLetra(letra),
                         child: Container(
                           width: 80,
                           height: 80,

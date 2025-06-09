@@ -4,6 +4,7 @@ import '../services/estado_app.dart';
 import '../widgets/nivel_card.dart';
 import '../widgets/titulo_pagina.dart';
 import '../widgets/fondo_menu_abc.dart';
+import 'configuracion_voz.dart';
 
 class PantallaMenu extends StatelessWidget {
   const PantallaMenu({super.key});
@@ -29,7 +30,49 @@ class PantallaMenu extends StatelessWidget {
                       texto: '¡Hola ${estadoApp.nombreUsuario}!',
                       fontSize: isDesktop ? 48 : 40,
                     ),
-                  ), // Botón de inicio
+                  ),
+                  // Botón de configuración de voz
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () => _abrirConfiguracionVoz(context),
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.purple.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: Colors.purple.withOpacity(0.5),
+                            width: 1,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.record_voice_over,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              'Voz',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8), // Botón de inicio
                   Material(
                     color: Colors.transparent,
                     child: InkWell(
@@ -220,5 +263,13 @@ class PantallaMenu extends StatelessWidget {
   void _regresarInicio(BuildContext context) {
     // Navegar de vuelta a la pantalla de inicio
     Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+  }
+
+  // Método para abrir la configuración de voz
+  void _abrirConfiguracionVoz(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ConfiguracionVoz()),
+    );
   }
 }
