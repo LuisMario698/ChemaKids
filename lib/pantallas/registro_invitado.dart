@@ -23,11 +23,16 @@ class _PantallaRegistroInvitadoState extends State<PantallaRegistroInvitado>
 
   late AnimationController _fadeController;
   late AnimationController _slideController;
+  late AnimationController _scaleController;
+  late AnimationController _rotateController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
+  late Animation<double> _scaleAnimation;
+  late Animation<double> _rotateAnimation;
 
   bool _isLoading = false;
-  final InvitadoService _invitadoService = InvitadoService.instance;
+
+  final _invitadoService = InvitadoService.instance;
 
   @override
   void initState() {
@@ -43,6 +48,16 @@ class _PantallaRegistroInvitadoState extends State<PantallaRegistroInvitado>
       vsync: this,
     );
 
+    _scaleController = AnimationController(
+      duration: const Duration(milliseconds: 1200),
+      vsync: this,
+    );
+
+    _rotateController = AnimationController(
+      duration: const Duration(milliseconds: 2000),
+      vsync: this,
+    );
+
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -55,9 +70,21 @@ class _PantallaRegistroInvitadoState extends State<PantallaRegistroInvitado>
       CurvedAnimation(parent: _slideController, curve: Curves.easeOutBack),
     );
 
+    _scaleAnimation = Tween<double>(
+      begin: 0.8,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut));
+
+    _rotateAnimation = Tween<double>(
+      begin: 0,
+      end: 2 * 3.14159,
+    ).animate(CurvedAnimation(parent: _rotateController, curve: Curves.easeInOut));
+
     // Iniciar animaciones
     _fadeController.forward();
     _slideController.forward();
+    _scaleController.forward();
+    _rotateController.repeat();
   }
 
   @override
@@ -66,6 +93,8 @@ class _PantallaRegistroInvitadoState extends State<PantallaRegistroInvitado>
     _edadController.dispose();
     _fadeController.dispose();
     _slideController.dispose();
+    _scaleController.dispose();
+    _rotateController.dispose();
     super.dispose();
   }
 
@@ -76,188 +105,260 @@ class _PantallaRegistroInvitadoState extends State<PantallaRegistroInvitado>
 
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFFB2EBF2),
-              Color(0xFFFFF59D),
-              Color(0xFFFFB0B0),
-              Color(0xFFA5D6A7),
+              Colors.blue[200]!,
+              Colors.purple[200]!,
+              Colors.pink[200]!,
+              Colors.orange[200]!,
             ],
+            stops: const [0.1, 0.4, 0.7, 0.9],
           ),
         ),
         child: SafeArea(
           child: Column(
             children: [
-              // Botón de regresar
+              // Barra superior con botón de regresar
               Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Row(
                   children: [
-                    IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
-                        size: 32,
+                    // Botón de regresar con efecto hover
+                    MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: InkWell(
+                        onTap: () => Navigator.of(context).pop(),
+                        borderRadius: BorderRadius.circular(30),
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: const [
+                              Icon(Icons.arrow_back, color: Colors.white, size: 24),
+                              SizedBox(width: 8),
+                              Text(
+                                'Regresar',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                      tooltip: 'Regresar',
                     ),
                   ],
                 ),
               ),
 
+              // Contenido principal
               Expanded(
                 child: Center(
                   child: FadeTransition(
                     opacity: _fadeAnimation,
                     child: SlideTransition(
                       position: _slideAnimation,
-                      child: Container(
-                        width: isDesktop ? 500 : double.infinity,
-                        margin: const EdgeInsets.all(24),
-                        padding: const EdgeInsets.all(32),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(24),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 20,
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
-                        ),
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              // Título con emoji
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Text(
-                                    '🎮',
-                                    style: TextStyle(fontSize: 48),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Flexible(
-                                    child: Text(
-                                      '¡Jugar como Invitado!',
-                                      style: TextStyle(
-                                        fontSize: isDesktop ? 32 : 28,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.deepPurple,
+                      child: ScaleTransition(
+                        scale: _scaleAnimation,
+                        child: Container(
+                          width: isDesktop ? 500 : double.infinity,
+                          margin: const EdgeInsets.all(24),
+                          padding: const EdgeInsets.all(32),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(32),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 20,
+                                offset: const Offset(0, 10),
+                              ),
+                              BoxShadow(
+                                color: Colors.purple.withOpacity(0.1),
+                                blurRadius: 30,
+                                offset: const Offset(0, 15),
+                              ),
+                            ],
+                          ),
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // Título animado con emoji
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    RotationTransition(
+                                      turns: _rotateAnimation,
+                                      child: const Text(
+                                        '🎮',
+                                        style: TextStyle(fontSize: 48),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-
-                              const SizedBox(height: 8),
-
-                              Text(
-                                'Ingresa tu nombre y edad para empezar a jugar',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey[600],
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-
-                              const SizedBox(height: 32),
-
-                              // Campo de nombre
-                              _buildCampoTexto(
-                                controller: _nombreController,
-                                label: 'Tu nombre',
-                                hint: 'Ej: María, Juan, Ana...',
-                                icon: Icons.person,
-                                validator: (value) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return 'Por favor ingresa tu nombre';
-                                  }
-                                  if (value.trim().length < 2) {
-                                    return 'El nombre debe tener al menos 2 caracteres';
-                                  }
-                                  return null;
-                                },
-                              ),
-
-                              const SizedBox(height: 20),
-
-                              // Campo de edad
-                              _buildCampoTexto(
-                                controller: _edadController,
-                                label: 'Tu edad',
-                                hint: 'Ej: 5, 6, 7...',
-                                icon: Icons.cake,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                  LengthLimitingTextInputFormatter(2),
-                                ],
-                                validator: (value) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return 'Por favor ingresa tu edad';
-                                  }
-                                  final edad = int.tryParse(value);
-                                  if (edad == null) {
-                                    return 'Por favor ingresa un número válido';
-                                  }
-                                  if (edad < 3 || edad > 12) {
-                                    return 'La edad debe estar entre 3 y 12 años';
-                                  }
-                                  return null;
-                                },
-                              ),
-
-                              const SizedBox(height: 32),
-
-                              // Botón de registro
-                              _isLoading
-                                  ? const CircularProgressIndicator()
-                                  : _buildBotonRegistro(),
-
-                              const SizedBox(height: 16),
-
-                              // Información adicional
-                              Container(
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue[50],
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: Colors.blue[200]!,
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.info,
-                                      color: Colors.blue[600],
-                                      size: 20,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Expanded(
+                                    const SizedBox(width: 16),
+                                    Flexible(
                                       child: Text(
-                                        'Como invitado podrás jugar todos los niveles, pero tu progreso no se guardará.',
+                                        '¡Jugar como Invitado!',
                                         style: TextStyle(
-                                          color: Colors.blue[800],
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
+                                          fontSize: isDesktop ? 32 : 28,
+                                          fontWeight: FontWeight.bold,
+                                          foreground: Paint()
+                                            ..shader = LinearGradient(
+                                              colors: [
+                                                Colors.purple,
+                                                Colors.blue,
+                                                Colors.purple,
+                                              ],
+                                            ).createShader(
+                                              const Rect.fromLTWH(0, 0, 200, 70),
+                                            ),
                                         ),
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                            ],
+
+                                const SizedBox(height: 16),
+
+                                // Subtítulo animado
+                                ShaderMask(
+                                  shaderCallback: (bounds) => LinearGradient(
+                                    colors: [
+                                      Colors.blue[400]!,
+                                      Colors.purple[400]!,
+                                    ],
+                                  ).createShader(bounds),
+                                  child: Text(
+                                    '¡Prepárate para una aventura química!',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                      height: 1.5,
+                                    ),
+                                  ),
+                                ),
+
+                                const SizedBox(height: 32),
+
+                                // Campo de nombre animado
+                                _buildCampoTexto(
+                                  controller: _nombreController,
+                                  label: '¿Cómo te llamas?',
+                                  hint: '¡Escribe tu nombre aquí!',
+                                  icon: Icons.emoji_emotions,
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return '¡Ups! No olvides escribir tu nombre';
+                                    }
+                                    if (value.trim().length < 2) {
+                                      return 'Tu nombre debe tener al menos 2 letras';
+                                    }
+                                    return null;
+                                  },
+                                ),
+
+                                const SizedBox(height: 24),
+
+                                // Campo de edad animado
+                                _buildCampoTexto(
+                                  controller: _edadController,
+                                  label: '¿Cuántos años tienes?',
+                                  hint: 'Tu edad (3-12)',
+                                  icon: Icons.cake,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                    LengthLimitingTextInputFormatter(2),
+                                  ],
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return '¡No olvides decirnos tu edad!';
+                                    }
+                                    final edad = int.tryParse(value);
+                                    if (edad == null) {
+                                      return 'Por favor, escribe un número';
+                                    }
+                                    if (edad < 3 || edad > 12) {
+                                      return 'La edad debe estar entre 3 y 12 años';
+                                    }
+                                    return null;
+                                  },
+                                ),
+
+                                const SizedBox(height: 32),
+
+                                // Botón de registro animado
+                                _isLoading
+                                    ? const CircularProgressIndicator(
+                                        valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.purple,
+                                        ),
+                                      )
+                                    : _buildBotonRegistro(),
+
+                                const SizedBox(height: 24),
+
+                                // Mensaje informativo con diseño mejorado
+                                Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Colors.blue[50]!,
+                                        Colors.purple[50]!,
+                                      ],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(
+                                      color: Colors.blue[200]!,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue[100],
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        child: Icon(
+                                          Icons.info_outline,
+                                          color: Colors.blue[800],
+                                          size: 24,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: Text(
+                                          'Como invitado podrás jugar todos los niveles, pero tu progreso no se guardará.',
+                                          style: TextStyle(
+                                            color: Colors.blue[900],
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            height: 1.4,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -286,62 +387,112 @@ class _PantallaRegistroInvitadoState extends State<PantallaRegistroInvitado>
       keyboardType: keyboardType,
       inputFormatters: inputFormatters,
       validator: validator,
-      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+      style: const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w500,
+        color: Colors.black87,
+      ),
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        prefixIcon: Icon(icon, color: Colors.deepPurple),
+        prefixIcon: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 12),
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.purple[50],
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(icon, color: Colors.purple, size: 24),
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 24,
+          vertical: 20,
+        ),
+        filled: true,
+        fillColor: Colors.grey[50],
         border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(color: Colors.grey[300]!),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: Colors.deepPurple, width: 2),
+          borderSide: const BorderSide(color: Colors.purple, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: Colors.red, width: 2),
+          borderSide: BorderSide(color: Colors.red[400]!, width: 2),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: Colors.red, width: 2),
+          borderSide: BorderSide(color: Colors.red[400]!, width: 2),
         ),
-        filled: true,
-        fillColor: Colors.grey[50],
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 16,
+        errorStyle: TextStyle(
+          color: Colors.red[400],
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
         ),
       ),
     );
   }
 
   Widget _buildBotonRegistro() {
-    return SizedBox(
+    return Container(
       width: double.infinity,
-      height: 56,
-      child: ElevatedButton(
-        onPressed: _registrarInvitado,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.deepPurple,
-          foregroundColor: Colors.white,
-          elevation: 8,
-          shadowColor: Colors.deepPurple.withOpacity(0.4),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(Icons.play_arrow, size: 24),
-            SizedBox(width: 8),
-            Text(
-              '¡Empezar a Jugar!',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
+      height: 60,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.purple,
+            Colors.blue[600]!,
           ],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.purple.withOpacity(0.3),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: _registrarInvitado,
+          borderRadius: BorderRadius.circular(20),
+          child: Ink(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(
+                    Icons.play_circle_filled,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                  SizedBox(width: 12),
+                  Text(
+                    '¡Empezar a Jugar!',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );

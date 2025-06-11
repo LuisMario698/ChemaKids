@@ -51,7 +51,7 @@ SPEC CHECKSUMS:
   flutter_tts: ae915565cc6948444b513acc8ee021993281e027
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
-  rive_common: 08864495d71edbf4498cf42887faa18ca2760027
+  rive_common: ea79040f86acf053a2d5a75a2506175ee39796a5
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
   url_launcher_macos: 0fba8ddabfc33ce0a9afe7c5fef5aab3d8d2d673
 

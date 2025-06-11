@@ -224,13 +224,19 @@ class _JuegoEscuchandoNumerosState extends State<JuegoEscuchandoNumeros>
                 const SizedBox(height: 16),
                 Text(
                   'Puntuación: $_puntuacion de $_totalPreguntas',
-                  style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 20),
+                  style: const TextStyle(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontSize: 20,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   _obtenerMensajeFinal(),
-                  style: const TextStyle(color: Color.fromARGB(179, 40, 40, 40), fontSize: 16),
+                  style: const TextStyle(
+                    color: Color.fromARGB(179, 40, 40, 40),
+                    fontSize: 16,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -246,7 +252,9 @@ class _JuegoEscuchandoNumerosState extends State<JuegoEscuchandoNumeros>
                       },
                       child: const Text(
                         'Menú',
-                        style: TextStyle(color: Color.fromARGB(179, 34, 34, 34)),
+                        style: TextStyle(
+                          color: Color.fromARGB(179, 34, 34, 34),
+                        ),
                       ),
                     ),
                   ),
@@ -264,7 +272,9 @@ class _JuegoEscuchandoNumerosState extends State<JuegoEscuchandoNumeros>
                       ),
                       child: const Text(
                         'Jugar Otra Vez',
-                        style: TextStyle(color: Color.fromARGB(255, 61, 60, 60)),
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 61, 60, 60),
+                        ),
                       ),
                     ),
                   ),
@@ -329,288 +339,155 @@ class _JuegoEscuchandoNumerosState extends State<JuegoEscuchandoNumeros>
           child: Container(
             width: double.infinity,
             child: Column(
-          children: [
-            // Header con progreso y puntuación
-            Container(
-              padding: EdgeInsets.all(screenWidth * 0.03),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header con progreso y puntuación
+                Container(
+                  padding: EdgeInsets.all(screenWidth * 0.03),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Pregunta ${_preguntaActual + 1}/$_totalPreguntas',
-                        style: TextStyle(
-                          color: const Color.fromARGB(255, 0, 0, 0),
-                          fontSize: isDesktop ? 18 : 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Text(
-                        'Puntos: $_puntuacion',
-                        style: TextStyle(
-                          color: const Color.fromARGB(255, 0, 0, 0),
-                          fontSize: isDesktop ? 16 : 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                  // Indicador de audio
-                  AnimatedBuilder(
-                    animation:
-                        _isPlayingAudio
-                            ? _waveAnimation
-                            : const AlwaysStoppedAnimation(0),
-                    builder: (context, child) {
-                      return Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color:
-                              _isPlayingAudio
-                                  ? Colors.green.withOpacity(0.2)
-                                  : Colors.white.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              _isPlayingAudio
-                                  ? Icons.volume_up
-                                  : Icons.volume_up_outlined,
-                              color: const Color.fromARGB(255, 0, 0, 0),
-                              size: isDesktop ? 24 : 20,
-                            ),
-                            if (_isPlayingAudio) ...[
-                              const SizedBox(width: 8),
-                              ...List.generate(3, (index) {
-                                return Container(
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 1,
-                                  ),
-                                  width: 3,
-                                  height:
-                                      10 +
-                                      (5 * _waveAnimation.value * (index + 1)),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(2),
-                                  ),
-                                );
-                              }),
-                            ],
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-
-            // Progreso visual
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-              height: 6,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(3),
-              ),
-              child: FractionallySizedBox(
-                alignment: Alignment.centerLeft,
-                widthFactor: (_preguntaActual + 1) / _totalPreguntas,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.amber,
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                ),
-              ),
-            ),
-
-            SizedBox(height: screenHeight * 0.05),
-
-            // Botón principal de reproducir audio
-            AnimatedBuilder(
-              animation: _pulseAnimation,
-              builder: (context, child) {
-                return Transform.scale(
-                  scale: _isPlayingAudio ? _pulseAnimation.value : 1.0,
-                  child: GestureDetector(
-                    onTap: _reproducirNumero,
-                    child: Container(
-                      width: isDesktop ? 200 : 160,
-                      height: isDesktop ? 200 : 160,
-                      decoration: BoxDecoration(
-                        gradient: RadialGradient(
-                          colors: [Colors.blue[400]!, Colors.blue[600]!],
-                        ),
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.blue.withOpacity(0.4),
-                            blurRadius: 20,
-                            spreadRadius: _isPlayingAudio ? 10 : 5,
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(
-                            _isPlayingAudio
-                                ? Icons.volume_up
-                                : Icons.play_arrow,
-                            color: Colors.white,
-                            size: isDesktop ? 60 : 48,
-                          ),
-                          const SizedBox(height: 8),
                           Text(
-                            _isPlayingAudio ? 'Escuchando...' : '🔊 Escuchar',
+                            'Pregunta ${_preguntaActual + 1}/$_totalPreguntas',
                             style: TextStyle(
                               color: const Color.fromARGB(255, 0, 0, 0),
                               fontSize: isDesktop ? 18 : 14,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            'Puntos: $_puntuacion',
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 0, 0, 0),
+                              fontSize: isDesktop ? 16 : 12,
                             ),
                           ),
                         ],
                       ),
+                      // Indicador de audio
+                      AnimatedBuilder(
+                        animation:
+                            _isPlayingAudio
+                                ? _waveAnimation
+                                : const AlwaysStoppedAnimation(0),
+                        builder: (context, child) {
+                          return Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color:
+                                  _isPlayingAudio
+                                      ? Colors.green.withOpacity(0.2)
+                                      : Colors.white.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  _isPlayingAudio
+                                      ? Icons.volume_up
+                                      : Icons.volume_up_outlined,
+                                  color: const Color.fromARGB(255, 0, 0, 0),
+                                  size: isDesktop ? 24 : 20,
+                                ),
+                                if (_isPlayingAudio) ...[
+                                  const SizedBox(width: 8),
+                                  ...List.generate(3, (index) {
+                                    return Container(
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 1,
+                                      ),
+                                      width: 3,
+                                      height:
+                                          10 +
+                                          (5 *
+                                              _waveAnimation.value *
+                                              (index + 1)),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(2),
+                                      ),
+                                    );
+                                  }),
+                                ],
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Progreso visual
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                  height: 6,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                  child: FractionallySizedBox(
+                    alignment: Alignment.centerLeft,
+                    widthFactor: (_preguntaActual + 1) / _totalPreguntas,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.amber,
+                        borderRadius: BorderRadius.circular(3),
+                      ),
                     ),
                   ),
-                );
-              },
-            ),
-
-            SizedBox(height: screenHeight * 0.04),
-
-            // Instrucción
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.1),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(color: Colors.white.withOpacity(0.3)),
-              ),
-              child: Text(
-                _preguntaRespondida
-                    ? (_respuestaCorrecta
-                        ? '¡Correcto!'
-                        : 'La respuesta era $_numeroActual')
-                    : '¿Qué número escuchaste?',
-                style: TextStyle(
-                  fontSize: isDesktop ? 20 : 16,
-                  fontWeight: FontWeight.w600,
-                  color: const Color.fromARGB(255, 0, 0, 0),
                 ),
-                textAlign: TextAlign.center,
-              ),
-            ),
 
-            SizedBox(height: screenHeight * 0.03),
+                SizedBox(height: screenHeight * 0.05),
 
-            // Opciones de números (horizontal centrado con scroll)
-            Container(
-              height: isDesktop ? 90 : 70,
-              margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
-              child: Center(
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: _opciones.length,
-                  itemBuilder: (context, index) {
-                    final numero = _opciones[index];
-                    final colorBase =
-                        _coloresNumeros[(numero - 1) % _coloresNumeros.length];
-                    final colorBoton = _getColorBoton(numero);
-
-                    return Container(
-                      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.015),
+                // Botón principal de reproducir audio
+                AnimatedBuilder(
+                  animation: _pulseAnimation,
+                  builder: (context, child) {
+                    return Transform.scale(
+                      scale: _isPlayingAudio ? _pulseAnimation.value : 1.0,
                       child: GestureDetector(
-                        onTap: () => _seleccionarRespuesta(numero),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          width: isDesktop ? 75 : 60,
-                          height: isDesktop ? 75 : 60,
+                        onTap: _reproducirNumero,
+                        child: Container(
+                          width: isDesktop ? 200 : 160,
+                          height: isDesktop ? 200 : 160,
                           decoration: BoxDecoration(
-                            color: colorBoton,
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color:
-                                  _respuestaSeleccionada == numero
-                                      ? colorBase
-                                      : colorBase.withOpacity(0.5),
-                              width: _respuestaSeleccionada == numero ? 3 : 2,
+                            gradient: RadialGradient(
+                              colors: [Colors.blue[400]!, Colors.blue[600]!],
                             ),
+                            shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: colorBase.withOpacity(0.25),
-                                blurRadius: 6,
-                                offset: const Offset(0, 3),
+                                color: Colors.blue.withOpacity(0.4),
+                                blurRadius: 20,
+                                spreadRadius: _isPlayingAudio ? 10 : 5,
                               ),
                             ],
                           ),
-                          child: Stack(
-                            alignment: Alignment.center,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                              Icon(
+                                _isPlayingAudio
+                                    ? Icons.volume_up
+                                    : Icons.play_arrow,
+                                color: Colors.white,
+                                size: isDesktop ? 60 : 48,
+                              ),
+                              const SizedBox(height: 8),
                               Text(
-                                '$numero',
+                                _isPlayingAudio
+                                    ? 'Escuchando...'
+                                    : '🔊 Escuchar',
                                 style: TextStyle(
-                                  color:
-                                      _preguntaRespondida &&
-                                              numero == _numeroActual
-                                          ? const Color.fromARGB(255, 0, 0, 0)
-                                          : colorBase,
-                                  fontSize: isDesktop ? 26 : 22,
+                                  color: const Color.fromARGB(255, 0, 0, 0),
+                                  fontSize: isDesktop ? 18 : 14,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              if (_preguntaRespondida && numero == _numeroActual)
-                                Positioned(
-                                  bottom: 2,
-                                  right: 2,
-                                  child: AnimatedBuilder(
-                                    animation: _feedbackAnimation,
-                                    builder: (context, child) {
-                                      return Transform.scale(
-                                        scale: _feedbackAnimation.value,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(1),
-                                          decoration: BoxDecoration(
-                                            color: Colors.green,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Icon(
-                                            Icons.check,
-                                            color: Colors.white,
-                                            size: isDesktop ? 14 : 12,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              if (_preguntaRespondida &&
-                                  _respuestaSeleccionada == numero &&
-                                  numero != _numeroActual)
-                                Positioned(
-                                  bottom: 2,
-                                  right: 2,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(1),
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Icon(
-                                      Icons.close,
-                                      color: Colors.white,
-                                      size: isDesktop ? 14 : 12,
-                                    ),
-                                  ),
-                                ),
                             ],
                           ),
                         ),
@@ -618,38 +495,185 @@ class _JuegoEscuchandoNumerosState extends State<JuegoEscuchandoNumeros>
                     );
                   },
                 ),
-              ),
-            ),
 
-            // Indicador de scroll más compacto
-            if (_opciones.length > 4)
-              Container(
-                margin: const EdgeInsets.only(top: 6),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.swipe,
-                      color: Colors.white.withOpacity(0.6),
-                      size: 14,
+                SizedBox(height: screenHeight * 0.04),
+
+                // Instrucción
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.1),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(color: Colors.white.withOpacity(0.3)),
+                  ),
+                  child: Text(
+                    _preguntaRespondida
+                        ? (_respuestaCorrecta
+                            ? '¡Correcto!'
+                            : 'La respuesta era $_numeroActual')
+                        : '¿Qué número escuchaste?',
+                    style: TextStyle(
+                      fontSize: isDesktop ? 20 : 16,
+                      fontWeight: FontWeight.w600,
+                      color: const Color.fromARGB(255, 0, 0, 0),
                     ),
-                    const SizedBox(width: 3),
-                    Text(
-                      'Desliza para ver más opciones',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.6),
-                        fontSize: 11,
-                      ),
-                    ),
-                  ],
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              ),
 
-            // Espacio adicional para evitar overflow
-            SizedBox(height: screenHeight * 0.02),
-          ],
-        ),
-      ),
+                SizedBox(height: screenHeight * 0.03),
+
+                // Opciones de números (horizontal centrado con scroll)
+                Container(
+                  height: isDesktop ? 90 : 70,
+                  margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+                  child: Center(
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      physics: const BouncingScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: _opciones.length,
+                      itemBuilder: (context, index) {
+                        final numero = _opciones[index];
+                        final colorBase =
+                            _coloresNumeros[(numero - 1) %
+                                _coloresNumeros.length];
+                        final colorBoton = _getColorBoton(numero);
+
+                        return Container(
+                          margin: EdgeInsets.symmetric(
+                            horizontal: screenWidth * 0.015,
+                          ),
+                          child: GestureDetector(
+                            onTap: () => _seleccionarRespuesta(numero),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              width: isDesktop ? 75 : 60,
+                              height: isDesktop ? 75 : 60,
+                              decoration: BoxDecoration(
+                                color: colorBoton,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color:
+                                      _respuestaSeleccionada == numero
+                                          ? colorBase
+                                          : colorBase.withOpacity(0.5),
+                                  width:
+                                      _respuestaSeleccionada == numero ? 3 : 2,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: colorBase.withOpacity(0.25),
+                                    blurRadius: 6,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Text(
+                                    '$numero',
+                                    style: TextStyle(
+                                      color:
+                                          _preguntaRespondida &&
+                                                  numero == _numeroActual
+                                              ? const Color.fromARGB(
+                                                255,
+                                                0,
+                                                0,
+                                                0,
+                                              )
+                                              : colorBase,
+                                      fontSize: isDesktop ? 26 : 22,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  if (_preguntaRespondida &&
+                                      numero == _numeroActual)
+                                    Positioned(
+                                      bottom: 2,
+                                      right: 2,
+                                      child: AnimatedBuilder(
+                                        animation: _feedbackAnimation,
+                                        builder: (context, child) {
+                                          return Transform.scale(
+                                            scale: _feedbackAnimation.value,
+                                            child: Container(
+                                              padding: const EdgeInsets.all(1),
+                                              decoration: BoxDecoration(
+                                                color: Colors.green,
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Icon(
+                                                Icons.check,
+                                                color: Colors.white,
+                                                size: isDesktop ? 14 : 12,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  if (_preguntaRespondida &&
+                                      _respuestaSeleccionada == numero &&
+                                      numero != _numeroActual)
+                                    Positioned(
+                                      bottom: 2,
+                                      right: 2,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(1),
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          Icons.close,
+                                          color: Colors.white,
+                                          size: isDesktop ? 14 : 12,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+
+                // Indicador de scroll más compacto
+                if (_opciones.length > 4)
+                  Container(
+                    margin: const EdgeInsets.only(top: 6),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.swipe,
+                          color: Colors.white.withOpacity(0.6),
+                          size: 14,
+                        ),
+                        const SizedBox(width: 3),
+                        Text(
+                          'Desliza para ver más opciones',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.6),
+                            fontSize: 11,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                // Espacio adicional para evitar overflow
+                SizedBox(height: screenHeight * 0.02),
+              ],
+            ),
+          ),
         ),
       ),
     );

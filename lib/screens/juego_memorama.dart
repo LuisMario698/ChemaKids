@@ -32,7 +32,7 @@ class _JuegoMemoramaState extends State<JuegoMemorama> {
   void initState() {
     super.initState();
     _generarMemorama();
-    
+
     // Mostrar instrucciones al inicializar
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _mostrarDialogoInstrucciones();
@@ -53,7 +53,7 @@ class _JuegoMemoramaState extends State<JuegoMemorama> {
             'Encuentra los pares iguales.',
             'Si las dos cartas son iguales, se quedan volteadas.',
             'Si son diferentes, se voltean de nuevo.',
-            '¡Memoriza dónde están para encontrar todos los pares!'
+            '¡Memoriza dónde están para encontrar todos los pares!',
           ],
           icono: Icons.memory,
           onComenzar: () {

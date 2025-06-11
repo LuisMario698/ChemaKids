@@ -42,18 +42,12 @@ class _DialogoInstruccionesState extends State<DialogoInstrucciones>
     _scaleAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.elasticOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
 
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     _controller.forward();
     _initializeTTS();
@@ -77,12 +71,12 @@ class _DialogoInstruccionesState extends State<DialogoInstrucciones>
     try {
       // Crear texto completo con pausas naturales usando puntuación
       String textoCompleto = '';
-      
+
       // Agregar título y descripción
       textoCompleto += '${widget.titulo}. ';
       textoCompleto += '${widget.descripcion}. ';
       textoCompleto += 'Estas son las instrucciones: ';
-      
+
       // Agregar todas las instrucciones con pausas naturales
       for (int i = 0; i < widget.instrucciones.length; i++) {
         textoCompleto += 'Paso ${i + 1}: ${widget.instrucciones[i]}. ';
@@ -91,12 +85,12 @@ class _DialogoInstruccionesState extends State<DialogoInstrucciones>
           textoCompleto += ', '; // Pausa corta entre instrucciones
         }
       }
-      
-      textoCompleto += 'Estos son todos los pasos para jugar. ¡Ahora puedes comenzar!';
-      
+
+      textoCompleto +=
+          'Estos son todos los pasos para jugar. ¡Ahora puedes comenzar!';
+
       // Usar el método específico para instrucciones
       await _ttsService.speakInstructions(textoCompleto);
-      
     } catch (e) {
       print('❌ Error reproduciendo instrucciones: $e');
     } finally {
@@ -298,8 +292,11 @@ class _DialogoInstruccionesState extends State<DialogoInstrucciones>
                                             width: 30,
                                             height: 30,
                                             decoration: BoxDecoration(
-                                              color: Colors.white.withOpacity(0.2),
-                                              borderRadius: BorderRadius.circular(15),
+                                              color: Colors.white.withOpacity(
+                                                0.2,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
                                             ),
                                             child: Center(
                                               child: Text(
@@ -342,7 +339,9 @@ class _DialogoInstruccionesState extends State<DialogoInstrucciones>
                               child: TextButton(
                                 onPressed: () => Navigator.of(context).pop(),
                                 style: TextButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15),
                                     side: BorderSide(
@@ -369,9 +368,13 @@ class _DialogoInstruccionesState extends State<DialogoInstrucciones>
                                   widget.onComenzar();
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white.withOpacity(0.9),
+                                  backgroundColor: Colors.white.withOpacity(
+                                    0.9,
+                                  ),
                                   foregroundColor: widget.colorPrincipal,
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15),
                                   ),

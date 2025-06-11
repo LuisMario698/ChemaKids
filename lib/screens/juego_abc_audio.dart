@@ -108,24 +108,25 @@ class _JuegoAbcAudioState extends State<JuegoAbcAudio>
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => DialogoInstrucciones(
-        titulo: '¡Identifica las Letras!',
-        descripcion: 'Escucha atentamente y elige la letra correcta',
-        icono: Icons.hearing,
-        colorPrincipal: const Color(0xFF2A0944),
-        instrucciones: const [
-          'Toca el botón "Reproducir sonido" para escuchar una letra',
-          'Escucha atentamente el sonido de la letra',
-          'Elige la letra correcta entre las 4 opciones',
-          'Si aciertas, ganarás puntos y aumentarás tu racha',
-          'Si fallas, tu racha se reiniciará pero puedes seguir jugando',
-          'Usa el botón "Repetir audio" si necesitas escuchar de nuevo',
-        ],
-        onComenzar: () {
-          // Iniciar la primera ronda
-          _nuevaRonda();
-        },
-      ),
+      builder:
+          (context) => DialogoInstrucciones(
+            titulo: '¡Identifica las Letras!',
+            descripcion: 'Escucha atentamente y elige la letra correcta',
+            icono: Icons.hearing,
+            colorPrincipal: const Color(0xFF2A0944),
+            instrucciones: const [
+              'Toca el botón "Reproducir sonido" para escuchar una letra',
+              'Escucha atentamente el sonido de la letra',
+              'Elige la letra correcta entre las 4 opciones',
+              'Si aciertas, ganarás puntos y aumentarás tu racha',
+              'Si fallas, tu racha se reiniciará pero puedes seguir jugando',
+              'Usa el botón "Repetir audio" si necesitas escuchar de nuevo',
+            ],
+            onComenzar: () {
+              // Iniciar la primera ronda
+              _nuevaRonda();
+            },
+          ),
     );
   }
 

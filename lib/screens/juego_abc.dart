@@ -60,7 +60,8 @@ class _JuegoABCState extends State<JuegoABC>
   int _letraActualIndex = 0;
   late final AnimationController _controller;
   late final Animation<double> _scaleAnimation;
-  late final Animation<double> _floatAnimation;  final List<_Particle> _particles = [];
+  late final Animation<double> _floatAnimation;
+  final List<_Particle> _particles = [];
   final Random _random = Random();
   final TTSService _ttsService = TTSService();
   bool _isPlayingAudio = false;
@@ -93,6 +94,7 @@ class _JuegoABCState extends State<JuegoABC>
       _mostrarDialogoInstrucciones();
     });
   }
+
   /// Inicializa el servicio TTS
   Future<void> _initializeTTS() async {
     try {
@@ -108,24 +110,26 @@ class _JuegoABCState extends State<JuegoABC>
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => DialogoInstrucciones(
-        titulo: '¡Aprende el ABC!',
-        descripcion: 'Descubre cómo suenan las letras del abecedario',
-        icono: Icons.abc,
-        colorPrincipal: const Color(0xFF2A0944),
-        instrucciones: const [
-          'Toca la letra grande en el centro para escuchar cómo suena',
-          'Usa las flechas de los lados para cambiar de letra',
-          'También puedes deslizar hacia izquierda o derecha',
-          'Toca el botón azul grande de abajo para repetir el sonido',
-          'Cada letra tiene su propio sonido especial',
-        ],        onComenzar: () {
-          // Reproducir la primera letra automáticamente
-          Future.delayed(const Duration(milliseconds: 500), () {
-            _reproducirSonido();
-          });
-        },
-      ),
+      builder:
+          (context) => DialogoInstrucciones(
+            titulo: '¡Aprende el ABC!',
+            descripcion: 'Descubre cómo suenan las letras del abecedario',
+            icono: Icons.abc,
+            colorPrincipal: const Color(0xFF2A0944),
+            instrucciones: const [
+              'Toca la letra grande en el centro para escuchar cómo suena',
+              'Usa las flechas de los lados para cambiar de letra',
+              'También puedes deslizar hacia izquierda o derecha',
+              'Toca el botón azul grande de abajo para repetir el sonido',
+              'Cada letra tiene su propio sonido especial',
+            ],
+            onComenzar: () {
+              // Reproducir la primera letra automáticamente
+              Future.delayed(const Duration(milliseconds: 500), () {
+                _reproducirSonido();
+              });
+            },
+          ),
     );
   }
 

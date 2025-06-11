@@ -119,8 +119,12 @@ class TTSService {
       await stop();
 
       // Configurar velocidad más natural para instrucciones largas
-      await _flutterTts.setSpeechRate(0.5); // Más rápido que 0.1 pero no muy rápido
-      await _flutterTts.setPitch(1.1); // Tono ligeramente más bajo para mayor claridad
+      await _flutterTts.setSpeechRate(
+        0.5,
+      ); // Más rápido que 0.1 pero no muy rápido
+      await _flutterTts.setPitch(
+        1.1,
+      ); // Tono ligeramente más bajo para mayor claridad
 
       // Reproducir el texto completo
       await _flutterTts.speak(text);

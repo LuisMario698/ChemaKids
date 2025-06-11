@@ -26,7 +26,7 @@ class _JuegoSilabasState extends State<JuegoSilabas>
   final Random _random = Random();
   List<int> _palabrasUsadas = [];
   static const int _puntajeMaximo = 10;
-  
+
   // Servicio TTS para audio
   final TTSService _ttsService = TTSService();
   bool _isPlayingAudio = false;
@@ -130,11 +130,12 @@ class _JuegoSilabasState extends State<JuegoSilabas>
     _initializeTTS();
     _nuevaPregunta();
   }
+
   Future<void> _initializeTTS() async {
     try {
       await _ttsService.initialize();
       print('🎵 TTS Service inicializado para Sílabas Mágicas');
-      
+
       // Mostrar instrucciones al inicializar
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _mostrarDialogoInstrucciones();
@@ -148,7 +149,8 @@ class _JuegoSilabasState extends State<JuegoSilabas>
     await showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) {        return DialogoInstrucciones(
+      builder: (BuildContext context) {
+        return DialogoInstrucciones(
           titulo: '¡Sílabas Mágicas!',
           descripcion: 'Forma palabras arrastrando sílabas',
           instrucciones: [
@@ -157,7 +159,7 @@ class _JuegoSilabasState extends State<JuegoSilabas>
             'Arrastra las sílabas correctas a los espacios vacíos.',
             'Si necesitas ayuda, toca el botón de sonido.',
             '¡Gana puntos por cada palabra correcta!',
-            '¡Diviértete formando palabras!'
+            '¡Diviértete formando palabras!',
           ],
           icono: Icons.extension,
           onComenzar: () {
@@ -170,7 +172,7 @@ class _JuegoSilabasState extends State<JuegoSilabas>
 
   Future<void> _reproducirPalabra() async {
     if (_isPlayingAudio) return;
-    
+
     setState(() {
       _isPlayingAudio = true;
     });
@@ -192,7 +194,7 @@ class _JuegoSilabasState extends State<JuegoSilabas>
 
   Future<void> _reproducirSilaba(String silaba) async {
     if (_isPlayingAudio) return;
-    
+
     setState(() {
       _isPlayingAudio = true;
     });
@@ -277,6 +279,7 @@ class _JuegoSilabasState extends State<JuegoSilabas>
           ),
     );
   }
+
   void _checkRespuesta(String silaba2) {
     setState(() {
       if (silaba2 == _palabraActual['silaba2']) {
@@ -342,14 +345,18 @@ class _JuegoSilabasState extends State<JuegoSilabas>
           // Main content
           Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,              children: [
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
                 // Botón para escuchar la palabra completa
                 Container(
                   margin: const EdgeInsets.only(bottom: 20),
                   child: GestureDetector(
                     onTap: _reproducirPalabra,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 12,
+                      ),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [Colors.blue[300]!, Colors.blue[500]!],
@@ -367,13 +374,17 @@ class _JuegoSilabasState extends State<JuegoSilabas>
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            _isPlayingAudio ? Icons.volume_up : Icons.play_arrow,
+                            _isPlayingAudio
+                                ? Icons.volume_up
+                                : Icons.play_arrow,
                             color: Colors.white,
                             size: 24,
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            _isPlayingAudio ? 'Escuchando...' : '🔊 Escuchar palabra',
+                            _isPlayingAudio
+                                ? 'Escuchando...'
+                                : '🔊 Escuchar palabra',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16,
@@ -386,7 +397,7 @@ class _JuegoSilabasState extends State<JuegoSilabas>
                   ),
                 ),
 
-                                const SizedBox(height: 40),
+                const SizedBox(height: 40),
                 // Primera sílaba (fija) con botón de audio
                 Column(
                   children: [
@@ -441,7 +452,7 @@ class _JuegoSilabasState extends State<JuegoSilabas>
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),                // Opciones de segunda sílaba
+                const SizedBox(height: 20), // Opciones de segunda sílaba
                 Wrap(
                   spacing: 20,
                   runSpacing: 20,
@@ -503,7 +514,9 @@ class _JuegoSilabasState extends State<JuegoSilabas>
                                   ],
                                 ),
                                 child: Icon(
-                                  _isPlayingAudio ? Icons.volume_up : Icons.play_arrow,
+                                  _isPlayingAudio
+                                      ? Icons.volume_up
+                                      : Icons.play_arrow,
                                   color: Colors.blue[700],
                                   size: 20,
                                 ),

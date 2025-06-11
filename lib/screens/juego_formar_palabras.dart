@@ -105,9 +105,10 @@ class _JuegoFormarPalabrasState extends State<JuegoFormarPalabras>
     _iniciarPalabra();
     _initializeTTS();
   }
+
   void _initializeTTS() async {
     await _ttsService.initialize();
-    
+
     // Mostrar instrucciones al inicializar
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _mostrarDialogoInstrucciones();
@@ -118,7 +119,8 @@ class _JuegoFormarPalabrasState extends State<JuegoFormarPalabras>
     await showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) {        return DialogoInstrucciones(
+      builder: (BuildContext context) {
+        return DialogoInstrucciones(
           titulo: '¡Formar Palabras!',
           descripcion: 'Completa palabras letra por letra',
           instrucciones: [
@@ -127,7 +129,7 @@ class _JuegoFormarPalabrasState extends State<JuegoFormarPalabras>
             'Toca las letras de abajo para completar la palabra.',
             'Si te equivocas, puedes tocar otra letra.',
             'Usa el botón de sonido para escuchar la palabra.',
-            '¡Completa todas las palabras!'
+            '¡Completa todas las palabras!',
           ],
           icono: Icons.spellcheck,
           onComenzar: () {

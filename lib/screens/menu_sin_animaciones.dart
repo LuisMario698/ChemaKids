@@ -15,10 +15,11 @@ class PantallaMenu extends StatefulWidget {
   State<PantallaMenu> createState() => _PantallaMenuState();
 }
 
-class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderStateMixin {
+class _PantallaMenuState extends State<PantallaMenu>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _indiceColor = 0;
-  
+
   @override
   void initState() {
     super.initState();
@@ -48,16 +49,15 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
                 height: size.height * 0.25,
                 child: Column(
                   children: [
-                    Expanded(child: _construirEncabezado(estadoApp, esEscritorio)),
+                    Expanded(
+                      child: _construirEncabezado(estadoApp, esEscritorio),
+                    ),
                     _construirNavegacion(esEscritorio),
                   ],
                 ),
               ),
               // Contenido ocupa 75% de la altura
-              Expanded(
-                flex: 3,
-                child: _construirContenido(esEscritorio),
-              ),
+              Expanded(flex: 3, child: _construirContenido(esEscritorio)),
             ],
           ),
         ),
@@ -77,11 +77,7 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  icon: const Icon(
-                    Icons.home,
-                    color: Colors.white,
-                    size: 32,
-                  ),
+                  icon: const Icon(Icons.home, color: Colors.white, size: 32),
                   onPressed: () => Navigator.pushReplacementNamed(context, '/'),
                 ),
                 IconButton(
@@ -110,17 +106,15 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: EstiloInfantil.temasColores[_indiceColor][0].withOpacity(0.3),
+                        color: EstiloInfantil.temasColores[_indiceColor][0]
+                            .withOpacity(0.3),
                         blurRadius: 10,
                         spreadRadius: 2,
                       ),
                     ],
                   ),
                   child: Center(
-                    child: Text(
-                      '🦸‍♂️',
-                      style: TextStyle(fontSize: 40),
-                    ),
+                    child: Text('🦸‍♂️', style: TextStyle(fontSize: 40)),
                   ),
                 ),
                 SizedBox(width: 16),
@@ -129,9 +123,10 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ShaderMask(
-                        shaderCallback: (bounds) => LinearGradient(
-                          colors: EstiloInfantil.temasColores[_indiceColor],
-                        ).createShader(bounds),
+                        shaderCallback:
+                            (bounds) => LinearGradient(
+                              colors: EstiloInfantil.temasColores[_indiceColor],
+                            ).createShader(bounds),
                         child: Text(
                           '¡Hola ${estadoApp.nombreUsuario.isNotEmpty ? estadoApp.nombreUsuario : "Pequeño Explorador"}! 🌟',
                           style: TextStyle(
@@ -164,10 +159,7 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
       child: Container(
         width: MediaQuery.of(context).size.width * 0.8,
         alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(
-          horizontal: 32,
-          vertical: 16
-        ),
+        padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -177,11 +169,7 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  icon: const Icon(
-                    Icons.home,
-                    color: Colors.white,
-                    size: 32,
-                  ),
+                  icon: const Icon(Icons.home, color: Colors.white, size: 32),
                   onPressed: () => Navigator.pushReplacementNamed(context, '/'),
                 ),
                 IconButton(
@@ -208,26 +196,25 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: EstiloInfantil.temasColores[_indiceColor][0].withOpacity(0.3),
+                    color: EstiloInfantil.temasColores[_indiceColor][0]
+                        .withOpacity(0.3),
                     blurRadius: 8,
                     spreadRadius: 2,
                   ),
                 ],
               ),
               child: Center(
-                child: Text(
-                  '🦸‍♂️',
-                  style: TextStyle(fontSize: 32),
-                ),
+                child: Text('🦸‍♂️', style: TextStyle(fontSize: 32)),
               ),
             ),
             SizedBox(height: 16),
             Column(
               children: [
                 ShaderMask(
-                  shaderCallback: (bounds) => LinearGradient(
-                    colors: EstiloInfantil.temasColores[_indiceColor],
-                  ).createShader(bounds),
+                  shaderCallback:
+                      (bounds) => LinearGradient(
+                        colors: EstiloInfantil.temasColores[_indiceColor],
+                      ).createShader(bounds),
                   child: Text(
                     '¡Hola ${estadoApp.nombreUsuario.isNotEmpty ? estadoApp.nombreUsuario : "Pequeño Explorador"}! 🌟',
                     style: TextStyle(
@@ -271,103 +258,103 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
   void _mostrarConfiguracionAudio(bool esEscritorio) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF2A0944),
-        title: Text(
-          'Configuración de Audio',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: esEscritorio ? 20 : 18,
-          ),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: Icon(
-                Icons.music_note,
-                color: Colors.white,
-                size: esEscritorio ? 24 : 20,
-              ),
-              title: Text(
-                'Música de fondo',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: esEscritorio ? 16 : 14,
-                ),
-              ),
-              trailing: Switch(
-                value: true,
-                onChanged: (value) {},
-              ),
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.volume_up,
-                color: Colors.white,
-                size: esEscritorio ? 24 : 20,
-              ),
-              title: Text(
-                'Efectos de sonido',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: esEscritorio ? 16 : 14,
-                ),
-              ),
-              trailing: Switch(
-                value: true,
-                onChanged: (value) {},
-              ),
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.record_voice_over,
-                color: Colors.white,
-                size: esEscritorio ? 24 : 20,
-              ),
-              title: Text(
-                'Configurar voz',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: esEscritorio ? 16 : 14,
-                ),
-              ),
-              trailing: IconButton(
-                icon: Icon(Icons.settings, color: Colors.white),
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ConfiguracionVoz()),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            child: Text(
-              'Cerrar',
+      builder:
+          (context) => AlertDialog(
+            backgroundColor: const Color(0xFF2A0944),
+            title: Text(
+              'Configuración de Audio',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: esEscritorio ? 16 : 14,
+                fontSize: esEscritorio ? 20 : 18,
               ),
             ),
-            onPressed: () => Navigator.pop(context),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  leading: Icon(
+                    Icons.music_note,
+                    color: Colors.white,
+                    size: esEscritorio ? 24 : 20,
+                  ),
+                  title: Text(
+                    'Música de fondo',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: esEscritorio ? 16 : 14,
+                    ),
+                  ),
+                  trailing: Switch(value: true, onChanged: (value) {}),
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.volume_up,
+                    color: Colors.white,
+                    size: esEscritorio ? 24 : 20,
+                  ),
+                  title: Text(
+                    'Efectos de sonido',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: esEscritorio ? 16 : 14,
+                    ),
+                  ),
+                  trailing: Switch(value: true, onChanged: (value) {}),
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.record_voice_over,
+                    color: Colors.white,
+                    size: esEscritorio ? 24 : 20,
+                  ),
+                  title: Text(
+                    'Configurar voz',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: esEscritorio ? 16 : 14,
+                    ),
+                  ),
+                  trailing: IconButton(
+                    icon: Icon(Icons.settings, color: Colors.white),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ConfiguracionVoz(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                child: Text(
+                  'Cerrar',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: esEscritorio ? 16 : 14,
+                  ),
+                ),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
   Widget _construirNavegacion(bool esEscritorio) {
     return Center(
       child: Container(
-        width: esEscritorio ? MediaQuery.of(context).size.width * 0.6 : double.infinity,
+        width:
+            esEscritorio
+                ? MediaQuery.of(context).size.width * 0.6
+                : double.infinity,
         margin: EdgeInsets.symmetric(
           horizontal: esEscritorio ? 0 : 16,
-          vertical: esEscritorio ? 16 : 8
+          vertical: esEscritorio ? 16 : 8,
         ),
         height: esEscritorio ? 60 : 50,
         child: Stack(
@@ -398,10 +385,7 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xFFFFD700),
-                      Color(0xFFFFA500),
-                    ],
+                    colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
                   ),
                 ),
                 labelStyle: TextStyle(
@@ -436,10 +420,7 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
             ),
           ),
           SizedBox(width: 6),
-          Text(
-            emoji,
-            style: TextStyle(fontSize: esEscritorio ? 18 : 16),
-          ),
+          Text(emoji, style: TextStyle(fontSize: esEscritorio ? 18 : 16)),
         ],
       ),
     );
@@ -470,7 +451,8 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
                 TarjetaJuego(
                   titulo: "ABC",
                   emoji: "📚",
-                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3208/3208676.png",
+                  imageUrl:
+                      "https://cdn-icons-png.flaticon.com/512/3208/3208676.png",
                   onTap: () => Navigator.pushNamed(context, '/abc'),
                   indiceColor: indiceColor,
                   esEscritorio: esEscritorio,
@@ -478,7 +460,8 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
                 TarjetaJuego(
                   titulo: "Colores",
                   emoji: "🎨",
-                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3241/3241648.png",
+                  imageUrl:
+                      "https://cdn-icons-png.flaticon.com/512/3241/3241648.png",
                   onTap: () => Navigator.pushNamed(context, '/colores'),
                   indiceColor: indiceColor + 1,
                   esEscritorio: esEscritorio,
@@ -486,7 +469,8 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
                 TarjetaJuego(
                   titulo: "Formas",
                   emoji: "⭐",
-                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3208/3208704.png",
+                  imageUrl:
+                      "https://cdn-icons-png.flaticon.com/512/3208/3208704.png",
                   onTap: () => Navigator.pushNamed(context, '/formas'),
                   indiceColor: indiceColor + 2,
                   esEscritorio: esEscritorio,
@@ -494,7 +478,8 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
                 TarjetaJuego(
                   titulo: "Animales",
                   emoji: "🦁",
-                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3208/3208715.png",
+                  imageUrl:
+                      "https://cdn-icons-png.flaticon.com/512/3208/3208715.png",
                   onTap: () => Navigator.pushNamed(context, '/animales'),
                   indiceColor: indiceColor + 3,
                   esEscritorio: esEscritorio,
@@ -518,7 +503,8 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
                 TarjetaJuego(
                   titulo: "ABC Audio",
                   emoji: "🔊",
-                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3208/3208693.png",
+                  imageUrl:
+                      "https://cdn-icons-png.flaticon.com/512/3208/3208693.png",
                   onTap: () => Navigator.pushNamed(context, '/abc-audio'),
                   indiceColor: indiceColor,
                   esEscritorio: esEscritorio,
@@ -526,15 +512,18 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
                 TarjetaJuego(
                   titulo: "Sílabas Básicas",
                   emoji: "📝",
-                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3176/3176351.png",
-                  onTap: () => Navigator.pushNamed(context, '/silabasdesdecero'),
+                  imageUrl:
+                      "https://cdn-icons-png.flaticon.com/512/3176/3176351.png",
+                  onTap:
+                      () => Navigator.pushNamed(context, '/silabasdesdecero'),
                   indiceColor: indiceColor + 1,
                   esEscritorio: esEscritorio,
                 ),
                 TarjetaJuego(
                   titulo: "Sílabas Audio",
                   emoji: "🎵",
-                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3176/3176353.png",
+                  imageUrl:
+                      "https://cdn-icons-png.flaticon.com/512/3176/3176353.png",
                   onTap: () => Navigator.pushNamed(context, '/silabas-audio'),
                   indiceColor: indiceColor + 2,
                   esEscritorio: esEscritorio,
@@ -542,7 +531,8 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
                 TarjetaJuego(
                   titulo: "Memorama",
                   emoji: "🎯",
-                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3176/3176359.png",
+                  imageUrl:
+                      "https://cdn-icons-png.flaticon.com/512/3176/3176359.png",
                   onTap: () => Navigator.pushNamed(context, '/memorama'),
                   indiceColor: indiceColor + 3,
                   esEscritorio: esEscritorio,
@@ -550,7 +540,8 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
                 TarjetaJuego(
                   titulo: "¿Qué es?",
                   emoji: "🤔",
-                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3176/3176363.png",
+                  imageUrl:
+                      "https://cdn-icons-png.flaticon.com/512/3176/3176363.png",
                   onTap: () => Navigator.pushNamed(context, '/que-es'),
                   indiceColor: indiceColor + 4,
                   esEscritorio: esEscritorio,
@@ -574,7 +565,8 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
                 TarjetaJuego(
                   titulo: "Sílabas Mágicas",
                   emoji: "✨",
-                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3176/3176366.png",
+                  imageUrl:
+                      "https://cdn-icons-png.flaticon.com/512/3176/3176366.png",
                   onTap: () => Navigator.pushNamed(context, '/silabas'),
                   indiceColor: indiceColor,
                   esEscritorio: esEscritorio,
@@ -582,7 +574,8 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
                 TarjetaJuego(
                   titulo: "Formar Palabras",
                   emoji: "📖",
-                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3176/3176368.png",
+                  imageUrl:
+                      "https://cdn-icons-png.flaticon.com/512/3176/3176368.png",
                   onTap: () => Navigator.pushNamed(context, '/formar-palabras'),
                   indiceColor: indiceColor + 1,
                   esEscritorio: esEscritorio,
@@ -590,7 +583,8 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
                 TarjetaJuego(
                   titulo: "Rima Rima",
                   emoji: "🎭",
-                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3176/3176370.png",
+                  imageUrl:
+                      "https://cdn-icons-png.flaticon.com/512/3176/3176370.png",
                   onTap: () => Navigator.pushNamed(context, '/rimas'),
                   indiceColor: indiceColor + 2,
                   esEscritorio: esEscritorio,
@@ -619,7 +613,8 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
                 TarjetaJuego(
                   titulo: "123",
                   emoji: "🔢",
-                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3176/3176372.png",
+                  imageUrl:
+                      "https://cdn-icons-png.flaticon.com/512/3176/3176372.png",
                   onTap: () => Navigator.pushNamed(context, '/123'),
                   indiceColor: indiceColor,
                   esEscritorio: esEscritorio,
@@ -643,7 +638,8 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
                 TarjetaJuego(
                   titulo: "Números y Letras",
                   emoji: "🎲",
-                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3176/3176374.png",
+                  imageUrl:
+                      "https://cdn-icons-png.flaticon.com/512/3176/3176374.png",
                   onTap: () => Navigator.pushNamed(context, '/numeros'),
                   indiceColor: indiceColor,
                   esEscritorio: esEscritorio,
@@ -651,8 +647,10 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
                 TarjetaJuego(
                   titulo: "Escuchando Números",
                   emoji: "🎧",
-                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3176/3176376.png",
-                  onTap: () => Navigator.pushNamed(context, '/escuchando-numeros'),
+                  imageUrl:
+                      "https://cdn-icons-png.flaticon.com/512/3176/3176376.png",
+                  onTap:
+                      () => Navigator.pushNamed(context, '/escuchando-numeros'),
                   indiceColor: indiceColor + 1,
                   esEscritorio: esEscritorio,
                 ),
@@ -675,7 +673,8 @@ class _PantallaMenuState extends State<PantallaMenu> with SingleTickerProviderSt
                 TarjetaJuego(
                   titulo: "Sumas y Restas",
                   emoji: "➕",
-                  imageUrl: "https://cdn-icons-png.flaticon.com/512/3176/3176378.png",
+                  imageUrl:
+                      "https://cdn-icons-png.flaticon.com/512/3176/3176378.png",
                   onTap: () => Navigator.pushNamed(context, '/sumas-restas'),
                   indiceColor: indiceColor,
                   esEscritorio: esEscritorio,

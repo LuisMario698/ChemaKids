@@ -104,7 +104,7 @@ class _JuegoSilabasAudioState extends State<JuegoSilabasAudio>
 
   void _initializeTTS() async {
     await _ttsService.initialize();
-    
+
     // Mostrar instrucciones al inicializar
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _mostrarDialogoInstrucciones();
@@ -125,7 +125,7 @@ class _JuegoSilabasAudioState extends State<JuegoSilabasAudio>
             'Luego elige la sílaba correcta entre las opciones.',
             'Si no estás seguro, puedes escuchar otra vez.',
             '¡Gana puntos por cada respuesta correcta!',
-            '¡Pon atención y diviértete!'
+            '¡Pon atención y diviértete!',
           ],
           icono: Icons.hearing,
           onComenzar: () {

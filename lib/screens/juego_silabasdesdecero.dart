@@ -72,12 +72,13 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
     // Inicializar el servicio TTS
     _initializeTTS();
   }
+
   /// Inicializa el servicio TTS
   Future<void> _initializeTTS() async {
     try {
       await _ttsService.initialize();
       print('🎵 TTS Service inicializado para sílabas desde cero');
-      
+
       // Mostrar instrucciones al inicializar
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _mostrarDialogoInstrucciones();
@@ -91,13 +92,15 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
   void dispose() {
     _controller.dispose();
     _ttsService.stop(); // Detener cualquier reproducción en curso
-    super.dispose();  }
+    super.dispose();
+  }
 
   Future<void> _mostrarDialogoInstrucciones() async {
     await showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) {        return DialogoInstrucciones(
+      builder: (BuildContext context) {
+        return DialogoInstrucciones(
           titulo: '¡Aprendamos Sílabas!',
           descripcion: 'Forma sílabas tocando las vocales',
           instrucciones: [
@@ -106,7 +109,7 @@ class _JuegoSilabasDesdeCeroState extends State<JuegoSilabasDesdeCero>
             'Toca cualquier vocal para formar una sílaba.',
             '¡Escucha cómo suena cada sílaba!',
             'Usa las flechas para cambiar de consonante.',
-            '¡Diviértete aprendiendo!'
+            '¡Diviértete aprendiendo!',
           ],
           icono: Icons.abc,
           onComenzar: () {

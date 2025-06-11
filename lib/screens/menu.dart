@@ -203,9 +203,7 @@ class _PantallaMenuState extends State<PantallaMenu>
                 ),
               ],
             ),
-            child: Center(
-              child: Text('🦸‍♂️', style: TextStyle(fontSize: 24)),
-            ),
+            child: Center(child: Text('🦸‍♂️', style: TextStyle(fontSize: 24))),
           ),
           SizedBox(height: 8),
           Column(
@@ -247,12 +245,12 @@ class _PantallaMenuState extends State<PantallaMenu>
                   ],
                 ),
               ),
-              ],
-            ),
-          ],
-        ),
-      );
-    }
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
   void _mostrarConfiguracionAudio(bool esEscritorio) {
     showDialog(
@@ -459,7 +457,8 @@ class _PantallaMenuState extends State<PantallaMenu>
                   titulo: "Silabas desde Cero",
                   emoji: "📝",
                   imageUrl: "assets/images/silabas.png",
-                  onTap: () => Navigator.pushNamed(context, '/silabasdesdecero'),
+                  onTap:
+                      () => Navigator.pushNamed(context, '/silabasdesdecero'),
                   indiceColor: indiceColor,
                   esEscritorio: esEscritorio,
                 ),
@@ -467,8 +466,7 @@ class _PantallaMenuState extends State<PantallaMenu>
                   titulo: "Identifiar Silabas",
                   emoji: "🔊",
                   imageUrl: "assets/images/escuchar.png",
-                  onTap:
-                      () => Navigator.pushNamed(context, '/silabas-audio'),
+                  onTap: () => Navigator.pushNamed(context, '/silabas-audio'),
                   indiceColor: indiceColor + 1,
                   esEscritorio: esEscritorio,
                 ),
@@ -506,11 +504,7 @@ class _PantallaMenuState extends State<PantallaMenu>
                 ),
               ],
             ),
-            EncabezadoNivel(
-              nivel: "3",
-              titulo: "Extra",
-              emoji: "🎯",
-            ),
+            EncabezadoNivel(nivel: "3", titulo: "Extra", emoji: "🎯"),
             GridView.count(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
@@ -533,7 +527,7 @@ class _PantallaMenuState extends State<PantallaMenu>
           ],
         ),
         // Vista Matemáticas
-        // 
+        //
         ListView(
           children: [
             EncabezadoNivel(
@@ -549,21 +543,25 @@ class _PantallaMenuState extends State<PantallaMenu>
               padding: EdgeInsets.all(16),
               mainAxisSpacing: 16,
               crossAxisSpacing: 16,
-              children: [                TarjetaJuego(
+              children: [
+                TarjetaJuego(
                   titulo: "123",
                   emoji: "🔢",
                   imageUrl: "assets/images/Juego123.jpg",
                   onTap: () => Navigator.pushNamed(context, '/123'),
                   indiceColor: indiceColor,
                   esEscritorio: esEscritorio,
-                ),                TarjetaJuego(
+                ),
+                TarjetaJuego(
                   titulo: "Contar Animalitos",
                   emoji: "🐾",
                   imageUrl: "assets/images/juego_contar_animalitos.jpg",
-                  onTap: () => Navigator.pushNamed(context, '/contar-animalitos'),
+                  onTap:
+                      () => Navigator.pushNamed(context, '/contar-animalitos'),
                   indiceColor: indiceColor + 1,
                   esEscritorio: esEscritorio,
-                ),                TarjetaJuego(
+                ),
+                TarjetaJuego(
                   titulo: "Objetos y Números",
                   emoji: "🎯",
                   imageUrl: "assets/images/Juegoobjetosynumeros.jpg",
@@ -585,11 +583,14 @@ class _PantallaMenuState extends State<PantallaMenu>
               childAspectRatio: 0.85,
               padding: EdgeInsets.all(16),
               mainAxisSpacing: 16,
-              crossAxisSpacing: 16,              children: [                TarjetaJuego(
+              crossAxisSpacing: 16,
+              children: [
+                TarjetaJuego(
                   titulo: "Comparar Números",
                   emoji: "⚖️",
                   imageUrl: "assets/images/compararnumeros.jpg",
-                  onTap: () => Navigator.pushNamed(context, '/comparar-numeros'),
+                  onTap:
+                      () => Navigator.pushNamed(context, '/comparar-numeros'),
                   indiceColor: indiceColor + 1,
                   esEscritorio: esEscritorio,
                 ),
@@ -597,7 +598,8 @@ class _PantallaMenuState extends State<PantallaMenu>
                   titulo: "Aprende a Sumar",
                   emoji: "🧮",
                   imageUrl: "assets/images/aprendeasumar.jpg",
-                  onTap: () => Navigator.pushNamed(context, '/presentacion-sumas'),
+                  onTap:
+                      () => Navigator.pushNamed(context, '/presentacion-sumas'),
                   indiceColor: indiceColor + 2,
                   esEscritorio: esEscritorio,
                 ),
@@ -624,10 +626,12 @@ class _PantallaMenuState extends State<PantallaMenu>
               padding: EdgeInsets.all(16),
               mainAxisSpacing: 16,
               crossAxisSpacing: 16,
-              children: [                TarjetaJuego(
+              children: [
+                TarjetaJuego(
                   titulo: "Sumas y Restas",
                   emoji: "➕",
-                  imageUrl: "assets/images/aprendeasumar.jpg", // Usando la misma imagen de sumar
+                  imageUrl:
+                      "assets/images/aprendeasumar.jpg", // Usando la misma imagen de sumar
                   onTap: () => Navigator.pushNamed(context, '/sumas-restas'),
                   indiceColor: indiceColor,
                   esEscritorio: esEscritorio,

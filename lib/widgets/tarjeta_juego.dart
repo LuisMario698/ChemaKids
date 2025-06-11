@@ -24,7 +24,8 @@ class TarjetaJuego extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(20),
-      splashColor: Colors.white.withOpacity(0.1),      child: Container(
+      splashColor: Colors.white.withOpacity(0.1),
+      child: Container(
         width: esEscritorio ? 500 : 280,
         height: esEscritorio ? 300 : 240,
         decoration: BoxDecoration(
@@ -36,7 +37,9 @@ class TarjetaJuego extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: EstiloInfantil.temasColores[indiceColor][0].withOpacity(0.3),
+              color: EstiloInfantil.temasColores[indiceColor][0].withOpacity(
+                0.3,
+              ),
               blurRadius: 15,
               spreadRadius: 2,
               offset: Offset(0, 8),
@@ -62,35 +65,36 @@ class TarjetaJuego extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(15),
-                child: imageUrl.startsWith('assets/')
-                    ? Image.asset(
-                        imageUrl,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[200],
-                            child: Icon(
-                              Icons.image_not_supported,
-                              size: 50,
-                              color: Colors.grey[400],
-                            ),
-                          );
-                        },
-                      )
-                    : Image.network(
-                        imageUrl,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[200],
-                            child: Icon(
-                              Icons.image_not_supported,
-                              size: 50,
-                              color: Colors.grey[400],
-                            ),
-                          );
-                        },
-                      ),
+                child:
+                    imageUrl.startsWith('assets/')
+                        ? Image.asset(
+                          imageUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: Colors.grey[200],
+                              child: Icon(
+                                Icons.image_not_supported,
+                                size: 50,
+                                color: Colors.grey[400],
+                              ),
+                            );
+                          },
+                        )
+                        : Image.network(
+                          imageUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: Colors.grey[200],
+                              child: Icon(
+                                Icons.image_not_supported,
+                                size: 50,
+                                color: Colors.grey[400],
+                              ),
+                            );
+                          },
+                        ),
               ),
             ),
             SizedBox(height: esEscritorio ? 24 : 16),
@@ -113,10 +117,7 @@ class TarjetaJuego extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 8),
-                Text(
-                  emoji,
-                  style: TextStyle(fontSize: esEscritorio ? 28 : 22),
-                ),
+                Text(emoji, style: TextStyle(fontSize: esEscritorio ? 28 : 22)),
               ],
             ),
           ],
